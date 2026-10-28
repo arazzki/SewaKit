@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState([
@@ -16,8 +17,9 @@ export default function AdminCategoriesPage() {
     e.preventDefault();
     if (!newCategory.trim()) return;
 
+    const nextId = categories.length > 0 ? Math.max(...categories.map((c) => c.id)) + 1 : 1;
     const newEntry = {
-      id: Date.now(),
+      id: nextId,
       name: newCategory,
       slug: newCategory.toLowerCase().replace(/\s+/g, '-'),
       totalItems: 0,
@@ -34,9 +36,26 @@ export default function AdminCategoriesPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Manajemen Kategori Barang</h1>
-          <p className="text-sm text-gray-500">Tambah, ubah, atau hapus kategori penunjang kuliah</p>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Manajemen Kategori Barang</h1>
+            <p className="text-sm text-gray-500">Tambah, ubah, atau hapus kategori penunjang kuliah</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin/dashboard"
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition"
+            >
+              ← Kembali ke Dashboard Admin
+            </Link>
+            <Link
+              href="/"
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition"
+            >
+              Beranda
+            </Link>
+          </div>
         </div>
 
         {/* Form Tambah Kategori */}
