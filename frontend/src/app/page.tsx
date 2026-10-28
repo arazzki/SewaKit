@@ -225,7 +225,7 @@ export default function HomePage() {
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        SewaKit &copy; {new Date().getFullYear()} — Proyek Aplikasi Kolaborasi Mahasiswa
+        SewaKit &copy; 2026 — Proyek Aplikasi Kolaborasi Mahasiswa
       </footer>
     </div>
   );
