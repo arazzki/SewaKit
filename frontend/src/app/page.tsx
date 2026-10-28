@@ -189,20 +189,21 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((item) => (
-            <div
+            <Link
+              href={item.route}
               key={item.no}
-              className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition"
+              className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:border-indigo-400 hover:shadow-md transition"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <span className="inline-flex items-center justify-center rounded-lg bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700">
                     Fitur #{item.no}
                   </span>
-                  <code className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600 font-mono">
-                    {item.route}
+                  <code className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600 font-mono group-hover:bg-indigo-600 group-hover:text-white transition">
+                    {item.route} →
                   </code>
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-1.5">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5 group-hover:text-indigo-600 transition">
                   {item.title}
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">
@@ -219,7 +220,7 @@ export default function HomePage() {
                   {item.branch}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </main>
