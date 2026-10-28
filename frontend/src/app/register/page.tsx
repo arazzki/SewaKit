@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export default function RegisterPage() {
     password: '',
     password_confirmation: '',
   });
+  const [registered, setRegistered] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,7 +20,7 @@ export default function RegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    setRegistered(true);
   };
 
   return (
@@ -28,6 +30,12 @@ export default function RegisterPage() {
           <h1 className="text-2xl font-bold text-gray-900">Daftar Akun SewaKit</h1>
           <p className="text-sm text-gray-500 mt-1">Buat akun untuk mulai menyewa atau menyewakan alat</p>
         </div>
+
+        {registered && (
+          <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-xs font-medium text-green-800">
+            ✓ Pendaftaran berhasil untuk {formData.name} ({formData.nim})!
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -115,6 +123,20 @@ export default function RegisterPage() {
             Daftar Sekarang
           </button>
         </form>
+
+        <div className="mt-6 border-t border-gray-100 pt-4 text-center text-xs text-gray-600 space-y-2">
+          <p>
+            Sudah punya akun?{' '}
+            <Link href="/auth/login" className="font-semibold text-blue-600 hover:underline">
+              Masuk di sini
+            </Link>
+          </p>
+          <p>
+            <Link href="/" className="text-gray-400 hover:text-gray-700">
+              ← Kembali ke Beranda
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
