@@ -1,0 +1,80 @@
+services:
+  # 1. Database PostgreSQL 16
+  db:
+    image: postgres:16-alpine
+    container_name: sewakit-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sewakit
+      POSTGRES_USER: sewakit_user
+      POSTGRES_PASSWORD: sewakit_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sewakit_user -d sewakit"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Mailpit (Local Email Testing untuk OTP & Notifikasi)
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: sewakit-mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025" # Web UI Mailpit: http://localhost:8025
+      - "1025:1025" # SMTP Port
+
+  # 3. Backend (Laravel REST API)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sewakit-backend
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: sewakit
+      DB_USERNAME: sewakit_user
+      DB_PASSWORD: sewakit_password
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+    volumes:
+      - ./backend:/var/www/html
+      - backend_vendor:/var/www/html/vendor
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 4. Frontend (Next.js App Router)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sewakit-frontend
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_next:/app/.next
+
+volumes:
+  postgres_data:
+  backend_vendor:
+  frontend_node_modules:
+  frontend_next:

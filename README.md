@@ -34,12 +34,45 @@
 ```text
 SewaKit/
 ├── .github/                # Template Pull Request & GitHub Actions
-├── backend/                # REST API Laravel
-├── frontend/               # Aplikasi Web Next.js
-├── docker-compose.yml      # Konfigurasi PostgreSQL & Mailpit lokal
+├── backend/                # REST API Laravel (Port 8000)
+│   ├── routes/api.php      # Endpoint REST API
+│   └── Dockerfile          # Container PHP 8.3 + PostgreSQL driver
+├── frontend/               # Aplikasi Web Next.js (Port 3000)
+│   ├── src/app/            # App Router halaman fitur
+│   └── Dockerfile          # Container Node 22 + Hot Reload
+├── docker-compose.yml      # Menjalankan Frontend, Backend, PostgreSQL 16 & Mailpit
 ├── Laporan_Rancangan_Aplikasi_SewaKit.pdf
 └── README.md
 ```
+
+---
+
+## 🐳 Cara Menjalankan Project
+
+### Opsi A: Menggunakan Docker (Direkomendasikan agar Versi Seragam)
+Pastikan aplikasi **Docker Desktop** sudah menyala, lalu jalankan perintah ini di folder utama (`SewaKit/`):
+
+```bash
+# Menjalankan khusus Frontend saja (Fase Pengerjaan UI):
+docker compose up --build frontend
+
+# ATAU menjalankan seluruh sistem (Frontend + Backend + PostgreSQL + Mailpit):
+docker compose up --build
+```
+Akses di browser:
+- **Frontend (Next.js):** `http://localhost:3000`
+- **Backend API (Laravel):** `http://localhost:8000/api/health`
+- **Mailpit (Cek Email OTP/Notifikasi):** `http://localhost:8025`
+- **PostgreSQL Database:** `localhost:5432` (DB: `sewakit`, User: `sewakit_user`, Pass: `sewakit_password`)
+
+### Opsi B: Menjalankan Frontend Tanpa Docker (Lokal Node.js)
+Jika ingin mengerjakan tampilan Frontend secara cepat tanpa menyalakan Docker:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Buka `http://localhost:3000`.
 
 ---
 
