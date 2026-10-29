@@ -2,12 +2,12 @@ import type { HandoverStatus, ItemCondition } from "@/data/dummyHandovers";
 
 const STATUS_STYLES: Record<HandoverStatus, { label: string; className: string }> = {
   SIAP_COD: { label: "Siap diambil (COD)", className: "bg-sky-100 text-sky-800" },
-  DISEWA: { label: "Sedang disewa", className: "bg-indigo-100 text-indigo-800" },
+  DISEWA: { label: "Sedang disewa", className: "bg-[#EFECE6] text-[#141413]" },
   MENUNGGU_KONFIRMASI_PENGEMBALIAN: {
     label: "Menunggu konfirmasi pengembalian",
     className: "bg-amber-100 text-amber-800",
   },
-  SELESAI: { label: "Selesai", className: "bg-emerald-100 text-emerald-800" },
+  SELESAI: { label: "Selesai", className: "bg-[#E9F3ED] text-[#1B4332]" },
   SENGKETA: { label: "Sengketa", className: "bg-rose-100 text-rose-800" },
 };
 
@@ -21,7 +21,7 @@ export function StatusBadge({ status }: { status: HandoverStatus }) {
 }
 
 const CONDITION_STYLES: Record<ItemCondition, { label: string; className: string }> = {
-  BAIK: { label: "Baik", className: "bg-emerald-50 text-emerald-700" },
+  BAIK: { label: "Baik", className: "bg-[#E9F3ED] text-[#1B4332]" },
   RUSAK: { label: "Rusak", className: "bg-amber-50 text-amber-800" },
   HILANG: { label: "Hilang", className: "bg-rose-50 text-rose-700" },
 };

@@ -33,8 +33,8 @@ export default function HandoverView({ initialRentals }: { initialRentals: Hando
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       {/* Daftar sewa */}
       <aside className="space-y-3 lg:col-span-1">
-        <div className="rounded-xl border border-slate-200 bg-white p-3">
-          <p className="mb-2 text-xs font-medium text-slate-500">Lihat sebagai (simulasi)</p>
+        <div className="rounded-xl border border-[#DCD8CE] bg-white p-3">
+          <p className="mb-2 text-xs font-medium text-[#575653]">Lihat sebagai (simulasi)</p>
           <div className="grid grid-cols-2 gap-2">
             {(["PENYEWA", "PEMILIK"] as const).map((option) => (
               <button
@@ -43,7 +43,7 @@ export default function HandoverView({ initialRentals }: { initialRentals: Hando
                 onClick={() => setRole(option)}
                 aria-pressed={role === option}
                 className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  role === option ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  role === option ? "bg-[#141413] text-white" : "bg-[#EFECE6] text-[#575653] hover:bg-[#E2DFD7]"
                 }`}
               >
                 {option === "PENYEWA" ? "Penyewa" : "Pemilik"}
@@ -60,15 +60,15 @@ export default function HandoverView({ initialRentals }: { initialRentals: Hando
               type="button"
               onClick={() => setSelectedId(rental.id)}
               className={`w-full rounded-xl border bg-white p-4 text-left shadow-sm transition ${
-                rental.id === selectedId ? "border-indigo-500 ring-2 ring-indigo-100" : "border-slate-200 hover:border-indigo-300"
+                rental.id === selectedId ? "border-[#141413] ring-2 ring-[#141413]/15" : "border-[#DCD8CE] hover:border-[#141413]"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="font-mono text-xs text-slate-500">{rental.id}</span>
+                <span className="font-mono text-xs text-[#575653]">{rental.id}</span>
                 <StatusBadge status={rental.status} />
               </div>
-              <p className="mt-2 text-sm font-semibold text-slate-900">{rental.itemName}</p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-2 text-sm font-semibold text-[#141413]">{rental.itemName}</p>
+              <p className="mt-1 text-xs text-[#575653]">
                 {formatDate(rental.startDate)} – {formatDate(rental.endDate)}
                 {late && <span className="ml-1 font-semibold text-rose-600">· Terlambat</span>}
               </p>
@@ -79,31 +79,31 @@ export default function HandoverView({ initialRentals }: { initialRentals: Hando
 
       {/* Detail sewa terpilih */}
       {selected ? (
-        <section className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+        <section className="space-y-6 rounded-xl border border-[#DCD8CE] bg-white p-6 shadow-sm lg:col-span-2">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs text-slate-500">{selected.id}</span>
+              <span className="font-mono text-xs text-[#575653]">{selected.id}</span>
               <StatusBadge status={selected.status} />
             </div>
-            <h2 className="mt-2 text-xl font-bold text-slate-900">{selected.itemName}</h2>
+            <h2 className="mt-2 text-xl font-bold text-[#141413]">{selected.itemName}</h2>
             <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
               <div>
-                <dt className="inline text-slate-500">Penyewa: </dt>
-                <dd className="inline font-medium text-slate-900">{selected.renterName}</dd>
+                <dt className="inline text-[#575653]">Penyewa: </dt>
+                <dd className="inline font-medium text-[#141413]">{selected.renterName}</dd>
               </div>
               <div>
-                <dt className="inline text-slate-500">Pemilik: </dt>
-                <dd className="inline font-medium text-slate-900">{selected.ownerName}</dd>
+                <dt className="inline text-[#575653]">Pemilik: </dt>
+                <dd className="inline font-medium text-[#141413]">{selected.ownerName}</dd>
               </div>
               <div>
-                <dt className="inline text-slate-500">Jadwal: </dt>
-                <dd className="inline font-medium text-slate-900">
+                <dt className="inline text-[#575653]">Jadwal: </dt>
+                <dd className="inline font-medium text-[#141413]">
                   {formatDate(selected.startDate)} – {formatDate(selected.endDate)}
                 </dd>
               </div>
               <div>
-                <dt className="inline text-slate-500">Titik COD: </dt>
-                <dd className="inline font-medium text-slate-900">
+                <dt className="inline text-[#575653]">Titik COD: </dt>
+                <dd className="inline font-medium text-[#141413]">
                   {selected.codLocation}, {selected.codTime}
                 </dd>
               </div>
@@ -119,9 +119,9 @@ export default function HandoverView({ initialRentals }: { initialRentals: Hando
               return (
                 <li key={step.key} className="text-center">
                   <div
-                    className={`h-1.5 rounded-full ${done ? "bg-indigo-600" : active ? "bg-indigo-300" : "bg-slate-200"}`}
+                    className={`h-1.5 rounded-full ${done ? "bg-[#141413]" : active ? "bg-indigo-300" : "bg-slate-200"}`}
                   />
-                  <p className={`mt-1.5 text-xs ${active ? "font-semibold text-indigo-700" : "text-slate-500"}`}>
+                  <p className={`mt-1.5 text-xs ${active ? "font-semibold text-[#C83E2B]" : "text-[#575653]"}`}>
                     {step.key === "SELESAI" && selected.status === "SENGKETA" ? "Sengketa" : step.label}
                   </p>
                 </li>
@@ -156,7 +156,7 @@ export default function HandoverView({ initialRentals }: { initialRentals: Hando
           {(selected.status === "SELESAI" || selected.status === "SENGKETA") && <ClosedPanel rental={selected} />}
         </section>
       ) : (
-        <p className="text-sm text-slate-600 lg:col-span-2">Belum ada sewa yang perlu diserahterimakan.</p>
+        <p className="text-sm text-[#575653] lg:col-span-2">Belum ada sewa yang perlu diserahterimakan.</p>
       )}
     </div>
   );

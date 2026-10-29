@@ -63,7 +63,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
   return (
     <div>
       {/* Pencarian dan filter */}
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-[#DCD8CE] bg-white p-4 shadow-sm">
         <label htmlFor="search" className="sr-only">
           Cari barang
         </label>
@@ -73,19 +73,19 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Cari barang, misalnya ESP32, kamera, atau HT"
-          className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          className="w-full rounded-lg border border-[#DCD8CE] px-4 py-2.5 text-sm focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/15"
         />
 
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div>
-            <label htmlFor="category" className="mb-1 block text-xs font-medium text-slate-600">
+            <label htmlFor="category" className="mb-1 block text-xs font-medium text-[#575653]">
               Kategori
             </label>
             <select
               id="category"
               value={category}
               onChange={(event) => setCategory(event.target.value as CategorySlug | "semua")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2 text-sm"
             >
               <option value="semua">Semua kategori</option>
               {CATEGORIES.map((option) => (
@@ -97,14 +97,14 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           </div>
 
           <div>
-            <label htmlFor="price" className="mb-1 block text-xs font-medium text-slate-600">
+            <label htmlFor="price" className="mb-1 block text-xs font-medium text-[#575653]">
               Harga sewa
             </label>
             <select
               id="price"
               value={priceRange}
               onChange={(event) => setPriceRange(event.target.value as PriceRange)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2 text-sm"
             >
               {PRICE_RANGES.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -115,14 +115,14 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           </div>
 
           <div>
-            <label htmlFor="sort" className="mb-1 block text-xs font-medium text-slate-600">
+            <label htmlFor="sort" className="mb-1 block text-xs font-medium text-[#575653]">
               Urutkan
             </label>
             <select
               id="sort"
               value={sort}
               onChange={(event) => setSort(event.target.value as SortOption)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2 text-sm"
             >
               <option value="rekomendasi">Rekomendasi</option>
               <option value="harga-terendah">Harga terendah</option>
@@ -135,15 +135,15 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
 
       {/* Jumlah hasil */}
       <div className="mt-6 mb-4 flex items-center justify-between">
-        <p className="text-sm text-slate-600">
-          Menampilkan <span className="font-semibold text-slate-900">{filteredItems.length}</span> dari{" "}
+        <p className="text-sm text-[#575653]">
+          Menampilkan <span className="font-semibold text-[#141413]">{filteredItems.length}</span> dari{" "}
           {items.length} barang
         </p>
         {isFiltered && (
           <button
             type="button"
             onClick={resetFilters}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+            className="text-sm font-medium text-[#C83E2B] hover:text-[#C83E2B]"
           >
             Reset filter
           </button>
@@ -158,13 +158,13 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
-          <p className="font-semibold text-slate-900">Barang tidak ditemukan</p>
-          <p className="mt-1 text-sm text-slate-600">Coba kata kunci lain atau ubah filter yang dipilih.</p>
+        <div className="rounded-xl border border-dashed border-[#DCD8CE] bg-white p-10 text-center">
+          <p className="font-semibold text-[#141413]">Barang tidak ditemukan</p>
+          <p className="mt-1 text-sm text-[#575653]">Coba kata kunci lain atau ubah filter yang dipilih.</p>
           <button
             type="button"
             onClick={resetFilters}
-            className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+            className="mt-4 rounded-lg bg-[#141413] px-4 py-2 text-sm font-semibold text-white hover:bg-[#141413]"
           >
             Reset filter
           </button>

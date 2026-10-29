@@ -86,12 +86,12 @@ export default function ChecklistForm({
 
   return (
     <div className="space-y-4">
-      <div className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
+      <div className="divide-y divide-[#EFECE6] rounded-xl border border-[#DCD8CE] bg-white">
         {components.map((component) => {
           const entry = draft[component.id];
           return (
             <div key={component.id} className="p-4">
-              <p className="text-sm font-medium text-slate-900">{component.name}</p>
+              <p className="text-sm font-medium text-[#141413]">{component.name}</p>
               <div className="mt-2 flex flex-wrap gap-2" role="radiogroup" aria-label={`Kondisi ${component.name}`}>
                 {CONDITION_OPTIONS.map((option) => {
                   const selected = entry.condition === option.value;
@@ -104,8 +104,8 @@ export default function ChecklistForm({
                       onClick={() => updateEntry(component.id, { condition: option.value })}
                       className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
                         selected
-                          ? "border-indigo-600 bg-indigo-600 text-white"
-                          : "border-slate-300 bg-white text-slate-700 hover:border-indigo-400"
+                          ? "border-[#141413] bg-[#141413] text-white"
+                          : "border-[#DCD8CE] bg-white text-[#575653] hover:border-indigo-400"
                       }`}
                     >
                       {option.label}
@@ -119,7 +119,7 @@ export default function ChecklistForm({
                   value={entry.note}
                   onChange={(event) => updateEntry(component.id, { note: event.target.value })}
                   placeholder="Jelaskan kerusakan atau kekurangannya"
-                  className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  className="mt-2 w-full rounded-lg border border-[#DCD8CE] px-3 py-2 text-sm focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/15"
                 />
               )}
             </div>
@@ -127,10 +127,10 @@ export default function ChecklistForm({
         })}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-sm font-medium text-slate-900">Foto kondisi barang</p>
-        <p className="mt-0.5 text-xs text-slate-500">Minimal 1 foto. Foto ini menjadi bukti jika terjadi sengketa.</p>
-        <label className="mt-3 inline-block cursor-pointer rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:border-indigo-400">
+      <div className="rounded-xl border border-[#DCD8CE] bg-white p-4">
+        <p className="text-sm font-medium text-[#141413]">Foto kondisi barang</p>
+        <p className="mt-0.5 text-xs text-[#575653]">Minimal 1 foto. Foto ini menjadi bukti jika terjadi sengketa.</p>
+        <label className="mt-3 inline-block cursor-pointer rounded-lg border border-[#DCD8CE] px-3 py-2 text-xs font-semibold text-[#575653] hover:border-indigo-400">
           Pilih foto
           <input
             type="file"
@@ -153,7 +153,7 @@ export default function ChecklistForm({
                   width={96}
                   height={96}
                   unoptimized
-                  className="h-24 w-24 rounded-lg border border-slate-200 object-cover"
+                  className="h-24 w-24 rounded-lg border border-[#DCD8CE] object-cover"
                 />
                 <button
                   type="button"
@@ -170,7 +170,7 @@ export default function ChecklistForm({
       </div>
 
       <div>
-        <label htmlFor={`note-${filledBy}`} className="text-sm font-medium text-slate-900">
+        <label htmlFor={`note-${filledBy}`} className="text-sm font-medium text-[#141413]">
           Catatan tambahan (opsional)
         </label>
         <textarea
@@ -178,7 +178,7 @@ export default function ChecklistForm({
           value={generalNote}
           onChange={(event) => setGeneralNote(event.target.value)}
           rows={2}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          className="mt-1 w-full rounded-lg border border-[#DCD8CE] px-3 py-2 text-sm focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/15"
         />
       </div>
 
@@ -187,7 +187,7 @@ export default function ChecklistForm({
       <button
         type="button"
         onClick={handleSubmit}
-        className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+        className="w-full rounded-lg bg-[#141413] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#141413]"
       >
         {submitLabel}
       </button>
