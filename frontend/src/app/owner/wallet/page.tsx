@@ -206,12 +206,12 @@ export default function WalletPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-800 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#F6F5F0] px-4 py-8 text-[#141413] sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="mb-2 flex items-center gap-2 text-sm text-blue-600">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
+            <div className="mb-2 flex items-center gap-2 text-sm text-[#C83E2B]">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#EFECE6]">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -230,7 +230,7 @@ export default function WalletPage() {
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
               Saldo dan Penarikan Dana
             </h1>
-            <p className="mt-2 text-sm text-slate-500 sm:text-base">
+            <p className="mt-2 text-sm text-[#575653] sm:text-base">
               Kelola pendapatan sewa dan pantau pengajuan penarikan dana kamu.
             </p>
           </div>
@@ -245,9 +245,9 @@ export default function WalletPage() {
           aria-label="Ringkasan saldo"
           className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
         >
-          <div className="rounded-2xl bg-blue-700 p-5 text-white shadow-sm sm:p-6">
+          <div className="rounded-2xl bg-[#141413] p-5 text-white shadow-sm sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-blue-100">Saldo Tersedia</p>
+              <p className="text-sm text-[#A09D95]">Saldo Tersedia</p>
               <span className="rounded-lg bg-white/15 p-2">
                 <svg
                   viewBox="0 0 24 24"
@@ -265,15 +265,15 @@ export default function WalletPage() {
             <p className="mt-4 text-2xl font-bold sm:text-3xl">
               {formatRupiah(saldo)}
             </p>
-            <p className="mt-2 text-xs text-blue-100">
+            <p className="mt-2 text-xs text-[#A09D95]">
               Dana yang dapat diajukan untuk penarikan
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">Total Pendapatan</p>
-              <span className="rounded-lg bg-emerald-50 p-2 text-emerald-600">
+              <p className="text-sm text-[#575653]">Total Pendapatan</p>
+              <span className="rounded-lg bg-[#E9F3ED] p-2 text-[#1B4332]">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -290,14 +290,14 @@ export default function WalletPage() {
             <p className="mt-4 text-xl font-bold sm:text-2xl">
               {formatRupiah(totalPendapatan)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-[#575653]">
               Pendapatan masuk berstatus berhasil
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">Penarikan Diproses</p>
+              <p className="text-sm text-[#575653]">Penarikan Diproses</p>
               <span className="rounded-lg bg-amber-50 p-2 text-amber-600">
                 <svg
                   viewBox="0 0 24 24"
@@ -315,14 +315,14 @@ export default function WalletPage() {
             <p className="mt-4 text-xl font-bold sm:text-2xl">
               {formatRupiah(totalDiproses)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-[#575653]">
               Pengajuan yang belum selesai
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">Penarikan Berhasil</p>
+              <p className="text-sm text-[#575653]">Penarikan Berhasil</p>
               <span className="rounded-lg bg-violet-50 p-2 text-violet-600">
                 <svg
                   viewBox="0 0 24 24"
@@ -339,7 +339,7 @@ export default function WalletPage() {
             <p className="mt-4 text-xl font-bold sm:text-2xl">
               {formatRupiah(totalPenarikanBerhasil)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-[#575653]">
               Total penarikan yang berhasil
             </p>
           </div>
@@ -350,7 +350,7 @@ export default function WalletPage() {
             role="status"
             className={`mb-6 flex items-start gap-3 rounded-xl border p-4 text-sm ${
               jenisPesan === "sukses"
-                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                ? "border-[#1B4332]/25 bg-[#E9F3ED] text-[#1B4332]"
                 : "border-red-200 bg-red-50 text-red-800"
             }`}
           >
@@ -370,10 +370,10 @@ export default function WalletPage() {
         )}
 
         <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-5">
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:col-span-3">
+          <section className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6 lg:col-span-3">
             <div className="mb-6">
               <h2 className="text-lg font-bold">Ajukan Penarikan Dana</h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-[#575653]">
                 Masukkan nominal dan pilih rekening tujuan.
               </p>
             </div>
@@ -387,8 +387,8 @@ export default function WalletPage() {
                   Nominal Penarikan
                 </label>
 
-                <div className="flex overflow-hidden rounded-xl border border-slate-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
-                  <span className="flex items-center border-r border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-600">
+                <div className="flex overflow-hidden rounded-xl border border-[#DCD8CE] focus-within:border-[#141413] focus-within:ring-2 focus-within:ring-blue-100">
+                  <span className="flex items-center border-r border-[#DCD8CE] bg-[#F6F5F0] px-4 text-sm font-semibold text-[#575653]">
                     Rp
                   </span>
                   <input
@@ -409,12 +409,12 @@ export default function WalletPage() {
                   />
                 </div>
 
-                <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-[#575653]">
                   <span>Minimal penarikan Rp10.000</span>
                   <button
                     type="button"
                     onClick={isiSemuaSaldo}
-                    className="font-semibold text-blue-600 hover:text-blue-800"
+                    className="font-semibold text-[#C83E2B] hover:text-blue-800"
                   >
                     Gunakan semua saldo
                   </button>
@@ -432,7 +432,7 @@ export default function WalletPage() {
                   id="rekening"
                   value={rekeningId}
                   onChange={(event) => setRekeningId(event.target.value)}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-3 outline-none focus:border-[#141413] focus:ring-2 focus:ring-blue-100"
                 >
                   {rekeningContoh.map((rekening) => (
                     <option key={rekening.id} value={rekening.id}>
@@ -442,12 +442,12 @@ export default function WalletPage() {
                 </select>
 
                 {rekeningTerpilih && (
-                  <div className="mt-3 rounded-xl bg-slate-50 p-4">
-                    <p className="text-xs text-slate-500">Nama pemilik</p>
+                  <div className="mt-3 rounded-xl bg-[#F6F5F0] p-4">
+                    <p className="text-xs text-[#575653]">Nama pemilik</p>
                     <p className="mt-1 text-sm font-semibold">
                       {rekeningTerpilih.pemilik}
                     </p>
-                    <p className="mt-2 text-xs text-slate-500">
+                    <p className="mt-2 text-xs text-[#575653]">
                       Nomor rekening
                     </p>
                     <p className="mt-1 text-sm font-semibold">
@@ -460,9 +460,9 @@ export default function WalletPage() {
                 )}
               </div>
 
-              <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+              <div className="rounded-xl border border-[#DCD8CE] bg-[#EFECE6] p-4">
                 <div className="flex items-start gap-3">
-                  <span className="font-bold text-blue-700">i</span>
+                  <span className="font-bold text-[#C83E2B]">i</span>
                   <div>
                     <p className="text-sm font-semibold text-blue-900">
                       Informasi penarikan
@@ -478,40 +478,40 @@ export default function WalletPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                className="w-full rounded-xl bg-[#141413] px-5 py-3 font-semibold text-white transition hover:bg-[#141413] focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
               >
                 Ajukan Penarikan
               </button>
             </form>
           </section>
 
-          <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:col-span-2">
+          <aside className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6 lg:col-span-2">
             <h2 className="text-lg font-bold">Informasi Saldo</h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-[#575653]">
               Ringkasan akun pemilik.
             </p>
 
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-slate-500">Saldo saat ini</span>
+                <span className="text-sm text-[#575653]">Saldo saat ini</span>
                 <span className="text-right text-sm font-semibold">
                   {formatRupiah(saldo)}
                 </span>
               </div>
-              <div className="h-px bg-slate-100" />
+              <div className="h-px bg-[#EFECE6]" />
 
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-[#575653]">
                   Total pendapatan
                 </span>
                 <span className="text-right text-sm font-semibold">
                   {formatRupiah(totalPendapatan)}
                 </span>
               </div>
-              <div className="h-px bg-slate-100" />
+              <div className="h-px bg-[#EFECE6]" />
 
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-[#575653]">
                   Penarikan diproses
                 </span>
                 <span className="text-right text-sm font-semibold text-amber-600">
@@ -520,9 +520,9 @@ export default function WalletPage() {
               </div>
             </div>
 
-            <div className="mt-6 rounded-xl bg-slate-50 p-4">
+            <div className="mt-6 rounded-xl bg-[#F6F5F0] p-4">
               <p className="text-sm font-semibold">Perlu diketahui</p>
-              <ul className="mt-3 space-y-2 text-xs leading-5 text-slate-600">
+              <ul className="mt-3 space-y-2 text-xs leading-5 text-[#575653]">
                 <li>• Minimal penarikan adalah Rp10.000.</li>
                 <li>• Nominal tidak boleh melebihi saldo tersedia.</li>
                 <li>• Pengajuan baru akan berstatus Diproses.</li>
@@ -532,11 +532,11 @@ export default function WalletPage() {
           </aside>
         </div>
 
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-col gap-4 border-b border-slate-200 p-5 sm:p-6">
+        <section className="overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-[#DCD8CE] p-5 sm:p-6">
             <div>
               <h2 className="text-lg font-bold">Riwayat Transaksi</h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-[#575653]">
                 Pantau pendapatan dan pengajuan penarikan dana.
               </p>
             </div>
@@ -548,14 +548,14 @@ export default function WalletPage() {
                 onChange={(event) => setKataKunci(event.target.value)}
                 placeholder="Cari transaksi atau status..."
                 aria-label="Cari transaksi"
-                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm outline-none focus:border-[#141413] focus:ring-2 focus:ring-blue-100"
               />
 
               <select
                 value={filter}
                 onChange={(event) => setFilter(event.target.value)}
                 aria-label="Filter transaksi"
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 text-sm outline-none focus:border-[#141413] focus:ring-2 focus:ring-blue-100"
               >
                 <option value="semua">Semua transaksi</option>
                 <option value="masuk">Pendapatan masuk</option>
@@ -566,7 +566,7 @@ export default function WalletPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left text-sm">
-              <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+              <thead className="bg-[#F6F5F0] text-xs uppercase tracking-wide text-[#575653]">
                 <tr>
                   <th className="px-5 py-4 font-semibold">Tanggal</th>
                   <th className="px-5 py-4 font-semibold">Keterangan</th>
@@ -576,29 +576,29 @@ export default function WalletPage() {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#EFECE6]">
                 {transaksiTampil.map((item) => (
-                  <tr key={item.id} className="transition hover:bg-slate-50">
-                    <td className="whitespace-nowrap px-5 py-4 text-slate-500">
+                  <tr key={item.id} className="transition hover:bg-[#F6F5F0]">
+                    <td className="whitespace-nowrap px-5 py-4 text-[#575653]">
                       {item.tanggal}
                     </td>
 
-                    <td className="px-5 py-4 font-medium text-slate-800">
+                    <td className="px-5 py-4 font-medium text-[#141413]">
                       {item.keterangan}
                     </td>
 
                     <td
                       className={`whitespace-nowrap px-5 py-4 font-semibold ${
                         item.tipe === "masuk"
-                          ? "text-emerald-600"
-                          : "text-slate-800"
+                          ? "text-[#1B4332]"
+                          : "text-[#141413]"
                       }`}
                     >
                       {item.tipe === "masuk" ? "+" : "-"}
                       {formatRupiah(item.nominal)}
                     </td>
 
-                    <td className="px-5 py-4 text-slate-500">
+                    <td className="px-5 py-4 text-[#575653]">
                       {item.rekening || "—"}
                     </td>
 
@@ -606,7 +606,7 @@ export default function WalletPage() {
                       <span
                         className={`inline-flex whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
                           item.status === "Berhasil"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-[#E9F3ED] text-[#1B4332]"
                             : item.status === "Diproses"
                               ? "bg-amber-50 text-amber-700"
                               : "bg-red-50 text-red-700"
@@ -622,7 +622,7 @@ export default function WalletPage() {
                   <tr>
                     <td
                       colSpan={5}
-                      className="px-5 py-12 text-center text-sm text-slate-500"
+                      className="px-5 py-12 text-center text-sm text-[#575653]"
                     >
                       Tidak ada transaksi yang sesuai dengan pencarian.
                     </td>
@@ -632,13 +632,13 @@ export default function WalletPage() {
             </table>
           </div>
 
-          <div className="border-t border-slate-200 px-5 py-4 text-xs text-slate-500">
+          <div className="border-t border-[#DCD8CE] px-5 py-4 text-xs text-[#575653]">
             Menampilkan {transaksiTampil.length} dari {transaksi.length} transaksi.
             Semua data pada halaman ini merupakan simulasi frontend.
           </div>
         </section>
 
-        <footer className="mt-6 text-center text-xs leading-5 text-slate-400">
+        <footer className="mt-6 text-center text-xs leading-5 text-[#78756F]">
           SewaKit · Saldo dan Penarikan Dana · Mode Simulasi
         </footer>
       </div>
@@ -659,7 +659,7 @@ export default function WalletPage() {
             aria-labelledby="judul-konfirmasi"
             className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
           >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-700">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#EFECE6] text-[#C83E2B]">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -676,38 +676,38 @@ export default function WalletPage() {
             <h2 id="judul-konfirmasi" className="text-xl font-bold">
               Konfirmasi Penarikan
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="mt-2 text-sm leading-6 text-[#575653]">
               Periksa kembali detail pengajuan penarikan dana simulasi kamu.
             </p>
 
-            <div className="my-5 space-y-4 rounded-xl bg-slate-50 p-4">
+            <div className="my-5 space-y-4 rounded-xl bg-[#F6F5F0] p-4">
               <div>
-                <p className="text-xs text-slate-500">Nominal penarikan</p>
-                <p className="mt-1 text-xl font-bold text-blue-700">
+                <p className="text-xs text-[#575653]">Nominal penarikan</p>
+                <p className="mt-1 text-xl font-bold text-[#C83E2B]">
                   {formatRupiah(Number(nominal))}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-slate-500">Bank tujuan</p>
+                <p className="text-xs text-[#575653]">Bank tujuan</p>
                 <p className="mt-1 text-sm font-semibold">
                   {rekeningTerpilih.nama}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-slate-500">Nomor rekening</p>
+                <p className="text-xs text-[#575653]">Nomor rekening</p>
                 <p className="mt-1 text-sm font-semibold">
                   {rekeningTerpilih.nomor}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-slate-500">Sisa saldo setelah pengajuan</p>
+                <p className="text-xs text-[#575653]">Sisa saldo setelah pengajuan</p>
                 <p className="mt-1 text-sm font-semibold">
                   {formatRupiah(saldo - Number(nominal))}
                 </p>
               </div>
             </div>
 
-            <p className="mb-5 text-xs leading-5 text-slate-500">
+            <p className="mb-5 text-xs leading-5 text-[#575653]">
               Dengan melanjutkan, saldo simulasi akan langsung dikurangi.
               Status transaksi baru adalah Diproses, bukan transfer sungguhan.
             </p>
@@ -716,14 +716,14 @@ export default function WalletPage() {
               <button
                 type="button"
                 onClick={() => setKonfirmasi(false)}
-                className="rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold hover:bg-slate-50"
+                className="rounded-xl border border-[#DCD8CE] px-4 py-3 text-sm font-semibold hover:bg-[#F6F5F0]"
               >
                 Batal
               </button>
               <button
                 type="button"
                 onClick={konfirmasiPenarikan}
-                className="rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                className="rounded-xl bg-[#141413] px-4 py-3 text-sm font-semibold text-white hover:bg-[#141413]"
               >
                 Konfirmasi Penarikan
               </button>

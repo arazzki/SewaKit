@@ -22,7 +22,7 @@ type PanelProps = {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
-      <h3 className="text-base font-bold text-slate-900">{title}</h3>
+      <h3 className="text-base font-bold text-[#141413]">{title}</h3>
       {children}
     </section>
   );
@@ -30,9 +30,9 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function InfoBox({ tone = "slate", children }: { tone?: "slate" | "amber" | "emerald" | "rose"; children: ReactNode }) {
   const tones = {
-    slate: "border-slate-200 bg-slate-50 text-slate-700",
+    slate: "border-[#DCD8CE] bg-[#F6F5F0] text-[#575653]",
     amber: "border-amber-200 bg-amber-50 text-amber-900",
-    emerald: "border-emerald-200 bg-emerald-50 text-emerald-900",
+    emerald: "border-[#1B4332]/25 bg-[#E9F3ED] text-[#1B4332]",
     rose: "border-rose-200 bg-rose-50 text-rose-900",
   };
   return <div className={`rounded-xl border p-4 text-sm leading-relaxed ${tones[tone]}`}>{children}</div>;
@@ -63,10 +63,10 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
     }
     return (
       <Section title="2. Tunjukkan kode ini ke Pemilik">
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-6 text-center">
-          <p className="text-xs font-medium text-indigo-700">Kode serah terima</p>
-          <p className="mt-2 font-mono text-4xl font-bold tracking-[0.3em] text-indigo-900">{rental.handoverCode}</p>
-          <p className="mt-3 text-xs text-indigo-700">
+        <div className="rounded-xl border border-[#DCD8CE] bg-[#EFECE6] p-6 text-center">
+          <p className="text-xs font-medium text-[#C83E2B]">Kode serah terima</p>
+          <p className="mt-2 font-mono text-4xl font-bold tracking-[0.3em] text-[#141413]">{rental.handoverCode}</p>
+          <p className="mt-3 text-xs text-[#C83E2B]">
             Pemilik memasukkan kode ini di aplikasinya untuk mengonfirmasi bahwa barang sudah diserahkan.
           </p>
         </div>
@@ -83,7 +83,7 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
           Serahkan barang kepada <strong>{rental.renterName}</strong>. Penyewa akan memeriksa dan mengisi checklist
           kondisi, lalu menunjukkan kode serah terima kepadamu.
         </InfoBox>
-        <ul className="list-inside list-disc text-sm text-slate-700">
+        <ul className="list-inside list-disc text-sm text-[#575653]">
           {rental.components.map((component) => (
             <li key={component.id}>{component.name}</li>
           ))}
@@ -106,13 +106,13 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
 
   return (
     <Section title="Konfirmasi serah terima">
-      <p className="text-sm text-slate-600">Checklist yang diisi Penyewa:</p>
+      <p className="text-sm text-[#575653]">Checklist yang diisi Penyewa:</p>
       <ChecklistComparison components={rental.components} pickup={rental.pickupChecklist} />
       {rental.pickupChecklist.generalNote && (
         <InfoBox>Catatan Penyewa: {rental.pickupChecklist.generalNote}</InfoBox>
       )}
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <label htmlFor="handover-code" className="text-sm font-medium text-slate-900">
+      <div className="rounded-xl border border-[#DCD8CE] bg-white p-4">
+        <label htmlFor="handover-code" className="text-sm font-medium text-[#141413]">
           Masukkan kode serah terima dari Penyewa
         </label>
         <div className="mt-2 flex gap-2">
@@ -126,18 +126,18 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
               setCodeError("");
             }}
             placeholder="6 digit"
-            className="w-40 rounded-lg border border-slate-300 px-3 py-2 font-mono text-lg tracking-widest focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className="w-40 rounded-lg border border-[#DCD8CE] px-3 py-2 font-mono text-lg tracking-widest focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/15"
           />
           <button
             type="button"
             onClick={confirmCode}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+            className="rounded-lg bg-[#141413] px-4 py-2 text-sm font-semibold text-white hover:bg-[#141413]"
           >
             Konfirmasi
           </button>
         </div>
         {codeError && <p className="mt-2 text-sm font-medium text-rose-600">{codeError}</p>}
-        <p className="mt-2 text-xs text-slate-400">Kode demo untuk sewa ini: {rental.handoverCode}</p>
+        <p className="mt-2 text-xs text-[#78756F]">Kode demo untuk sewa ini: {rental.handoverCode}</p>
       </div>
     </Section>
   );
@@ -161,7 +161,7 @@ export function ActiveRentalPanel({ rental, role, onUpdate }: PanelProps) {
 
       {role === "PEMILIK" ? (
         <Section title="Barang sudah dikembalikan? Isi checklist pengembalian">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-[#575653]">
             Bandingkan kondisi barang sekarang dengan kondisi saat diambil di tabel bawah.
           </p>
           <ChecklistForm
@@ -198,21 +198,21 @@ function ReturnSummary({ rental }: { rental: HandoverRental }) {
   const lateDays = rental.returnLateDays ?? 0;
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-xs text-slate-500">Keterlambatan</p>
-        <p className={`mt-1 text-lg font-bold ${lateDays > 0 ? "text-rose-700" : "text-slate-900"}`}>
+      <div className="rounded-xl border border-[#DCD8CE] bg-white p-4">
+        <p className="text-xs text-[#575653]">Keterlambatan</p>
+        <p className={`mt-1 text-lg font-bold ${lateDays > 0 ? "text-rose-700" : "text-[#141413]"}`}>
           {lateDays > 0 ? `${lateDays} hari` : "Tepat waktu"}
         </p>
       </div>
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-xs text-slate-500">Komponen bermasalah</p>
-        <p className={`mt-1 text-lg font-bold ${worsened > 0 ? "text-rose-700" : "text-slate-900"}`}>
+      <div className="rounded-xl border border-[#DCD8CE] bg-white p-4">
+        <p className="text-xs text-[#575653]">Komponen bermasalah</p>
+        <p className={`mt-1 text-lg font-bold ${worsened > 0 ? "text-rose-700" : "text-[#141413]"}`}>
           {worsened > 0 ? `${worsened} komponen` : "Tidak ada"}
         </p>
       </div>
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-xs text-slate-500">Deposit ditahan</p>
-        <p className="mt-1 text-lg font-bold text-slate-900">{formatRupiah(rental.depositAmount)}</p>
+      <div className="rounded-xl border border-[#DCD8CE] bg-white p-4">
+        <p className="text-xs text-[#575653]">Deposit ditahan</p>
+        <p className="mt-1 text-lg font-bold text-[#141413]">{formatRupiah(rental.depositAmount)}</p>
       </div>
     </div>
   );
@@ -258,7 +258,7 @@ export function ReturnReviewPanel({ rental, role, onUpdate }: PanelProps) {
             }}
             rows={3}
             placeholder="Contoh: probe dikembalikan lengkap 4 buah, ada di foto pengembalian."
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className="w-full rounded-lg border border-[#DCD8CE] px-3 py-2 text-sm focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/15"
           />
           {reasonError && <p className="text-sm font-medium text-rose-600">{reasonError}</p>}
           <div className="flex gap-2">
@@ -272,7 +272,7 @@ export function ReturnReviewPanel({ rental, role, onUpdate }: PanelProps) {
             <button
               type="button"
               onClick={() => setObjecting(false)}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-[#DCD8CE] px-4 py-2 text-sm font-semibold text-[#575653] hover:bg-[#F6F5F0]"
             >
               Batal
             </button>
@@ -283,7 +283,7 @@ export function ReturnReviewPanel({ rental, role, onUpdate }: PanelProps) {
           <button
             type="button"
             onClick={() => onUpdate({ status: "SELESAI" })}
-            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+            className="flex-1 rounded-lg bg-[#141413] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#141413]"
           >
             Setuju dengan hasil pemeriksaan
           </button>

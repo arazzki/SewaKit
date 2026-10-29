@@ -247,27 +247,22 @@ export default function CancellationAndNoShowPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-[#F6F5F0]">
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className="border-b border-[#DCD8CE] bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white shadow-sm hover:bg-indigo-500 transition"
-            >
-              SK
-            </Link>
+            
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-slate-900">
-                  Fitur #8: Pembatalan & Laporan No-Show
+                <span className="text-lg font-bold text-[#141413]">
+                  Pembatalan Pesanan & Laporan No-Show COD
                 </span>
-                <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-                  PIC: Muhammad Ariq Azzaki
+                <span className="rounded-full bg-[#EFECE6] px-2.5 py-0.5 text-xs font-semibold text-[#C83E2B]">
+                  Proteksi Transaksi
                 </span>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#575653]">
                 Kalkulasi Refund Pembatalan • Auto-Cancel Batas Bayar 2 Jam & Hold 24 Jam • Penanganan No-Show COD
               </p>
             </div>
@@ -276,13 +271,13 @@ export default function CancellationAndNoShowPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/rentals/request"
-              className="rounded-lg border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition"
+              className="rounded-lg border border-[#DCD8CE] bg-[#EFECE6] px-3.5 py-2 text-xs font-semibold text-[#C83E2B] hover:bg-[#EFECE6] transition"
             >
-              ← Kembali ke Fitur #7 (Pengajuan Sewa)
+              ← Kembali ke Pengajuan Sewa
             </Link>
             <Link
               href="/"
-              className="rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition"
+              className="rounded-lg border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#575653] hover:bg-[#EFECE6] transition"
             >
               Beranda
             </Link>
@@ -292,11 +287,11 @@ export default function CancellationAndNoShowPage() {
 
       <main className="mx-auto max-w-7xl w-full flex-1 px-6 py-8">
         {actionAlert && (
-          <div className="mb-6 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-900">
+          <div className="mb-6 flex items-center justify-between rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] px-5 py-4 text-sm font-medium text-[#1B4332]">
             <span>✓ {actionAlert}</span>
             <button
               onClick={() => setActionAlert(null)}
-              className="text-xs font-bold text-emerald-700 underline ml-4"
+              className="text-xs font-bold text-[#1B4332] underline ml-4"
             >
               Tutup
             </button>
@@ -304,13 +299,13 @@ export default function CancellationAndNoShowPage() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="mb-6 flex flex-wrap gap-2 border-b border-slate-200 pb-4">
+        <div className="mb-6 flex flex-wrap gap-2 border-b border-[#DCD8CE] pb-4">
           <button
             onClick={() => setActiveTab("manual")}
             className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
               activeTab === "manual"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                ? "bg-[#141413] text-white shadow-sm"
+                : "bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]"
             }`}
           >
             1. Pembatalan oleh Penyewa / Pemilik (Aturan Refund)
@@ -319,8 +314,8 @@ export default function CancellationAndNoShowPage() {
             onClick={() => setActiveTab("auto")}
             className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
               activeTab === "auto"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                ? "bg-[#141413] text-white shadow-sm"
+                : "bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]"
             }`}
           >
             2. Pembatalan Otomatis (Lewat Batas Bayar 2 Jam / Hold 24 Jam)
@@ -329,8 +324,8 @@ export default function CancellationAndNoShowPage() {
             onClick={() => setActiveTab("noshow")}
             className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
               activeTab === "noshow"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                ? "bg-[#141413] text-white shadow-sm"
+                : "bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]"
             }`}
           >
             3. Laporan No-Show (Tidak Hadir Saat COD Kampus)
@@ -340,23 +335,23 @@ export default function CancellationAndNoShowPage() {
         {/* TAB 1: PEMBATALAN MANUAL & SIMULASI REFUND */}
         {activeTab === "manual" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
+            <div className="lg:col-span-2 rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs">
+              <h3 className="text-lg font-bold text-[#141413] mb-1">
                 Formulir Pembatalan Pesanan & Kalkulasi Pengembalian Dana
               </h3>
-              <p className="text-xs text-slate-500 mb-6">
+              <p className="text-xs text-[#575653] mb-6">
                 Sistem otomatis menghitung nominal pengembalian sewa dan deposit sesuai waktu pembatalan dan pihak yang membatalkan.
               </p>
 
               <form onSubmit={handleConfirmManualCancel} className="space-y-5">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                     Pilih Pesanan Sewa
                   </label>
                   <select
                     value={selectedOrderId}
                     onChange={(e) => setSelectedOrderId(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900"
+                    className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-3 text-sm text-[#141413]"
                   >
                     {orders.map((o) => (
                       <option key={o.id} value={o.id}>
@@ -367,7 +362,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                     Skenario & Kondisi Pembatalan
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -376,11 +371,11 @@ export default function CancellationAndNoShowPage() {
                       onClick={() => setScenario("RENTER_EARLY")}
                       className={`rounded-xl border p-3.5 text-left text-xs transition ${
                         scenario === "RENTER_EARLY"
-                          ? "border-indigo-600 bg-indigo-50/70 text-indigo-950 font-semibold"
-                          : "border-slate-200 bg-white text-slate-600"
+                          ? "border-[#141413] bg-[#EFECE6] text-[#141413] font-semibold"
+                          : "border-[#DCD8CE] bg-white text-[#575653]"
                       }`}
                     >
-                      <span className="block font-bold text-slate-900 mb-0.5">
+                      <span className="block font-bold text-[#141413] mb-0.5">
                         Penyewa Batal (&gt; 24 Jam Sebelum COD)
                       </span>
                       Refund 100% (Uang Sewa + Deposit kembali penuh)
@@ -391,11 +386,11 @@ export default function CancellationAndNoShowPage() {
                       onClick={() => setScenario("RENTER_LATE")}
                       className={`rounded-xl border p-3.5 text-left text-xs transition ${
                         scenario === "RENTER_LATE"
-                          ? "border-indigo-600 bg-indigo-50/70 text-indigo-950 font-semibold"
-                          : "border-slate-200 bg-white text-slate-600"
+                          ? "border-[#141413] bg-[#EFECE6] text-[#141413] font-semibold"
+                          : "border-[#DCD8CE] bg-white text-[#575653]"
                       }`}
                     >
-                      <span className="block font-bold text-slate-900 mb-0.5">
+                      <span className="block font-bold text-[#141413] mb-0.5">
                         Penyewa Batal Mendadak (&lt; 12 Jam COD)
                       </span>
                       Deposit kembali 100%, Sewa dipotong 50%
@@ -406,11 +401,11 @@ export default function CancellationAndNoShowPage() {
                       onClick={() => setScenario("OWNER_CANCEL")}
                       className={`rounded-xl border p-3.5 text-left text-xs transition ${
                         scenario === "OWNER_CANCEL"
-                          ? "border-indigo-600 bg-indigo-50/70 text-indigo-950 font-semibold"
-                          : "border-slate-200 bg-white text-slate-600"
+                          ? "border-[#141413] bg-[#EFECE6] text-[#141413] font-semibold"
+                          : "border-[#DCD8CE] bg-white text-[#575653]"
                       }`}
                     >
-                      <span className="block font-bold text-slate-900 mb-0.5">
+                      <span className="block font-bold text-[#141413] mb-0.5">
                         Dibatalkan oleh Pemilik Barang
                       </span>
                       Refund 100% utuh ke Penyewa + Penalti Pemilik
@@ -421,11 +416,11 @@ export default function CancellationAndNoShowPage() {
                       onClick={() => setScenario("UNPAID_CANCEL")}
                       className={`rounded-xl border p-3.5 text-left text-xs transition ${
                         scenario === "UNPAID_CANCEL"
-                          ? "border-indigo-600 bg-indigo-50/70 text-indigo-950 font-semibold"
-                          : "border-slate-200 bg-white text-slate-600"
+                          ? "border-[#141413] bg-[#EFECE6] text-[#141413] font-semibold"
+                          : "border-[#DCD8CE] bg-white text-[#575653]"
                       }`}
                     >
-                      <span className="block font-bold text-slate-900 mb-0.5">
+                      <span className="block font-bold text-[#141413] mb-0.5">
                         Batal Sebelum Pembayaran
                       </span>
                       Tanpa denda, jadwal langsung dibuka kembali
@@ -434,7 +429,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                     Alasan Pembatalan
                   </label>
                   <textarea
@@ -442,7 +437,7 @@ export default function CancellationAndNoShowPage() {
                     value={cancelReason}
                     onChange={(e) => setCancelReason(e.target.value)}
                     placeholder="Contoh: Jadwal praktikum laboratorium diundur ke minggu depan oleh dosen..."
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900"
+                    className="w-full rounded-xl border border-[#DCD8CE] px-4 py-3 text-sm text-[#141413]"
                   />
                 </div>
 
@@ -457,45 +452,45 @@ export default function CancellationAndNoShowPage() {
             </div>
 
             {/* Rincian Refund Otomatis */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs h-fit">
+            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs h-fit">
               <span className="rounded-md bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700">
                 Simulasi Perhitungan Refund
               </span>
-              <h4 className="mt-3 text-base font-bold text-slate-900">
+              <h4 className="mt-3 text-base font-bold text-[#141413]">
                 {selectedOrder.itemName}
               </h4>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[#575653] mt-1">
                 Jadwal COD: {selectedOrder.codSchedule}
               </p>
 
-              <div className="my-5 border-t border-b border-slate-100 py-4 space-y-2.5 text-sm">
+              <div className="my-5 border-t border-b border-[#EFECE6] py-4 space-y-2.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Biaya Sewa Dibayar</span>
-                  <span className="font-semibold text-slate-900">
+                  <span className="text-[#575653]">Biaya Sewa Dibayar</span>
+                  <span className="font-semibold text-[#141413]">
                     Rp {(selectedOrder.isPaid ? selectedOrder.rentalCost : 0).toLocaleString("id-ID")}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Deposit Jaminan</span>
-                  <span className="font-semibold text-slate-900">
+                  <span className="text-[#575653]">Deposit Jaminan</span>
+                  <span className="font-semibold text-[#141413]">
                     Rp {(selectedOrder.isPaid ? selectedOrder.depositAmount : 0).toLocaleString("id-ID")}
                   </span>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-slate-100">
-                  <span className="text-slate-700 font-bold">Refund ke Penyewa</span>
-                  <span className="font-extrabold text-emerald-600">
+                <div className="flex justify-between pt-2 border-t border-[#EFECE6]">
+                  <span className="text-[#575653] font-bold">Refund ke Penyewa</span>
+                  <span className="font-extrabold text-[#1B4332]">
                     Rp {preview.refundRenter.toLocaleString("id-ID")}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-700 font-bold">Kompensasi ke Pemilik</span>
-                  <span className="font-bold text-indigo-600">
+                  <span className="text-[#575653] font-bold">Kompensasi ke Pemilik</span>
+                  <span className="font-bold text-[#C83E2B]">
                     Rp {preview.ownerComp.toLocaleString("id-ID")}
                   </span>
                 </div>
               </div>
 
-              <div className="rounded-xl bg-slate-50 p-3.5 text-xs text-slate-700 leading-relaxed border border-slate-200">
+              <div className="rounded-xl bg-[#F6F5F0] p-3.5 text-xs text-[#575653] leading-relaxed border border-[#DCD8CE]">
                 <strong>Aturan Diterapkan:</strong> {preview.ruleDesc}
               </div>
             </div>
@@ -505,11 +500,11 @@ export default function CancellationAndNoShowPage() {
         {/* TAB 2: AUTO-CANCEL BATAS WAKTU */}
         {activeTab === "auto" && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5">
-              <h3 className="text-lg font-bold text-slate-900">
+            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5">
+              <h3 className="text-lg font-bold text-[#141413]">
                 Monitoring Batas Waktu & Pembatalan Otomatis (Auto-Expire)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[#575653] mt-1">
                 Sistem otomatis membatalkan pesanan jika Pemilik tidak merespons dalam <strong>24 jam</strong> atau Penyewa tidak membayar dalam <strong>2 jam</strong> setelah disetujui.
               </p>
             </div>
@@ -518,11 +513,11 @@ export default function CancellationAndNoShowPage() {
               {orders.map((o) => (
                 <div
                   key={o.id}
-                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between"
+                  className="rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="font-mono text-xs font-bold bg-slate-100 px-2.5 py-1 rounded text-slate-800">
+                      <span className="font-mono text-xs font-bold bg-[#EFECE6] px-2.5 py-1 rounded text-[#141413]">
                         {o.id}
                       </span>
                       <span
@@ -531,7 +526,7 @@ export default function CancellationAndNoShowPage() {
                           o.status === "MENUNGGU_RESPON_24_JAM"
                             ? "bg-amber-100 text-amber-800"
                             : o.status === "SIAP_COD"
-                            ? "bg-emerald-100 text-emerald-800"
+                            ? "bg-[#E9F3ED] text-[#1B4332]"
                             : "bg-rose-100 text-rose-800"
                         }`}
                       >
@@ -539,11 +534,11 @@ export default function CancellationAndNoShowPage() {
                       </span>
                     </div>
 
-                    <h4 className="text-base font-bold text-slate-900 mb-2">
+                    <h4 className="text-base font-bold text-[#141413] mb-2">
                       {o.itemName}
                     </h4>
 
-                    <div className="text-xs text-slate-600 space-y-1 mb-4">
+                    <div className="text-xs text-[#575653] space-y-1 mb-4">
                       <p>
                         Penyewa: <strong>{o.renterName}</strong> • Pemilik:{" "}
                         <strong>{o.ownerName}</strong>
@@ -563,7 +558,7 @@ export default function CancellationAndNoShowPage() {
                     )}
                   </div>
 
-                  <div className="pt-3 border-t border-slate-100">
+                  <div className="pt-3 border-t border-[#EFECE6]">
                     {o.status === "MENUNGGU_PEMBAYARAN_2_JAM" && (
                       <button
                         onClick={() =>
@@ -584,7 +579,7 @@ export default function CancellationAndNoShowPage() {
                     )}
                     {o.status !== "MENUNGGU_PEMBAYARAN_2_JAM" &&
                       o.status !== "MENUNGGU_RESPON_24_JAM" && (
-                        <span className="block text-center text-xs text-slate-400">
+                        <span className="block text-center text-xs text-[#78756F]">
                           Status transaksi: {o.status.replace(/_/g, " ")}
                         </span>
                       )}
@@ -598,23 +593,23 @@ export default function CancellationAndNoShowPage() {
         {/* TAB 3: LAPORAN NO-SHOW SAAT COD */}
         {activeTab === "noshow" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
+            <div className="lg:col-span-2 rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs">
+              <h3 className="text-lg font-bold text-[#141413] mb-1">
                 Formulir Pelaporan No-Show (Pihak Tidak Datang Saat COD)
               </h3>
-              <p className="text-xs text-slate-500 mb-6">
+              <p className="text-xs text-[#575653] mb-6">
                 Jika salah satu pihak tidak hadir di titik temu kampus setelah melewati batas toleransi tunggu (30 menit), transaksi dapat dibatalkan dengan kompensasi otomatis.
               </p>
 
               <form onSubmit={handleReportNoShow} className="space-y-5">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                     Pilih Transaksi yang Sedang Dijadwalkan COD
                   </label>
                   <select
                     value={noShowOrderId}
                     onChange={(e) => setNoShowOrderId(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900"
+                    className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-3 text-sm text-[#141413]"
                   >
                     {orders.map((o) => (
                       <option key={o.id} value={o.id}>
@@ -625,7 +620,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                     Siapa Pihak yang Tidak Hadir (No-Show)?
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -635,10 +630,10 @@ export default function CancellationAndNoShowPage() {
                       className={`rounded-xl border p-4 text-left text-xs transition ${
                         noShowParty === "RENTER_ABSENT"
                           ? "border-rose-600 bg-rose-50 text-rose-950 font-semibold"
-                          : "border-slate-200 bg-white text-slate-600"
+                          : "border-[#DCD8CE] bg-white text-[#575653]"
                       }`}
                     >
-                      <span className="block font-bold text-slate-900 mb-1">
+                      <span className="block font-bold text-[#141413] mb-1">
                         Penyewa Tidak Datang (Dilaporkan Pemilik)
                       </span>
                       Deposit dikembalikan ke Penyewa, tetapi biaya sewa diberikan ke Pemilik sebagai kompensasi waktu & transportasi.
@@ -650,10 +645,10 @@ export default function CancellationAndNoShowPage() {
                       className={`rounded-xl border p-4 text-left text-xs transition ${
                         noShowParty === "OWNER_ABSENT"
                           ? "border-rose-600 bg-rose-50 text-rose-950 font-semibold"
-                          : "border-slate-200 bg-white text-slate-600"
+                          : "border-[#DCD8CE] bg-white text-[#575653]"
                       }`}
                     >
-                      <span className="block font-bold text-slate-900 mb-1">
+                      <span className="block font-bold text-[#141413] mb-1">
                         Pemilik Barang Tidak Datang (Dilaporkan Penyewa)
                       </span>
                       Dana Sewa + Deposit dikembalikan 100% utuh ke Penyewa & akun Pemilik mendapat penalti No-Show.
@@ -663,7 +658,7 @@ export default function CancellationAndNoShowPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                       Durasi Menunggu di Titik COD (Menit)
                     </label>
                     <input
@@ -671,24 +666,24 @@ export default function CancellationAndNoShowPage() {
                       min={30}
                       value={waitedMinutes}
                       onChange={(e) => setWaitedMinutes(Number(e.target.value))}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900"
+                      className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm text-[#141413]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                       Bukti Foto Kehadiran di Titik COD Kampus
                     </label>
                     <input
                       type="text"
                       value={proofFileName}
                       onChange={(e) => setProofFileName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 font-mono"
+                      className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm text-[#141413] font-mono"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
                     Kronologi Singkat
                   </label>
                   <textarea
@@ -696,7 +691,7 @@ export default function CancellationAndNoShowPage() {
                     value={noShowNotes}
                     onChange={(e) => setNoShowNotes(e.target.value)}
                     placeholder="Contoh: Sudah menunggu di Lobi Gedung TULT sejak pukul 10:00 WIB dan menghubungi via WhatsApp namun tidak aktif..."
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900"
+                    className="w-full rounded-xl border border-[#DCD8CE] px-4 py-3 text-sm text-[#141413]"
                   />
                 </div>
 
@@ -710,21 +705,21 @@ export default function CancellationAndNoShowPage() {
             </div>
 
             {/* Info Ringkasan Keputusan No-Show */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs h-fit space-y-4">
+            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs h-fit space-y-4">
               <span className="rounded-md bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-900">
                 Keputusan Otomatis No-Show
               </span>
-              <h4 className="text-base font-bold text-slate-900">
+              <h4 className="text-base font-bold text-[#141413]">
                 {selectedNoShowOrder.itemName}
               </h4>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#575653]">
                 Titik COD: <strong>{selectedNoShowOrder.codLocation}</strong>
               </p>
 
-              <div className="border-t border-b border-slate-100 py-4 space-y-2 text-xs">
+              <div className="border-t border-b border-[#EFECE6] py-4 space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Refund ke Penyewa:</span>
-                  <strong className="text-emerald-600 text-sm">
+                  <span className="text-[#575653]">Refund ke Penyewa:</span>
+                  <strong className="text-[#1B4332] text-sm">
                     Rp{" "}
                     {(noShowParty === "RENTER_ABSENT"
                       ? selectedNoShowOrder.depositAmount
@@ -734,8 +729,8 @@ export default function CancellationAndNoShowPage() {
                   </strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Kompensasi ke Pemilik:</span>
-                  <strong className="text-indigo-600 text-sm">
+                  <span className="text-[#575653]">Kompensasi ke Pemilik:</span>
+                  <strong className="text-[#C83E2B] text-sm">
                     Rp{" "}
                     {(noShowParty === "RENTER_ABSENT"
                       ? selectedNoShowOrder.rentalCost
@@ -745,7 +740,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
               </div>
 
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-[#575653] leading-relaxed">
                 Laporan No-Show wajib menyertakan bukti kehadiran di titik COD kampus setelah menunggu minimal <strong>30 menit</strong> dari jadwal yang disepakati.
               </p>
             </div>

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from 'sonner';
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,16 +17,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SewaKit — Platform Sewa Alat Kuliah Antar-Mahasiswa",
+  title: "SewaKit - Platform Sewa Alat Kuliah & Praktikum P2P Kampus",
   description:
-    "Platform sewa-menyewa perangkat IoT, elektronika, multimedia, dan perlengkapan kuliah antar-mahasiswa dengan sistem deposit dan COD kampus.",
+    "Platform sewa-menyewa peralatan praktikum, perangkat IoT, kamera multimedia, dan perlengkapan acara antar mahasiswa Telkom University.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
-        {children}
+      <body className="min-h-full flex flex-col bg-[#F6F5F0] text-[#141413] antialiased">
+        <Navbar />
+        <div className="flex-1 flex flex-col">{children}</div>
+        <Footer />
         <Toaster position="top-center" richColors />
       </body>
     </html>

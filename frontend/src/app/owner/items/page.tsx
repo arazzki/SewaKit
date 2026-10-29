@@ -216,32 +216,32 @@ export default function KelolaBarangPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-4 text-gray-800 sm:p-6">
+    <main className="min-h-screen bg-[#F6F5F0] p-4 text-[#141413] sm:p-6">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+          <h1 className="text-2xl font-bold text-[#141413] sm:text-3xl">
             Kelola Barang dan Paket
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-[#575653]">
             Kelola barang yang tersedia untuk disewakan di lingkungan kampus.
           </p>
         </header>
 
         <section className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Total Jenis Barang</p>
+            <p className="text-sm text-[#575653]">Total Jenis Barang</p>
             <p className="mt-2 text-2xl font-bold">{barang.length}</p>
           </div>
 
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Total Stok</p>
+            <p className="text-sm text-[#575653]">Total Stok</p>
             <p className="mt-2 text-2xl font-bold">
               {barang.reduce((total, item) => total + item.stok, 0)}
             </p>
           </div>
 
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Kategori Barang</p>
+            <p className="text-sm text-[#575653]">Kategori Barang</p>
             <p className="mt-2 text-2xl font-bold">
               {new Set(barang.map((item) => item.kategori)).size}
             </p>
@@ -252,7 +252,7 @@ export default function KelolaBarangPage() {
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <h2 className="text-xl font-semibold">Daftar Barang</h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-[#575653]">
                 Tambah, ubah, cari, dan kelola barang sewaan.
               </p>
             </div>
@@ -260,7 +260,7 @@ export default function KelolaBarangPage() {
             <button
               type="button"
               onClick={tampilForm ? resetForm : bukaFormTambah}
-              className="rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white hover:bg-blue-700"
+              className="rounded-lg bg-[#141413] px-4 py-2.5 font-medium text-white hover:bg-[#141413]"
             >
               {tampilForm ? "Tutup Form" : "+ Tambah Barang"}
             </button>
@@ -269,7 +269,7 @@ export default function KelolaBarangPage() {
           {tampilForm && (
             <form
               onSubmit={simpanBarang}
-              className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6"
+              className="mb-8 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-4 sm:p-6"
             >
               <h3 className="mb-5 text-lg font-semibold">
                 {idEdit !== null ? "Edit Barang" : "Tambah Barang Baru"}
@@ -286,7 +286,7 @@ export default function KelolaBarangPage() {
                     onChange={(e) => setNama(e.target.value)}
                     placeholder="Contoh: Sensor suhu DHT22"
                     required
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
                   />
                 </div>
 
@@ -299,7 +299,7 @@ export default function KelolaBarangPage() {
                     value={kategori}
                     onChange={(e) => setKategori(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
                   >
                     <option value="">Pilih kategori</option>
                     {daftarKategori.map((item) => (
@@ -321,7 +321,7 @@ export default function KelolaBarangPage() {
                     placeholder="Jelaskan kondisi, fungsi, atau spesifikasi barang."
                     rows={3}
                     required
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
                   />
                 </div>
 
@@ -335,9 +335,9 @@ export default function KelolaBarangPage() {
                     type="file"
                     accept="image/*"
                     onChange={pilihFoto}
-                    className="block w-full rounded-lg border border-gray-300 bg-white p-2 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:font-medium file:text-blue-700 hover:file:bg-blue-100"
+                    className="block w-full rounded-lg border border-[#DCD8CE] bg-white p-2 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-[#EFECE6] file:px-4 file:py-2 file:font-medium file:text-[#C83E2B] hover:file:bg-[#EFECE6]"
                   />
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-[#575653]">
                     Format gambar yang didukung mengikuti browser. Maksimal 2 MB.
                   </p>
 
@@ -347,7 +347,7 @@ export default function KelolaBarangPage() {
                       <img
                         src={foto}
                         alt="Pratinjau barang"
-                        className="h-40 w-40 rounded-lg border border-gray-200 bg-white object-cover"
+                        className="h-40 w-40 rounded-lg border border-[#DCD8CE] bg-white object-cover"
                       />
                       <button
                         type="button"
@@ -378,7 +378,7 @@ export default function KelolaBarangPage() {
                     onChange={(e) => setHarga(e.target.value)}
                     required
                     placeholder="150000"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
                   />
                 </div>
 
@@ -395,7 +395,7 @@ export default function KelolaBarangPage() {
                     onChange={(e) => setDeposit(e.target.value)}
                     required
                     placeholder="500000"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
                   />
                 </div>
 
@@ -412,7 +412,7 @@ export default function KelolaBarangPage() {
                     onChange={(e) => setStok(e.target.value)}
                     required
                     placeholder="3"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
                   />
                 </div>
               </div>
@@ -420,7 +420,7 @@ export default function KelolaBarangPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   type="submit"
-                  className="rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700"
+                  className="rounded-lg bg-[#141413] px-5 py-2.5 font-medium text-white hover:bg-[#141413]"
                 >
                   {idEdit !== null ? "Simpan Perubahan" : "Simpan Barang"}
                 </button>
@@ -428,7 +428,7 @@ export default function KelolaBarangPage() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 font-medium hover:bg-gray-100"
+                  className="rounded-lg border border-[#DCD8CE] bg-white px-5 py-2.5 font-medium hover:bg-[#F6F5F0]"
                 >
                   Batal
                 </button>
@@ -442,14 +442,14 @@ export default function KelolaBarangPage() {
               onChange={(e) => setPencarian(e.target.value)}
               placeholder="Cari nama atau spesifikasi barang..."
               aria-label="Cari barang"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-[#DCD8CE] px-4 py-3 outline-none focus:border-[#141413]"
             />
 
             <select
               value={filterKategori}
               onChange={(e) => setFilterKategori(e.target.value)}
               aria-label="Filter kategori barang"
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-[#DCD8CE] bg-white px-4 py-3 outline-none focus:border-[#141413]"
             >
               <option value="">Semua kategori</option>
               {daftarKategori.map((item) => (
@@ -463,7 +463,7 @@ export default function KelolaBarangPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1050px] border-collapse text-left">
               <thead>
-                <tr className="border-b bg-gray-50 text-sm text-gray-600">
+                <tr className="border-b bg-[#F6F5F0] text-sm text-[#575653]">
                   <th className="px-4 py-3 font-semibold">No.</th>
                   <th className="px-4 py-3 font-semibold">Foto</th>
                   <th className="px-4 py-3 font-semibold">Nama Barang</th>
@@ -478,24 +478,24 @@ export default function KelolaBarangPage() {
 
               <tbody>
                 {daftarBarang.map((item, index) => (
-                  <tr key={item.id} className="border-b last:border-b-0 hover:bg-gray-50">
+                  <tr key={item.id} className="border-b last:border-b-0 hover:bg-[#F6F5F0]">
                     <td className="px-4 py-4">{index + 1}</td>
                     <td className="px-4 py-4">
                       {item.foto ? (
                         <img
                           src={item.foto}
                           alt={item.nama}
-                          className="h-14 w-14 rounded-lg border border-gray-200 object-cover"
+                          className="h-14 w-14 rounded-lg border border-[#DCD8CE] object-cover"
                         />
                       ) : (
-                        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-gray-100 text-xs text-gray-400">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-[#F6F5F0] text-xs text-[#78756F]">
                           No foto
                         </div>
                       )}
                     </td>
                     <td className="max-w-[220px] px-4 py-4">
-                      <p className="font-medium text-gray-900">{item.nama}</p>
-                      <p className="mt-1 line-clamp-2 text-xs text-gray-500">
+                      <p className="font-medium text-[#141413]">{item.nama}</p>
+                      <p className="mt-1 line-clamp-2 text-xs text-[#575653]">
                         {item.spesifikasi}
                       </p>
                     </td>
@@ -513,7 +513,7 @@ export default function KelolaBarangPage() {
                       <span
                         className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ${
                           item.stok > 0
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-[#E9F3ED] text-green-700"
                             : "bg-red-100 text-red-700"
                         }`}
                       >
@@ -525,7 +525,7 @@ export default function KelolaBarangPage() {
                         <button
                           type="button"
                           onClick={() => editBarang(item)}
-                          className="font-medium text-indigo-600 hover:text-indigo-800"
+                          className="font-medium text-[#C83E2B] hover:text-[#141413]"
                         >
                           Edit
                         </button>
@@ -543,7 +543,7 @@ export default function KelolaBarangPage() {
 
                 {daftarBarang.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="px-4 py-10 text-center text-gray-500">
+                    <td colSpan={9} className="px-4 py-10 text-center text-[#575653]">
                       Tidak ada barang yang cocok dengan pencarian atau kategori.
                     </td>
                   </tr>
@@ -552,7 +552,7 @@ export default function KelolaBarangPage() {
             </table>
           </div>
 
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-[#575653]">
             Menampilkan {daftarBarang.length} dari {barang.length} jenis barang.
           </p>
         </section>
