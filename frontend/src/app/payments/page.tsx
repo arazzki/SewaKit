@@ -57,10 +57,10 @@ export default function PaymentPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold text-slate-900">
-                Fitur #9: Pembayaran (Xendit Sandbox)
+                Pembayaran Transaksi Sewa (Xendit Gateway)
               </span>
               <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-                PIC: Muhammad Fiqri Habibi
+                Escrow Terlindungi
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">

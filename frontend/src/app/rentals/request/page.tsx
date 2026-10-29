@@ -345,7 +345,7 @@ export default function RentalRequestPage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <Link
@@ -357,10 +357,10 @@ export default function RentalRequestPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-slate-900">
-                  Fitur #7: Pengajuan & Persetujuan Sewa
+                  Pengajuan & Persetujuan Sewa Alat
                 </span>
                 <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-                  PIC: Muhammad Ariq Azzaki
+                  Booking & Escrow
                 </span>
               </div>
               <p className="text-xs text-slate-500">
@@ -374,7 +374,7 @@ export default function RentalRequestPage() {
               href="/rentals/cancellation"
               className="rounded-lg border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition"
             >
-              Buka Fitur #8 (Pembatalan & No-Show) →
+              Pembatalan & No-Show →
             </Link>
             <Link
               href="/"

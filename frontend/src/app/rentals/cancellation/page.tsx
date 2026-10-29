@@ -249,7 +249,7 @@ export default function CancellationAndNoShowPage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <Link
@@ -261,10 +261,10 @@ export default function CancellationAndNoShowPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-slate-900">
-                  Fitur #8: Pembatalan & Laporan No-Show
+                  Pembatalan Pesanan & Laporan No-Show COD
                 </span>
                 <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-                  PIC: Muhammad Ariq Azzaki
+                  Proteksi Transaksi
                 </span>
               </div>
               <p className="text-xs text-slate-500">
@@ -278,7 +278,7 @@ export default function CancellationAndNoShowPage() {
               href="/rentals/request"
               className="rounded-lg border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition"
             >
-              ← Kembali ke Fitur #7 (Pengajuan Sewa)
+              ← Kembali ke Pengajuan Sewa
             </Link>
             <Link
               href="/"

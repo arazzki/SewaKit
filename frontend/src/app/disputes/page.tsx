@@ -37,10 +37,10 @@ export default function DisputesAndDepositPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold text-slate-900">
-                Fitur #10: Deposit, Denda {"&"} Sengketa
+                Manajemen Deposit, Denda {"&"} Sengketa
               </span>
               <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-                PIC: Muhammad Fiqri Habibi
+                Pusat Resolusi
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
