@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SewaKit — Platform Sewa Alat Kuliah & Praktikum P2P Kampus",
+  title: "SewaKit - Platform Sewa Alat Kuliah & Praktikum P2P Kampus",
   description:
     "Platform sewa-menyewa peralatan praktikum, perangkat IoT, kamera multimedia, dan perlengkapan acara antar mahasiswa Telkom University.",
 };
