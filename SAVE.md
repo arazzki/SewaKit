@@ -305,3 +305,4 @@ Jika Anda adalah pengembang atau AI Assistant yang melanjutkan sesi ini, berikut
    - Evaluasi setiap menit: Pembatalan otomatis pesanan yang melewati batas bayar 2 jam (*Auto-Cancel Expired Payment*).
    - Evaluasi setiap jam: Pembatalan otomatis pengajuan yang tidak direspons pemilik dalam 24 jam (*Auto-Cancel Expired Hold*).
    - Pengiriman email pengingat H-1 jadwal pengembalian alat via Mailpit.
+halo
