@@ -1,278 +1,205 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Bell, User, Menu, X, ArrowUpRight, Compass, Package, Wallet, Shield } from "lucide-react";
 
-const RENTER_FLOW_LINKS = [
+const NAV_LINKS = [
+  { href: "/", label: "Beranda" },
   { href: "/catalog", label: "Katalog Alat" },
-  { href: "/rentals/request", label: "Pengajuan & Jadwal" },
-  { href: "/payments", label: "Pembayaran" },
-  { href: "/handover", label: "Serah Terima COD" },
-  { href: "/rentals/cancellation", label: "Pembatalan & No-Show" },
-  { href: "/disputes", label: "Deposit & Sengketa" },
-  { href: "/reviews", label: "Ulasan" },
+  { href: "/rentals/request", label: "Pengajuan Sewa" },
+  { href: "/owner/items", label: "Inventaris Pemilik" },
+  { href: "/admin/dashboard", label: "Moderasi" },
 ];
 
-const OWNER_LINKS = [
-  { href: "/owner/items", label: "Kelola Barang & Paket" },
-  { href: "/owner/wallet", label: "Saldo & Penarikan Dana" },
-];
-
-const ADMIN_LINKS = [
-  { href: "/admin/dashboard", label: "Dashboard Statistik" },
-  { href: "/admin/categories", label: "Manajemen Kategori" },
+const SUB_FLOW_LINKS = [
+  { href: "/catalog", label: "01. Cari Alat" },
+  { href: "/rentals/request", label: "02. Booking & Hold 24J" },
+  { href: "/payments", label: "03. Escrow Xendit" },
+  { href: "/handover", label: "04. Serah Terima COD" },
+  { href: "/disputes", label: "05. Deposit & Klaim" },
+  { href: "/rentals/cancellation", label: "06. Pembatalan" },
+  { href: "/reviews", label: "07. Ulasan" },
+  { href: "/owner/wallet", label: "Dompet Pemilik" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(href + "/");
+    return pathname.startsWith(href);
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
-      {/* Main Top Bar */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
-        {/* Brand */}
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 font-extrabold text-white shadow-xs group-hover:bg-indigo-500 transition">
-              SK
+    <header className="sticky top-0 z-40 border-b border-[#DCD8CE] bg-[#F6F5F0]/95 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
+        {/* Brand Identity */}
+        <Link href="/" className="flex items-center gap-3 shrink-0 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#141413] bg-[#141413] font-mono text-xs font-bold tracking-tighter text-[#F6F5F0] transition group-hover:bg-[#C83E2B] group-hover:border-[#C83E2B]">
+            SK
+          </div>
+          <div className="leading-none">
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold tracking-tight text-[#141413]">
+                SewaKit
+              </span>
+              <span className="rounded border border-[#DCD8CE] bg-[#EFECE6] px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-[#575653]">
+                TEL-U P2P
+              </span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-extrabold tracking-tight text-slate-900">
-                  SewaKit
-                </span>
-                <span className="hidden sm:inline-block rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-semibold text-indigo-700 border border-indigo-100">
-                  Kampus P2P
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 hidden sm:block">
-                Sewa Alat Praktikum & Kuliah Antar-Mahasiswa
-              </p>
-            </div>
-          </Link>
-        </div>
+            <span className="mt-0.5 block text-[11px] text-[#78756F]">
+               Bursa Alat Praktikum & Riset Kampus
+            </span>
+          </div>
+        </Link>
 
-        {/* Desktop Primary Links */}
-        <nav className="hidden lg:flex items-center gap-1">
-          <Link
-            href="/"
-            className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
-              isActive("/")
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            Beranda
-          </Link>
-          <Link
-            href="/catalog"
-            className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
-              isActive("/catalog")
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            Katalog Alat
-          </Link>
-          <Link
-            href="/rentals/request"
-            className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
-              isActive("/rentals") || isActive("/payments") || isActive("/handover") || isActive("/disputes")
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            Pesanan & Sewa
-          </Link>
-          <Link
-            href="/owner/items"
-            className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
-              isActive("/owner")
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            Panel Pemilik
-          </Link>
-          <Link
-            href="/admin/dashboard"
-            className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
-              isActive("/admin")
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            Admin
-          </Link>
+        {/* Desktop Links */}
+        <nav className="hidden lg:flex items-center gap-1 rounded-full border border-[#DCD8CE] bg-[#EFECE6]/70 p-1">
+          {NAV_LINKS.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
+                  active
+                    ? "bg-[#141413] text-[#F6F5F0] shadow-xs"
+                    : "text-[#575653] hover:text-[#141413]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Right User Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Notifikasi */}
+        {/* Right Actions */}
+        <div className="hidden sm:flex items-center gap-2">
           <Link
             href="/notifications"
-            title="Notifikasi & Pengingat"
-            className={`relative flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition ${
-              isActive("/notifications")
-                ? "border-indigo-200 bg-indigo-50 text-indigo-700"
-                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+            title="Notifikasi Transaksi"
+            className={`relative flex h-9 w-9 items-center justify-center rounded-xl border transition ${
+              pathname.startsWith("/notifications")
+                ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
+                : "border-[#DCD8CE] bg-white text-[#141413] hover:border-[#141413]"
             }`}
           >
-            <span>🔔</span>
-            <span className="hidden md:inline">Notifikasi</span>
-            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
-              3
-            </span>
+            <Bell className="size-4" />
+            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[#C83E2B]" />
           </Link>
 
-          {/* Profil */}
           <Link
             href="/profile"
-            className={`hidden sm:flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition ${
-              isActive("/profile")
-                ? "border-indigo-200 bg-indigo-50 text-indigo-700"
-                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+            className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition ${
+              pathname.startsWith("/profile")
+                ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
+                : "border-[#DCD8CE] bg-white text-[#141413] hover:border-[#141413]"
             }`}
           >
-            <span>👤</span>
+            <User className="size-3.5" />
             <span>Profil</span>
           </Link>
 
-          {/* Masuk / Daftar */}
           <Link
             href="/auth/login"
-            className="rounded-xl bg-indigo-600 px-3.5 py-2 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-indigo-500 transition"
+            className="rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-medium text-[#141413] hover:border-[#141413] transition"
           >
             Masuk
           </Link>
+
           <Link
             href="/register"
-            className="hidden xl:inline-flex rounded-xl border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-xs sm:text-sm font-bold text-indigo-700 hover:bg-indigo-100 transition"
+            className="inline-flex items-center gap-1 rounded-xl bg-[#C83E2B] px-3.5 py-2 text-xs font-medium text-white hover:bg-[#AE3221] transition"
           >
-            Daftar
+            <span>Daftar</span>
+            <ArrowUpRight className="size-3.5" />
           </Link>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            type="button"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-100"
-            aria-label="Toggle Menu"
-          >
-            {mobileOpen ? "✕" : "☰"}
-          </button>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="flex lg:hidden h-9 w-9 items-center justify-center rounded-xl border border-[#DCD8CE] bg-white text-[#141413]"
+          aria-label="Toggle Menu"
+        >
+          {mobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+        </button>
       </div>
 
-      {/* Sub-Navigation Bar (Quick Access to All Marketplace Flows) */}
-      <div className="border-t border-slate-100 bg-slate-50/90">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 overflow-x-auto px-4 sm:px-6 py-2 text-xs no-scrollbar">
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px] mr-1">
-              Alur Penyewa:
-            </span>
-            {RENTER_FLOW_LINKS.map((item) => (
+      {/* Sub-bar Alur Transaksi */}
+      <div className="border-t border-[#E6E3DA] bg-[#EFECE6]/60">
+        <div className="mx-auto flex max-w-7xl items-center gap-1.5 overflow-x-auto px-4 py-1.5 sm:px-6 text-[11px] whitespace-nowrap">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F] mr-1">
+            Alur Sistem:
+          </span>
+          {SUB_FLOW_LINKS.map((step) => {
+            const active = pathname === step.href;
+            return (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-lg px-2.5 py-1 font-medium whitespace-nowrap transition ${
-                  isActive(item.href)
-                    ? "bg-indigo-600 text-white shadow-2xs"
-                    : "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                key={step.href}
+                href={step.href}
+                className={`rounded-md px-2 py-0.5 font-mono transition ${
+                  active
+                    ? "bg-[#141413] text-[#F6F5F0] font-semibold"
+                    : "text-[#575653] hover:bg-[#E2DFD7]/60 hover:text-[#141413]"
                 }`}
               >
-                {item.label}
+                {step.label}
               </Link>
-            ))}
-          </div>
-
-          <div className="hidden xl:flex items-center gap-1.5 shrink-0 border-l border-slate-200 pl-4">
-            <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px] mr-1">
-              Pemilik:
-            </span>
-            {OWNER_LINKS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-lg px-2.5 py-1 font-medium whitespace-nowrap transition ${
-                  isActive(item.href)
-                    ? "bg-indigo-600 text-white shadow-2xs"
-                    : "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-4">
-          <div className="space-y-1">
-            <p className="px-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              MenuPenyewa
-            </p>
-            <div className="grid grid-cols-2 gap-1.5">
-              {RENTER_FLOW_LINKS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold ${
-                    isActive(item.href)
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-slate-700 hover:bg-slate-100"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-t border-[#DCD8CE] bg-[#F6F5F0] px-4 py-4 space-y-3">
+          <div className="grid grid-cols-1 gap-1">
+            {NAV_LINKS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`rounded-xl px-3.5 py-2.5 text-sm font-medium ${
+                  isActive(item.href)
+                    ? "bg-[#141413] text-[#F6F5F0]"
+                    : "text-[#141413] hover:bg-[#EFECE6]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
-
-          <div className="space-y-1 border-t border-slate-100 pt-3">
-            <p className="px-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Panel Pemilik & Admin
-            </p>
-            <div className="grid grid-cols-2 gap-1.5">
-              {[...OWNER_LINKS, ...ADMIN_LINKS].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold ${
-                    isActive(item.href)
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-slate-700 hover:bg-slate-100"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex gap-2 border-t border-slate-100 pt-3">
+          <div className="flex flex-wrap gap-2 border-t border-[#DCD8CE] pt-3">
+            <Link
+              href="/notifications"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-xl border border-[#DCD8CE] bg-white px-3 py-2 text-xs font-medium text-[#141413]"
+            >
+              Notifikasi
+            </Link>
             <Link
               href="/profile"
-              onClick={() => setMobileOpen(false)}
-              className="flex-1 rounded-lg border border-slate-200 py-2 text-center text-xs font-semibold text-slate-700"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-xl border border-[#DCD8CE] bg-white px-3 py-2 text-xs font-medium text-[#141413]"
             >
-              Profil Saya
+              Profil
+            </Link>
+            <Link
+              href="/auth/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-xl border border-[#DCD8CE] bg-white px-3 py-2 text-xs font-medium text-[#141413]"
+            >
+              Masuk
             </Link>
             <Link
               href="/register"
-              onClick={() => setMobileOpen(false)}
-              className="flex-1 rounded-lg bg-indigo-50 py-2 text-center text-xs font-semibold text-indigo-700"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-xl bg-[#C83E2B] px-3 py-2 text-xs font-medium text-white"
             >
               Daftar Akun
             </Link>
