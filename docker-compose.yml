@@ -47,9 +47,20 @@ services:
       MAIL_MAILER: smtp
       MAIL_HOST: mailpit
       MAIL_PORT: 1025
-    volumes:
-      - ./backend:/var/www/html
-      - backend_vendor:/var/www/html/vendor
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/app
+          target: /var/www/html/app
+        - action: sync
+          path: ./backend/routes
+          target: /var/www/html/routes
+        - action: sync
+          path: ./backend/config
+          target: /var/www/html/config
+        - action: sync
+          path: ./backend/database
+          target: /var/www/html/database
     depends_on:
       db:
         condition: service_healthy
