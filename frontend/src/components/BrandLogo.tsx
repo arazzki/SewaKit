@@ -11,23 +11,20 @@ export interface BrandLogoProps {
 
 const SIZE_MAP = {
   sm: {
-    box: "h-7 w-7 rounded-lg text-[10px]",
+    icon: "h-7 w-7",
     wordmark: "text-sm",
-    badge: "px-1.5 py-0.5 text-[9px]",
     tagline: "text-[10px]",
     gap: "gap-2.5",
   },
   md: {
-    box: "h-9 w-9 rounded-xl text-xs",
+    icon: "h-9 w-9",
     wordmark: "text-base",
-    badge: "px-1.5 py-0.5 text-[10px]",
     tagline: "text-[11px]",
     gap: "gap-3",
   },
   lg: {
-    box: "h-11 w-11 rounded-xl text-sm",
+    icon: "h-11 w-11",
     wordmark: "text-lg",
-    badge: "px-2 py-0.5 text-[10px]",
     tagline: "text-xs",
     gap: "gap-3.5",
   },
@@ -45,40 +42,68 @@ export default function BrandLogo({
 
   const content = (
     <>
-      <div
+      {/* Official SewaKit Vector Emblem (Modular P2P S-Trace) */}
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
         className={cx(
-          "flex shrink-0 items-center justify-center border font-mono font-black tracking-tighter text-[#F6F5F0] transition-colors duration-200",
-          isDark
-            ? "border-[#262523] bg-[#141413] group-hover:border-[#C83E2B] group-hover:bg-[#C83E2B]"
-            : "border-[#141413] bg-[#141413] group-hover:border-[#C83E2B] group-hover:bg-[#C83E2B]",
-          s.box,
+          "shrink-0 transition-transform duration-200 group-hover:scale-[1.03]",
+          s.icon,
         )}
       >
-        SK
-      </div>
+        <rect
+          width="40"
+          height="40"
+          rx="10"
+          className={cx(
+            "transition-colors duration-200",
+            isDark
+              ? "fill-[#1D1D1B] group-hover:fill-[#262523]"
+              : "fill-[#141413] group-hover:fill-[#1F1E1C]",
+          )}
+        />
+        <rect
+          x="1"
+          y="1"
+          width="38"
+          height="38"
+          rx="9"
+          strokeWidth="1"
+          className={cx(
+            "transition-colors duration-200",
+            isDark
+              ? "stroke-[#33312E] group-hover:stroke-[#C83E2B]/60"
+              : "stroke-[#2C2B28] group-hover:stroke-[#C83E2B]/60",
+          )}
+        />
+        <path
+          d="M 21.8 11.5 H 14 A 2.8 2.8 0 0 0 11.2 14.3 V 17.2 A 2.8 2.8 0 0 0 14 20 H 26 A 2.8 2.8 0 0 1 28.8 22.8 V 25.7 A 2.8 2.8 0 0 1 26 28.5 H 18.2"
+          stroke="#F6F5F0"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx="27.5" cy="11.5" r="2.6" fill="#C83E2B" />
+        <circle
+          cx="12.5"
+          cy="28.5"
+          r="2.2"
+          fill={isDark ? "#8E8B83" : "#D5D2CA"}
+        />
+      </svg>
+
       <div className="min-w-0 leading-none">
-        <div className="flex items-center gap-2">
-          <span
-            className={cx(
-              "font-bold tracking-tight",
-              isDark ? "text-[#F6F5F0]" : "text-[#141413]",
-              s.wordmark,
-            )}
-          >
-            SewaKit
-          </span>
-          <span
-            className={cx(
-              "rounded-md border font-mono font-semibold uppercase tracking-wider",
-              isDark
-                ? "border-[#2A2927] bg-[#1D1D1B] text-[#D5D2CA]"
-                : "border-[#DCD8CE] bg-[#EFECE6] text-[#575653]",
-              s.badge,
-            )}
-          >
-            TEL-U P2P
-          </span>
-        </div>
+        <span
+          className={cx(
+            "block font-extrabold tracking-tight",
+            isDark ? "text-[#F6F5F0]" : "text-[#141413]",
+            s.wordmark,
+          )}
+        >
+          SewaKit
+        </span>
         {showTagline && (
           <span
             className={cx(
@@ -98,7 +123,11 @@ export default function BrandLogo({
     return (
       <Link
         href={href}
-        className={cx("group inline-flex items-center shrink-0", s.gap, className)}
+        className={cx(
+          "group inline-flex shrink-0 items-center",
+          s.gap,
+          className,
+        )}
       >
         {content}
       </Link>
@@ -106,7 +135,9 @@ export default function BrandLogo({
   }
 
   return (
-    <div className={cx("group inline-flex items-center shrink-0", s.gap, className)}>
+    <div
+      className={cx("group inline-flex shrink-0 items-center", s.gap, className)}
+    >
       {content}
     </div>
   );

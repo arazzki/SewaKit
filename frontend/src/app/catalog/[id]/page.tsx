@@ -251,6 +251,17 @@ async function ItemDetail({
               <span className="font-bold text-[#1B4332]">&lt; 25 Menit</span>
             </div>
           </div>
+
+          <Link
+            href="/reviews"
+            className="mt-3 flex w-full items-center justify-between rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3.5 py-2.5 text-xs font-semibold text-[#141413] transition hover:border-[#141413] hover:bg-white"
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <Star className="size-3.5 fill-[#C83E2B] text-[#C83E2B]" />
+              <span>Lihat Ulasan &amp; Reputasi 2 Arah</span>
+            </span>
+            <span className="font-mono text-[#C83E2B]">→</span>
+          </Link>
         </div>
       </aside>
     </div>

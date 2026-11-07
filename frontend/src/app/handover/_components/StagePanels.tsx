@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import {
   Copy,
@@ -9,6 +10,9 @@ import {
   AlertTriangle,
   Clock,
   CheckCircle2,
+  Star,
+  Wallet,
+  Scale,
 } from "lucide-react";
 import {
   formatDate,
@@ -431,20 +435,49 @@ export function ClosedPanel({ rental }: { rental: HandoverRental }) {
   return (
     <div className="space-y-6">
       {rental.status === "SENGKETA" ? (
-        <InfoBox
-          tone="rose"
-          icon={<AlertTriangle className="size-4 text-[#B42318]" />}
-        >
-          <strong>Eskalasi Mediasi Admin Aktif.</strong> Alasan keberatan
-          Penyewa: &ldquo;{rental.disputeReason}&rdquo;. Deposit dibekukan sementara hingga keputusan moderator keluar.
-        </InfoBox>
+        <div className="space-y-3">
+          <InfoBox
+            tone="rose"
+            icon={<AlertTriangle className="size-4 text-[#B42318]" />}
+          >
+            <strong>Eskalasi Mediasi Admin Aktif.</strong> Alasan keberatan
+            Penyewa: &ldquo;{rental.disputeReason}&rdquo;. Deposit dibekukan sementara hingga keputusan moderator keluar.
+          </InfoBox>
+          <div className="flex flex-wrap gap-2.5">
+            <Link
+              href="/disputes"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#B42318] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#912018]"
+            >
+              <Scale className="size-3.5" />
+              <span>Buka Ruang Mediasi &amp; Sengketa →</span>
+            </Link>
+          </div>
+        </div>
       ) : (
-        <InfoBox
-          tone="emerald"
-          icon={<CheckCircle2 className="size-4 text-[#1B4332]" />}
-        >
-          Protokol serah terima pengembalian selesai dan disahkan kedua pihak. Pencairan pendapatan pemilik serta pengembalian deposit telah diteruskan otomatis oleh sistem Escrow.
-        </InfoBox>
+        <div className="space-y-3">
+          <InfoBox
+            tone="emerald"
+            icon={<CheckCircle2 className="size-4 text-[#1B4332]" />}
+          >
+            Protokol serah terima pengembalian selesai dan disahkan kedua pihak. Pencairan pendapatan pemilik serta pengembalian deposit telah diteruskan otomatis oleh sistem Escrow.
+          </InfoBox>
+          <div className="flex flex-wrap gap-2.5">
+            <Link
+              href="/reviews"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+            >
+              <Star className="size-3.5" />
+              <span>Beri Rating &amp; Ulasan Transaksi →</span>
+            </Link>
+            <Link
+              href="/owner/wallet"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#141413] bg-white px-4 py-2.5 text-xs font-semibold text-[#141413] transition hover:bg-[#EFECE6]"
+            >
+              <Wallet className="size-3.5" />
+              <span>Lihat Pencairan Dompet Pemilik →</span>
+            </Link>
+          </div>
+        </div>
       )}
       <ReturnSummary rental={rental} />
       <ChecklistComparison

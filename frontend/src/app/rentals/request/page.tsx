@@ -819,10 +819,17 @@ function RentalRequestContent() {
                       <p className="text-xs text-[#575653]">
                         Menunggu penyewa melunasi invoice Xendit dalam batas 2 jam.
                       </p>
+                      <Link
+                        href="/payments"
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#C83E2B] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#AE3221]"
+                      >
+                        <span>Lanjut Pembayaran Escrow (Xendit)</span>
+                        <ArrowRight className="size-3.5" />
+                      </Link>
                       <button
                         type="button"
                         onClick={() => handleSimulatePaid(req.id)}
-                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#141413] bg-white px-4 py-2 text-xs font-semibold text-[#141413] transition hover:bg-[#EFECE6]"
                       >
                         <Zap className="size-3.5" />
                         <span>Simulasikan Lunas (Buka Kontak)</span>

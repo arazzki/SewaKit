@@ -124,23 +124,31 @@ export default function PaymentPage() {
         title="Checkout Escrow Xendit Sandbox"
         description="Dana sewa dan deposit jaminan disimpan aman pada akun penampung SewaKit hingga serah terima fisik COD terverifikasi."
         actions={
-          !isPaid ? (
-            <div className="inline-flex items-center gap-2.5 rounded-xl border border-[#E9C893] bg-[#FEF7EC] px-3.5 py-2">
-              <Timer className="size-4 text-[#9A5B13]" />
-              <div className="leading-none">
-                <span className="block font-mono text-[9px] font-semibold uppercase tracking-widest text-[#9A5B13]">
-                  BATAS BAYAR 2 JAM
-                </span>
-                <span className="font-mono text-sm font-bold text-[#141413]">
-                  {formatTimer(secondsLeft)}
-                </span>
+          <>
+            <Link
+              href="/rentals/request"
+              className="rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#141413] transition hover:bg-[#EFECE6]"
+            >
+              ← Pengajuan Sewa
+            </Link>
+            {!isPaid ? (
+              <div className="inline-flex items-center gap-2.5 rounded-xl border border-[#E9C893] bg-[#FEF7EC] px-3.5 py-2">
+                <Timer className="size-4 text-[#9A5B13]" />
+                <div className="leading-none">
+                  <span className="block font-mono text-[9px] font-semibold uppercase tracking-widest text-[#9A5B13]">
+                    BATAS BAYAR 2 JAM
+                  </span>
+                  <span className="font-mono text-sm font-bold text-[#141413]">
+                    {formatTimer(secondsLeft)}
+                  </span>
+                </div>
               </div>
-            </div>
-          ) : (
-            <Badge variant="available" dot className="px-3 py-1.5 text-xs">
-              LUNAS TERVERIFIKASI WEBHOOK
-            </Badge>
-          )
+            ) : (
+              <Badge variant="available" dot className="px-3 py-1.5 text-xs">
+                LUNAS TERVERIFIKASI WEBHOOK
+              </Badge>
+            )}
+          </>
         }
       />
 
