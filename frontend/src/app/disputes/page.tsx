@@ -1,257 +1,318 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  ShieldCheck,
+  Scale,
+  CheckCircle2,
+  AlertTriangle,
+  Plus,
+  X,
+  ArrowLeft,
+} from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import Badge from "@/components/ui/badge";
+import { formatRupiah } from "@/lib/format";
 
 export default function DisputesAndDepositPage() {
-  const [activeTab, setActiveTab] = useState<'deposit' | 'sengketa'>('deposit');
+  const [activeTab, setActiveTab] = useState<"deposit" | "sengketa">("deposit");
   const [showClaimModal, setShowClaimModal] = useState(false);
-  const [claimReason, setClaimReason] = useState('');
-  const [claimAmount, setClaimAmount] = useState('50000');
+  const [claimReason, setClaimReason] = useState("");
+  const [claimAmount, setClaimAmount] = useState("50000");
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
 
-  const [depositData, setDepositData] = useState({
+  const [depositData] = useState({
     totalHeld: 150000,
-    orderId: 'REQ-2026-089',
-    itemName: 'Oscilloscope Digital Rigol DS1054Z',
-    status: 'DITAHAN_SISTEM',
+    orderId: "REQ-2026-089",
+    itemName: "Rigol DS1054Z Digital Oscilloscope (50 MHz, 4 Ch)",
+    status: "DITAHAN_ESCROW",
     dendaKeterlambatan: 0,
     dendaKerusakan: 0,
   });
 
+  const netRefund =
+    depositData.totalHeld -
+    depositData.dendaKeterlambatan -
+    depositData.dendaKerusakan;
+
   const handleWithdraw = () => {
-    setAlertMsg('Pengajuan pengembalian deposit berhasil! Dana Rp ' + depositData.totalHeld.toLocaleString('id-ID') + ' diteruskan ke rekening penyewa.');
+    setAlertMsg(
+      `Pencairan deposit berhasil diproses. Dana ${formatRupiah(
+        netRefund,
+      )} diteruskan otomatis ke rekening penyewa.`,
+    );
   };
 
-  const handleSubmiClaim = (e: React.FormEvent) => {
+  const handleSubmitClaim = (e: React.FormEvent) => {
     e.preventDefault();
     setShowClaimModal(false);
-    setAlertMsg('Klaim sengketa berhasil diajukan ke Admin SewaKit! Tim Admin akan meninjau foto kondisi barang saat serah terima.');
+    setAlertMsg(
+      "Klaim sengketa sebesar " +
+        formatRupiah(Number(claimAmount)) +
+        " diteruskan ke Moderator SewaKit untuk audit perbandingan foto serah terima.",
+    );
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header & Navigasi */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#DCD8CE] shadow-xs">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-[#141413]">
-                Manajemen Deposit, Denda {"&"} Sengketa
-              </span>
-              <span className="rounded-full bg-[#EFECE6] px-2.5 py-0.5 text-xs font-semibold text-[#C83E2B]">
-                Pusat Resolusi
-              </span>
-            </div>
-            <p className="text-xs text-[#575653] mt-1">
-              Escrow Penahanan Deposit Jaminan • Otomatisasi Denda • Penyelesaian Sengketa Admin
-            </p>
-          </div>
+    <div className="flex min-h-screen flex-col bg-[#F6F5F0]">
+      <PageHeader
+        eyebrow="05 / PROTEKSI DEPOSIT & MEDIASI SENGKETA"
+        title="Manajemen Deposit Escrow & Resolusi Klaim"
+        description="Transparansi perhitungan pengembalian jaminan penyewa, pemotongan denda terukur, dan eskalasi bukti fisik ke moderator kampus."
+        actions={
+          <Link
+            href="/handover"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#141413] bg-white px-4 py-2.5 text-xs font-medium text-[#141413] transition hover:bg-[#EFECE6]"
+          >
+            <ArrowLeft className="size-3.5" />
+            <span>Protokol Serah Terima</span>
+          </Link>
+        }
+      />
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="rounded-lg border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#575653] hover:bg-[#EFECE6] transition"
-            >
-              ← Kembali ke Beranda
-            </Link>
-          </div>
-        </div>
-
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
         {alertMsg && (
-          <div className="rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] p-4 text-xs font-medium text-[#1B4332] flex justify-between items-center">
-            <span>✓ {alertMsg}</span>
-            <button onClick={() => setAlertMsg(null)} className="underline font-bold ml-4">
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] px-4 py-3 text-xs font-medium text-[#1B4332]">
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="size-4 shrink-0" />
+              <span>{alertMsg}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setAlertMsg(null)}
+              className="font-mono font-semibold underline"
+            >
               Tutup
             </button>
           </div>
         )}
 
-        {/* Tab Pilihan */}
-        <div className="flex gap-2 border-b border-[#DCD8CE] pb-2">
+        {/* Minimalist Segmented Tabs */}
+        <div className="flex flex-wrap gap-2 border-b border-[#DCD8CE] pb-4">
           <button
-            onClick={() => setActiveTab('deposit')}
-            className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
-              activeTab === 'deposit'
-                ? 'bg-[#141413] text-white shadow-xs'
-                : 'bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]'
+            type="button"
+            onClick={() => setActiveTab("deposit")}
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition ${
+              activeTab === "deposit"
+                ? "bg-[#141413] text-[#F6F5F0]"
+                : "border border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413] hover:text-[#141413]"
             }`}
           >
-            1. Status Penahanan Deposit (Escrow)
+            <ShieldCheck className="size-3.5" />
+            <span>01. Buku Besar Penahanan Deposit</span>
           </button>
           <button
-            onClick={() => setActiveTab('sengketa')}
-            className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
-              activeTab === 'sengketa'
-                ? 'bg-[#141413] text-white shadow-xs'
-                : 'bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]'
+            type="button"
+            onClick={() => setActiveTab("sengketa")}
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition ${
+              activeTab === "sengketa"
+                ? "bg-[#141413] text-[#F6F5F0]"
+                : "border border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413] hover:text-[#141413]"
             }`}
           >
-            2. Pusat Resolusi Sengketa {"&"} Klaim
+            <Scale className="size-3.5" />
+            <span>02. Pusat Mediasi Sengketa &amp; Klaim</span>
           </button>
         </div>
 
         {/* TAB 1: KELOLA DEPOSIT */}
-        {activeTab === 'deposit' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-4">
-              <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE] shadow-xs">
-                <div className="flex justify-between items-start mb-4">
+        {activeTab === "deposit" && (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <div className="lg:col-span-8">
+              <div className="overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EFECE6] bg-[#FBF9F5] px-6 py-4">
                   <div>
-                    <span className="font-mono text-xs bg-[#EFECE6] px-2 py-0.5 rounded text-[#575653] font-bold">
+                    <span className="font-mono text-xs font-bold text-[#78756F]">
                       {depositData.orderId}
                     </span>
-                    <h2 className="text-base font-bold text-[#141413] mt-1">
+                    <h2 className="mt-0.5 text-base font-bold text-[#141413]">
                       {depositData.itemName}
                     </h2>
                   </div>
-                  <span className="bg-[#E9F3ED] text-[#1B4332] text-xs px-2.5 py-1 rounded-full font-semibold">
-                    Aman di Escrow
-                  </span>
+                  <Badge variant="available" dot>
+                    Dana Terkunci di Escrow
+                  </Badge>
                 </div>
 
-                <div className="border-t border-b border-[#EFECE6] py-4 my-4 space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-[#575653]">Nominal Deposit Disetor:</span>
-                    <strong className="text-[#141413]">
-                      Rp {depositData.totalHeld.toLocaleString('id-ID')}
-                    </strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#575653]">Potongan Denda Keterlambatan:</span>
-                    <strong className="text-[#141413]">
-                      Rp {depositData.dendaKeterlambatan.toLocaleString('id-ID')}
-                    </strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#575653]">Potongan Klaim Kerusakan Fisik:</span>
-                    <strong className="text-[#141413]">
-                      Rp {depositData.dendaKerusakan.toLocaleString('id-ID')}
-                    </strong>
-                  </div>
-                  <div className="flex justify-between pt-2 border-t border-[#EFECE6] text-sm">
-                    <span className="font-bold text-[#141413]">Sisa Deposit Siap Dicairkan:</span>
-                    <strong className="text-[#1B4332] font-extrabold">
-                      Rp {(depositData.totalHeld - depositData.dendaKeterlambatan - depositData.dendaKerusakan).toLocaleString('id-ID')}
-                    </strong>
-                  </div>
-                </div>
+                <div className="p-6">
+                  <dl className="space-y-3 border-b border-[#EFECE6] pb-5 text-xs">
+                    <div className="flex justify-between">
+                      <dt className="text-[#575653]">
+                        Setoran Awal Deposit Jaminan
+                      </dt>
+                      <dd className="font-mono font-semibold text-[#141413]">
+                        {formatRupiah(depositData.totalHeld)}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-[#575653]">
+                        Potongan Denda Keterlambatan
+                      </dt>
+                      <dd className="font-mono font-semibold text-[#141413]">
+                        -{formatRupiah(depositData.dendaKeterlambatan)}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-[#575653]">
+                        Potongan Kompensasi Kerusakan Fisik
+                      </dt>
+                      <dd className="font-mono font-semibold text-[#141413]">
+                        -{formatRupiah(depositData.dendaKerusakan)}
+                      </dd>
+                    </div>
+                  </dl>
 
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleWithdraw}
-                    className="flex-1 bg-[#141413] text-white py-2.5 rounded-xl font-bold text-xs hover:bg-[#141413] transition"
-                  >
-                    Konfirmasi Pencairan Deposit ke Penyewa
-                  </button>
-                  <button
-                    onClick={() => setShowClaimModal(true)}
-                    className="border border-rose-200 bg-rose-50 text-rose-700 px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-rose-100 transition"
-                  >
-                    Klaim Denda / Kerusakan
-                  </button>
+                  <div className="my-5 flex items-baseline justify-between">
+                    <span className="text-sm font-bold text-[#141413]">
+                      Estimasi Pengembalian Bersih ke Penyewa
+                    </span>
+                    <span className="font-mono text-2xl font-bold text-[#1B4332]">
+                      {formatRupiah(netRefund)}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2.5 sm:flex-row">
+                    <button
+                      type="button"
+                      onClick={handleWithdraw}
+                      className="flex-1 rounded-xl bg-[#141413] px-4 py-3 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#1B4332]"
+                    >
+                      Rilis &amp; Kembalikan Deposit ke Penyewa
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowClaimModal(true)}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#FECDCA] bg-[#FEF3F2] px-4 py-3 text-xs font-semibold text-[#B42318] transition hover:bg-[#B42318] hover:text-white"
+                    >
+                      <AlertTriangle className="size-3.5" />
+                      <span>Ajukan Klaim Kerusakan</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="bg-white rounded-2xl p-5 border border-[#DCD8CE] text-xs space-y-3">
-                <span className="font-bold text-[#141413] block">
-                  Ketentuan Perlindungan Deposit:
+            <aside className="lg:col-span-4">
+              <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 space-y-3 text-xs">
+                <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
+                  ATURAN ESCROW SEWAKIT
                 </span>
-                <p className="text-[#575653] leading-relaxed">
-                  1. Uang deposit ditahan oleh sistem SewaKit selama masa transaksi COD berlangsung.
-                </p>
-                <p className="text-[#575653] leading-relaxed">
-                  2. Jika barang kembali lengkap dan sesuai checklist fisik awal, deposit kembali 100% utuh ke saldo penyewa.
-                </p>
-                <p className="text-[#575653] leading-relaxed">
-                  3. Total maksimal denda keterlambatan/kerusakan dibatasi <strong>sebesar nominal deposit jaminan</strong>.
-                </p>
+                <h3 className="text-sm font-bold text-[#141413]">
+                  Perlindungan Dua Arah
+                </h3>
+                <ol className="space-y-2.5 text-[#575653] leading-relaxed">
+                  <li>
+                    <strong className="font-mono text-[#141413]">01.</strong>{" "}
+                    Dana jaminan dibekukan pada rekening penampung selama masa sewa aktif.
+                  </li>
+                  <li>
+                    <strong className="font-mono text-[#141413]">02.</strong>{" "}
+                    Apabila checklist pengembalian cocok dengan kondisi awal, dana kembali 100% tanpa potongan.
+                  </li>
+                  <li>
+                    <strong className="font-mono text-[#141413]">03.</strong>{" "}
+                    Plafon maksimal klaim denda dibatasi sebesar nilai deposit ({formatRupiah(depositData.totalHeld)}).
+                  </li>
+                </ol>
               </div>
-            </div>
+            </aside>
           </div>
         )}
 
         {/* TAB 2: SENGKETA */}
-        {activeTab === 'sengketa' && (
-          <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE] shadow-xs space-y-4">
-            <div className="flex justify-between items-center">
+        {activeTab === "sengketa" && (
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6 space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-[#141413]">
-                  Daftar Sengketa {"&"} Keberatan Aktif
-                </h3>
-                <p className="text-xs text-[#575653]">
-                  Sengketa diputuskan secara adil oleh Admin berdasarkan perbandingan foto serah terima.
+                <h2 className="text-base font-bold text-[#141413]">
+                  Antrian Mediasi Sengketa Aktif
+                </h2>
+                <p className="mt-0.5 text-xs text-[#575653]">
+                  Keputusan akhir ditetapkan oleh Moderator berdasarkan bukti foto timestamp saat pengambilan vs pengembalian COD.
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setShowClaimModal(true)}
-                className="bg-rose-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-500 transition"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#C83E2B] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#AE3221]"
               >
-                + Ajukan Sengketa Baru
+                <Plus className="size-3.5" />
+                <span>Buat Tiket Klaim Baru</span>
               </button>
             </div>
 
-            <div className="rounded-xl border border-dashed border-[#DCD8CE] p-8 text-center text-xs text-[#78756F]">
-              Belum ada sengketa transaksi yang sedang berjalan. Semua transaksi dalam status aman.
+            <div className="rounded-xl border border-dashed border-[#DCD8CE] bg-[#FBF9F5] py-12 text-center">
+              <Scale className="mx-auto mb-2 size-6 text-[#78756F]" />
+              <p className="text-xs font-semibold text-[#141413]">
+                Tidak ada tiket sengketa yang sedang terbuka
+              </p>
+              <p className="mt-1 text-xs text-[#78756F]">
+                Seluruh transaksi aktif berjalan normal sesuai protokol serah terima.
+              </p>
             </div>
           </div>
         )}
 
         {/* MODAL KLAIM */}
         {showClaimModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-[#DCD8CE]">
-              <h3 className="text-base font-bold text-[#141413] mb-1">
-                Formulir Pengajuan Klaim / Sengketa
-              </h3>
-              <p className="text-xs text-[#575653] mb-4">
-                Diajukan jika ada keterlambatan pengembalian atau kerusakan komponen fisik alat.
-              </p>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#141413]/45 p-4 backdrop-blur-[2px]">
+            <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white shadow-xl">
+              <div className="flex items-center justify-between border-b border-[#EFECE6] bg-[#FBF9F5] px-5 py-3.5">
+                <h3 className="text-sm font-bold text-[#141413]">
+                  Formulir Pengajuan Klaim Deposit
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowClaimModal(false)}
+                  className="rounded-lg p-1 text-[#78756F] hover:bg-[#EFECE6] hover:text-[#141413]"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
 
-              <form onSubmit={handleSubmiClaim} className="space-y-4 text-xs">
+              <form onSubmit={handleSubmitClaim} className="space-y-4 p-5 text-xs">
                 <div>
-                  <label className="block font-bold text-[#575653] mb-1">
-                    Nominal Denda / Klaim yang Dituntut (Rp)
+                  <label className="mb-1.5 block font-semibold text-[#141413]">
+                    Nominal Kompensasi yang Diajukan (Rp)
                   </label>
                   <input
                     type="number"
                     max={depositData.totalHeld}
                     value={claimAmount}
                     onChange={(e) => setClaimAmount(e.target.value)}
-                    className="w-full rounded-xl border border-[#DCD8CE] px-3 py-2 text-sm text-[#141413] focus:outline-none focus:border-[#141413]"
+                    className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-white px-3.5 font-mono text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
                   />
-                  <span className="text-[11px] text-[#78756F]">
-                    Maksimal klaim: Rp {depositData.totalHeld.toLocaleString('id-ID')} (sebesar deposit).
+                  <span className="mt-1 block font-mono text-[10px] text-[#78756F]">
+                    Batas klaim: {formatRupiah(depositData.totalHeld)} (100% nilai deposit)
                   </span>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-[#575653] mb-1">
-                    Alasan Klaim / Bukti Kerusakan
+                  <label className="mb-1.5 block font-semibold text-[#141413]">
+                    Kronologi &amp; Rincian Kerusakan Komponen
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={claimReason}
                     onChange={(e) => setClaimReason(e.target.value)}
-                    placeholder="Contoh: Kabel probe osiloskop putus saat pengembalian barang..."
-                    className="w-full rounded-xl border border-[#DCD8CE] px-3 py-2 text-xs text-[#141413] focus:outline-none focus:border-[#141413]"
+                    placeholder="Contoh: Probe channel 2 patah pada pengait ujung saat pengembalian di Lobi TULT..."
+                    className="w-full rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2.5 text-xs text-[#141413] focus:border-[#141413] focus:outline-none"
                   />
                 </div>
 
-                <div className="flex gap-2 pt-2">
+                <div className="flex gap-2 pt-1">
                   <button
                     type="submit"
-                    className="flex-1 bg-rose-600 text-white py-2.5 rounded-xl font-bold hover:bg-rose-500 transition"
+                    className="flex-1 rounded-xl bg-[#B42318] py-2.5 font-semibold text-white transition hover:bg-[#912018]"
                   >
-                    Kirim Klaim ke Admin
+                    Kirim Klaim ke Moderator
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowClaimModal(false)}
-                    className="border border-[#DCD8CE] bg-white px-4 py-2.5 rounded-xl font-semibold text-[#575653]"
+                    className="rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 font-medium text-[#575653] hover:bg-[#F6F5F0]"
                   >
                     Batal
                   </button>
@@ -260,7 +321,7 @@ export default function DisputesAndDepositPage() {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

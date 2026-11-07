@@ -1,13 +1,30 @@
-
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import {
+  Wallet,
+  TrendingUp,
+  Clock,
+  CheckCircle2,
+  ArrowUpRight,
+  Building2,
+  AlertCircle,
+  X,
+  Package,
+} from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import Badge from "@/components/ui/badge";
+import SearchInput from "@/components/ui/search-input";
+import DataTable, { type DataTableColumn } from "@/components/ui/data-table";
+import { formatRupiah } from "@/lib/format";
 
 type StatusTransaksi = "Berhasil" | "Diproses" | "Ditolak";
 type TipeTransaksi = "masuk" | "keluar";
 
 type Transaksi = {
   id: number;
+  kode: string;
   tanggal: string;
   keterangan: string;
   nominal: number;
@@ -16,97 +33,92 @@ type Transaksi = {
   rekening?: string;
 };
 
-const saldoAwal = 425000;
+const SALDO_AWAL = 425000;
 
-const transaksiAwal: Transaksi[] = [
+const WEEKLY_REVENUE = [
+  { day: "Sen", amount: 45000 },
+  { day: "Sel", amount: 90000 },
+  { day: "Rab", amount: 35000 },
+  { day: "Kam", amount: 120000 },
+  { day: "Jum", amount: 150000 },
+  { day: "Sab", amount: 75000 },
+  { day: "Min", amount: 100000 },
+];
+
+const TRANSAKSI_AWAL: Transaksi[] = [
   {
     id: 1,
-    tanggal: "28 Okt 2026",
-    keterangan: "Pendapatan sewa Kamera Canon EOS",
+    kode: "STL-2026-401",
+    tanggal: "07 Nov 2026",
+    keterangan: "Rilis Escrow sewa Kamera Sony Alpha A6400 (2 Hari)",
     nominal: 150000,
     tipe: "masuk",
     status: "Berhasil",
   },
   {
     id: 2,
-    tanggal: "26 Okt 2026",
-    keterangan: "Pendapatan sewa Proyektor Epson",
-    nominal: 100000,
+    kode: "STL-2026-398",
+    tanggal: "05 Nov 2026",
+    keterangan: "Rilis Escrow sewa Rigol DS1054Z Oscilloscope",
+    nominal: 135000,
     tipe: "masuk",
     status: "Berhasil",
   },
   {
     id: 3,
-    tanggal: "25 Okt 2026",
-    keterangan: "Penarikan dana ke BCA",
+    kode: "WD-2026-112",
+    tanggal: "03 Nov 2026",
+    keterangan: "Penarikan dana (Payout) ke Rekening BCA",
     nominal: 75000,
     tipe: "keluar",
     status: "Diproses",
-    rekening: "BCA •••• 1234",
+    rekening: "BCA •••• 7890",
   },
-];
-
-const rekeningContoh = [
-  { id: "bca", nama: "BCA", nomor: "1234567890", pemilik: "Pemilik Akun" },
-  { id: "bri", nama: "BRI", nomor: "0987654321", pemilik: "Pemilik Akun" },
-  { id: "bni", nama: "BNI", nomor: "1122334455", pemilik: "Pemilik Akun" },
   {
-    id: "mandiri",
-    nama: "Mandiri",
-    nomor: "5566778899",
-    pemilik: "Pemilik Akun",
+    id: 4,
+    kode: "STL-2026-380",
+    tanggal: "01 Nov 2026",
+    keterangan: "Rilis Escrow sewa Proyektor Portabel Full HD",
+    nominal: 120000,
+    tipe: "masuk",
+    status: "Berhasil",
   },
 ];
 
-function formatRupiah(nilai: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(nilai);
-}
-
-function formatTanggal() {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date());
-}
+const REKENING_TUJUAN = [
+  { id: "bca", nama: "BCA", nomor: "1234567890", pemilik: "Triansyah Danishwara" },
+  { id: "mandiri", nama: "Mandiri", nomor: "5566778899", pemilik: "Triansyah Danishwara" },
+  { id: "bni", nama: "BNI", nomor: "1122334455", pemilik: "Triansyah Danishwara" },
+  { id: "jago", nama: "Bank Jago", nomor: "1099887766", pemilik: "Triansyah Danishwara" },
+];
 
 function formatNomorRekening(nomor: string) {
   return `•••• ${nomor.slice(-4)}`;
 }
 
 export default function WalletPage() {
-  const [saldo, setSaldo] = useState(saldoAwal);
+  const [saldo, setSaldo] = useState(SALDO_AWAL);
   const [nominal, setNominal] = useState("");
   const [rekeningId, setRekeningId] = useState("bca");
-  const [transaksi, setTransaksi] = useState<Transaksi[]>(transaksiAwal);
+  const [transaksi, setTransaksi] = useState<Transaksi[]>(TRANSAKSI_AWAL);
   const [pesan, setPesan] = useState("");
   const [jenisPesan, setJenisPesan] = useState<"sukses" | "error">("sukses");
   const [filter, setFilter] = useState("semua");
   const [kataKunci, setKataKunci] = useState("");
   const [konfirmasi, setKonfirmasi] = useState(false);
 
-  const rekeningTerpilih = rekeningContoh.find(
-    (rekening) => rekening.id === rekeningId
-  );
+  const rekeningTerpilih = REKENING_TUJUAN.find((r) => r.id === rekeningId);
 
   const totalPendapatan = transaksi
     .filter((item) => item.tipe === "masuk" && item.status === "Berhasil")
     .reduce((total, item) => total + item.nominal, 0);
 
   const totalPenarikanBerhasil = transaksi
-    .filter(
-      (item) => item.tipe === "keluar" && item.status === "Berhasil"
-    )
+    .filter((item) => item.tipe === "keluar" && item.status === "Berhasil")
     .reduce((total, item) => total + item.nominal, 0);
 
   const totalDiproses = transaksi
-    .filter(
-      (item) => item.tipe === "keluar" && item.status === "Diproses"
-    )
+    .filter((item) => item.tipe === "keluar" && item.status === "Diproses")
     .reduce((total, item) => total + item.nominal, 0);
 
   const transaksiTampil = transaksi.filter((item) => {
@@ -114,233 +126,225 @@ export default function WalletPage() {
       filter === "semua" ||
       (filter === "masuk" && item.tipe === "masuk") ||
       (filter === "keluar" && item.tipe === "keluar");
-
+    const q = kataKunci.toLowerCase();
     const cocokKataKunci =
-      item.keterangan.toLowerCase().includes(kataKunci.toLowerCase()) ||
-      item.status.toLowerCase().includes(kataKunci.toLowerCase());
-
+      item.keterangan.toLowerCase().includes(q) ||
+      item.kode.toLowerCase().includes(q) ||
+      item.status.toLowerCase().includes(q);
     return cocokFilter && cocokKataKunci;
   });
-
-  function tampilkanPesan(
-    teks: string,
-    jenis: "sukses" | "error"
-  ) {
-    setPesan(teks);
-    setJenisPesan(jenis);
-  }
 
   function ajukanPenarikan(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPesan("");
-
     const jumlah = Number(nominal);
 
-    if (!Number.isFinite(jumlah) || jumlah <= 0) {
-      tampilkanPesan("Masukkan nominal penarikan yang valid.", "error");
+    if (!Number.isFinite(jumlah) || !Number.isInteger(jumlah) || jumlah <= 0) {
+      setJenisPesan("error");
+      setPesan("Masukkan angka bulat nominal penarikan yang valid.");
       return;
     }
-
-    if (!Number.isInteger(jumlah)) {
-      tampilkanPesan("Nominal penarikan harus berupa angka bulat.", "error");
-      return;
-    }
-
     if (jumlah < 10000) {
-      tampilkanPesan("Minimal penarikan adalah Rp10.000.", "error");
+      setJenisPesan("error");
+      setPesan("Batas minimal penarikan dana adalah Rp10.000.");
       return;
     }
-
     if (jumlah > saldo) {
-      tampilkanPesan("Saldo tidak mencukupi untuk penarikan tersebut.", "error");
+      setJenisPesan("error");
+      setPesan("Nominal melebihi saldo Escrow tersedia Anda.");
       return;
     }
-
-    if (!rekeningTerpilih) {
-      tampilkanPesan("Pilih rekening tujuan terlebih dahulu.", "error");
-      return;
-    }
-
     setKonfirmasi(true);
   }
 
   function konfirmasiPenarikan() {
     const jumlah = Number(nominal);
-
-    if (
-      !rekeningTerpilih ||
-      !Number.isInteger(jumlah) ||
-      jumlah < 10000 ||
-      jumlah > saldo
-    ) {
+    if (!rekeningTerpilih || jumlah < 10000 || jumlah > saldo) {
       setKonfirmasi(false);
-      tampilkanPesan("Penarikan tidak dapat diproses. Periksa saldo dan nominal.", "error");
       return;
     }
 
     const transaksiBaru: Transaksi = {
       id: Date.now(),
-      tanggal: formatTanggal(),
-      keterangan: `Penarikan dana ke ${rekeningTerpilih.nama}`,
+      kode: `WD-2026-${Math.floor(120 + (Date.now() % 800))}`,
+      tanggal: "08 Nov 2026",
+      keterangan: `Penarikan dana (Payout) ke ${rekeningTerpilih.nama}`,
       nominal: jumlah,
       tipe: "keluar",
       status: "Diproses",
       rekening: `${rekeningTerpilih.nama} ${formatNomorRekening(
-        rekeningTerpilih.nomor
+        rekeningTerpilih.nomor,
       )}`,
     };
 
-    setSaldo((saldoSekarang) => saldoSekarang - jumlah);
-    setTransaksi((daftar) => [transaksiBaru, ...daftar]);
+    setSaldo((prev) => prev - jumlah);
+    setTransaksi((prev) => [transaksiBaru, ...prev]);
     setNominal("");
     setKonfirmasi(false);
-    tampilkanPesan(
-      "Pengajuan penarikan berhasil dibuat dan berstatus Diproses. Ini hanya simulasi.",
-      "sukses"
+    setJenisPesan("sukses");
+    setPesan(
+      `Instruksi pencairan ${transaksiBaru.kode} sebesar ${formatRupiah(
+        jumlah,
+      )} berhasil diteruskan ke antrean kliring bank.`,
     );
   }
 
-  function isiSemuaSaldo() {
-    setNominal(String(saldo));
-    setPesan("");
-  }
+  const maxWeekly = Math.max(...WEEKLY_REVENUE.map((d) => d.amount));
+
+  const columns: DataTableColumn<Transaksi>[] = [
+    {
+      key: "kode",
+      header: "ID Referensi",
+      render: (item) => (
+        <span className="font-mono font-semibold text-[#141413]">
+          {item.kode}
+        </span>
+      ),
+    },
+    {
+      key: "tanggal",
+      header: "Tanggal",
+      render: (item) => (
+        <span className="font-mono text-[#575653]">{item.tanggal}</span>
+      ),
+    },
+    {
+      key: "keterangan",
+      header: "Rincian Mutasi",
+      render: (item) => (
+        <span className="font-medium text-[#141413]">{item.keterangan}</span>
+      ),
+    },
+    {
+      key: "rekening",
+      header: "Rekening Tujuan",
+      render: (item) => (
+        <span className="font-mono text-[#575653]">
+          {item.rekening || "Escrow Internal"}
+        </span>
+      ),
+    },
+    {
+      key: "nominal",
+      header: "Nominal",
+      align: "right",
+      render: (item) => (
+        <span
+          className={`font-mono font-bold ${
+            item.tipe === "masuk" ? "text-[#1B4332]" : "text-[#141413]"
+          }`}
+        >
+          {item.tipe === "masuk" ? "+" : "-"}
+          {formatRupiah(item.nominal)}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      align: "right",
+      render: (item) => (
+        <Badge
+          variant={
+            item.status === "Berhasil"
+              ? "available"
+              : item.status === "Diproses"
+                ? "hold"
+                : "danger"
+          }
+          dot
+        >
+          {item.status}
+        </Badge>
+      ),
+    },
+  ];
 
   return (
-    <main className="min-h-screen bg-[#F6F5F0] px-4 py-8 text-[#141413] sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <div className="mb-2 flex items-center gap-2 text-sm text-[#C83E2B]">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#EFECE6]">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  className="h-5 w-5"
-                  aria-hidden="true"
-                >
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M3 10h18M7 15h3" />
-                </svg>
-              </span>
-              <span>Area Pemilik</span>
-            </div>
+    <div className="flex min-h-screen flex-col bg-[#F6F5F0] text-[#141413]">
+      <PageHeader
+        eyebrow="MERCHANT ESCROW TREASURY"
+        title="Dompet Pendapatan & Pencairan Dana"
+        description="Pantau arus kas masuk dari sewa instrumen yang telah selesai dan tarik saldo ke rekening bank pribadi."
+        actions={
+          <Link
+            href="/owner/items"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#141413] bg-white px-4 py-2.5 text-xs font-medium text-[#141413] transition hover:bg-[#EFECE6]"
+          >
+            <Package className="size-3.5" />
+            <span>Inventaris Barang</span>
+          </Link>
+        }
+      />
 
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Saldo dan Penarikan Dana
-            </h1>
-            <p className="mt-2 text-sm text-[#575653] sm:text-base">
-              Kelola pendapatan sewa dan pantau pengajuan penarikan dana kamu.
-            </p>
-          </div>
-
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700">
-            <span className="h-2 w-2 rounded-full bg-amber-500" />
-            Mode Simulasi
-          </span>
-        </header>
-
-        <section
-          aria-label="Ringkasan saldo"
-          className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
-        >
-          <div className="rounded-2xl bg-[#141413] p-5 text-white shadow-sm sm:p-6">
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
+        {/* 4 Metric Cards */}
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-[#141413] bg-[#141413] p-5 text-[#F6F5F0]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#A09D95]">Saldo Tersedia</p>
-              <span className="rounded-lg bg-white/15 p-2">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  className="h-5 w-5"
-                  aria-hidden="true"
-                >
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M3 10h18M16 14h2" />
-                </svg>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#A09D95]">
+                SALDO SIAP CAIR
               </span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
+                <Wallet className="size-4 text-[#F6F5F0]" />
+              </div>
             </div>
-            <p className="mt-4 text-2xl font-bold sm:text-3xl">
+            <p className="mt-3 font-mono text-2xl font-bold sm:text-3xl">
               {formatRupiah(saldo)}
             </p>
-            <p className="mt-2 text-xs text-[#A09D95]">
-              Dana yang dapat diajukan untuk penarikan
+            <p className="mt-1.5 text-[11px] text-[#A09D95]">
+              Bebas ditarik kapan saja (Min. Rp10.000)
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#575653]">Total Pendapatan</p>
-              <span className="rounded-lg bg-[#E9F3ED] p-2 text-[#1B4332]">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  className="h-5 w-5"
-                  aria-hidden="true"
-                >
-                  <path d="M3 17l6-6 4 3 8-8" />
-                  <path d="M15 6h6v6" />
-                </svg>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                AKUMULASI PENDAPATAN
               </span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#1B4332]/20 bg-[#E9F3ED] text-[#1B4332]">
+                <TrendingUp className="size-4" />
+              </div>
             </div>
-            <p className="mt-4 text-xl font-bold sm:text-2xl">
+            <p className="mt-3 font-mono text-2xl font-bold text-[#141413]">
               {formatRupiah(totalPendapatan)}
             </p>
-            <p className="mt-2 text-xs text-[#575653]">
-              Pendapatan masuk berstatus berhasil
+            <p className="mt-1.5 text-[11px] text-[#575653]">
+              Settlement sewa berstatus selesai
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#575653]">Penarikan Diproses</p>
-              <span className="rounded-lg bg-amber-50 p-2 text-amber-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  className="h-5 w-5"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7v5l3 2" />
-                </svg>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                KLIRING DIPROSES
               </span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E9C893] bg-[#FEF7EC] text-[#9A5B13]">
+                <Clock className="size-4" />
+              </div>
             </div>
-            <p className="mt-4 text-xl font-bold sm:text-2xl">
+            <p className="mt-3 font-mono text-2xl font-bold text-[#9A5B13]">
               {formatRupiah(totalDiproses)}
             </p>
-            <p className="mt-2 text-xs text-[#575653]">
-              Pengajuan yang belum selesai
+            <p className="mt-1.5 text-[11px] text-[#575653]">
+              Estimasi masuk rekening 1×24 jam
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#575653]">Penarikan Berhasil</p>
-              <span className="rounded-lg bg-violet-50 p-2 text-violet-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  className="h-5 w-5"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12l4 4L19 6" />
-                </svg>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                TOTAL TELAH DITARIK
               </span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#DCD8CE] bg-[#F6F5F0] text-[#141413]">
+                <CheckCircle2 className="size-4" />
+              </div>
             </div>
-            <p className="mt-4 text-xl font-bold sm:text-2xl">
+            <p className="mt-3 font-mono text-2xl font-bold text-[#141413]">
               {formatRupiah(totalPenarikanBerhasil)}
             </p>
-            <p className="mt-2 text-xs text-[#575653]">
-              Total penarikan yang berhasil
+            <p className="mt-1.5 text-[11px] text-[#575653]">
+              Pencairan terkonfirmasi bank
             </p>
           </div>
         </section>
@@ -348,48 +352,65 @@ export default function WalletPage() {
         {pesan && (
           <div
             role="status"
-            className={`mb-6 flex items-start gap-3 rounded-xl border p-4 text-sm ${
+            className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs font-medium ${
               jenisPesan === "sukses"
                 ? "border-[#1B4332]/25 bg-[#E9F3ED] text-[#1B4332]"
-                : "border-red-200 bg-red-50 text-red-800"
+                : "border-[#FECDCA] bg-[#FEF3F2] text-[#B42318]"
             }`}
           >
-            <span className="font-bold">
-              {jenisPesan === "sukses" ? "✓" : "!"}
+            <span className="flex items-center gap-2">
+              {jenisPesan === "sukses" ? (
+                <CheckCircle2 className="size-4 shrink-0" />
+              ) : (
+                <AlertCircle className="size-4 shrink-0" />
+              )}
+              <span>{pesan}</span>
             </span>
-            <p>{pesan}</p>
             <button
               type="button"
               onClick={() => setPesan("")}
-              className="ml-auto font-bold"
               aria-label="Tutup pesan"
+              className="rounded p-1 hover:bg-black/5"
             >
-              ×
+              <X className="size-3.5" />
             </button>
           </div>
         )}
 
-        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-5">
-          <section className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6 lg:col-span-3">
-            <div className="mb-6">
-              <h2 className="text-lg font-bold">Ajukan Penarikan Dana</h2>
-              <p className="mt-1 text-sm text-[#575653]">
-                Masukkan nominal dan pilih rekening tujuan.
-              </p>
+        {/* Payout Form + Weekly Revenue Chart */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Payout Form (7 Cols) */}
+          <section className="rounded-2xl border border-[#DCD8CE] bg-white p-6 lg:col-span-7">
+            <div className="mb-5 border-b border-[#EFECE6] pb-3.5">
+              <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
+                DISBURSEMENT REQUEST
+              </span>
+              <h2 className="mt-0.5 text-base font-bold text-[#141413]">
+                Instruksi Penarikan Dana ke Rekening Bank
+              </h2>
             </div>
 
-            <form onSubmit={ajukanPenarikan} className="space-y-5">
+            <form onSubmit={ajukanPenarikan} className="space-y-4">
               <div>
-                <label
-                  htmlFor="nominal"
-                  className="mb-2 block text-sm font-medium"
-                >
-                  Nominal Penarikan
-                </label>
+                <div className="mb-1.5 flex items-center justify-between text-xs">
+                  <label htmlFor="nominal" className="font-semibold text-[#141413]">
+                    Nominal Penarikan
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNominal(String(saldo));
+                      setPesan("");
+                    }}
+                    className="font-mono text-[11px] font-semibold text-[#C83E2B] hover:underline"
+                  >
+                    Tarik Seluruh Saldo ({formatRupiah(saldo)})
+                  </button>
+                </div>
 
-                <div className="flex overflow-hidden rounded-xl border border-[#DCD8CE] focus-within:border-[#141413] focus-within:ring-2 focus-within:ring-blue-100">
-                  <span className="flex items-center border-r border-[#DCD8CE] bg-[#F6F5F0] px-4 text-sm font-semibold text-[#575653]">
-                    Rp
+                <div className="flex h-11 overflow-hidden rounded-xl border border-[#DCD8CE] bg-white focus-within:border-[#141413]">
+                  <span className="flex items-center border-r border-[#DCD8CE] bg-[#F6F5F0] px-3.5 font-mono text-xs font-bold text-[#575653]">
+                    IDR
                   </span>
                   <input
                     id="nominal"
@@ -398,339 +419,211 @@ export default function WalletPage() {
                     max={saldo}
                     step="1"
                     inputMode="numeric"
-                    placeholder="Contoh: 100000"
+                    placeholder="100000"
                     value={nominal}
                     onChange={(event) => {
                       setNominal(event.target.value);
                       setPesan("");
                     }}
-                    className="min-w-0 flex-1 px-4 py-3 outline-none"
+                    className="min-w-0 flex-1 px-3.5 font-mono text-sm font-semibold text-[#141413] outline-none"
                     required
                   />
-                </div>
-
-                <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-[#575653]">
-                  <span>Minimal penarikan Rp10.000</span>
-                  <button
-                    type="button"
-                    onClick={isiSemuaSaldo}
-                    className="font-semibold text-[#C83E2B] hover:text-blue-800"
-                  >
-                    Gunakan semua saldo
-                  </button>
                 </div>
               </div>
 
               <div>
                 <label
                   htmlFor="rekening"
-                  className="mb-2 block text-sm font-medium"
+                  className="mb-1.5 block text-xs font-semibold text-[#141413]"
                 >
-                  Rekening Tujuan
+                  Rekening Bank Terverifikasi
                 </label>
-                <select
-                  id="rekening"
-                  value={rekeningId}
-                  onChange={(event) => setRekeningId(event.target.value)}
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-3 outline-none focus:border-[#141413] focus:ring-2 focus:ring-blue-100"
-                >
-                  {rekeningContoh.map((rekening) => (
-                    <option key={rekening.id} value={rekening.id}>
-                      {rekening.nama} — {formatNomorRekening(rekening.nomor)}
-                    </option>
-                  ))}
-                </select>
-
-                {rekeningTerpilih && (
-                  <div className="mt-3 rounded-xl bg-[#F6F5F0] p-4">
-                    <p className="text-xs text-[#575653]">Nama pemilik</p>
-                    <p className="mt-1 text-sm font-semibold">
-                      {rekeningTerpilih.pemilik}
-                    </p>
-                    <p className="mt-2 text-xs text-[#575653]">
-                      Nomor rekening
-                    </p>
-                    <p className="mt-1 text-sm font-semibold">
-                      {rekeningTerpilih.nomor}
-                    </p>
-                    <p className="mt-2 text-xs text-amber-700">
-                      Data rekening di atas hanya contoh simulasi.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <div className="rounded-xl border border-[#DCD8CE] bg-[#EFECE6] p-4">
-                <div className="flex items-start gap-3">
-                  <span className="font-bold text-[#C83E2B]">i</span>
-                  <div>
-                    <p className="text-sm font-semibold text-blue-900">
-                      Informasi penarikan
-                    </p>
-                    <p className="mt-1 text-xs leading-5 text-blue-800">
-                      Saat pengajuan dikonfirmasi, saldo simulasi akan
-                      berkurang dan transaksi tercatat dengan status
-                      Diproses. Tidak ada uang sungguhan yang dikirim.
-                    </p>
-                  </div>
+                <div className="relative flex items-center">
+                  <Building2 className="pointer-events-none absolute left-3.5 size-4 text-[#78756F]" />
+                  <select
+                    id="rekening"
+                    value={rekeningId}
+                    onChange={(event) => setRekeningId(event.target.value)}
+                    className="h-11 w-full rounded-xl border border-[#DCD8CE] bg-white pl-10 pr-4 text-xs font-semibold text-[#141413] focus:border-[#141413] focus:outline-none"
+                  >
+                    {REKENING_TUJUAN.map((rekening) => (
+                      <option key={rekening.id} value={rekening.id}>
+                        {rekening.nama} — {formatNomorRekening(rekening.nomor)} a.n.{" "}
+                        {rekening.pemilik}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-[#141413] px-5 py-3 font-semibold text-white transition hover:bg-[#141413] focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#141413] px-5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
               >
-                Ajukan Penarikan
+                <span>Ajukan Pencairan Saldo</span>
+                <ArrowUpRight className="size-4" />
               </button>
             </form>
           </section>
 
-          <aside className="rounded-2xl border border-[#DCD8CE] bg-white p-5 shadow-sm sm:p-6 lg:col-span-2">
-            <h2 className="text-lg font-bold">Informasi Saldo</h2>
-            <p className="mt-1 text-sm text-[#575653]">
-              Ringkasan akun pemilik.
-            </p>
-
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-[#575653]">Saldo saat ini</span>
-                <span className="text-right text-sm font-semibold">
-                  {formatRupiah(saldo)}
+          {/* 7-Day Weekly Revenue Sparkline Bar Chart (5 Cols) */}
+          <aside className="flex flex-col justify-between rounded-2xl border border-[#DCD8CE] bg-white p-6 lg:col-span-5">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#78756F]">
+                  RINGKASAN PENDAPATAN 7 HARI
                 </span>
+                <Badge variant="available">+18.4% Mingguan</Badge>
               </div>
-              <div className="h-px bg-[#EFECE6]" />
+              <h2 className="mt-1 text-base font-bold text-[#141413]">
+                Performa Sewa Instrumen
+              </h2>
 
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-[#575653]">
-                  Total pendapatan
-                </span>
-                <span className="text-right text-sm font-semibold">
-                  {formatRupiah(totalPendapatan)}
-                </span>
+              <div className="mt-6 flex h-36 items-end justify-between gap-2 border-b border-[#EFECE6] pb-3">
+                {WEEKLY_REVENUE.map((item) => {
+                  const pct = Math.max(12, Math.round((item.amount / maxWeekly) * 100));
+                  const isPeak = item.amount === maxWeekly;
+                  return (
+                    <div
+                      key={item.day}
+                      className="flex h-full flex-1 flex-col items-center justify-end gap-1.5"
+                    >
+                      <span className="font-mono text-[9px] text-[#78756F]">
+                        {Math.round(item.amount / 1000)}k
+                      </span>
+                      <div
+                        style={{ height: `${pct}%` }}
+                        className={`w-full max-w-[28px] rounded-t-md transition-all ${
+                          isPeak ? "bg-[#C83E2B]" : "bg-[#141413]"
+                        }`}
+                      />
+                    </div>
+                  );
+                })}
               </div>
-              <div className="h-px bg-[#EFECE6]" />
 
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-[#575653]">
-                  Penarikan diproses
-                </span>
-                <span className="text-right text-sm font-semibold text-amber-600">
-                  {formatRupiah(totalDiproses)}
-                </span>
+              <div className="mt-2 flex justify-between font-mono text-[10px] text-[#78756F]">
+                {WEEKLY_REVENUE.map((item) => (
+                  <span key={item.day} className="flex-1 text-center">
+                    {item.day}
+                  </span>
+                ))}
               </div>
             </div>
 
-            <div className="mt-6 rounded-xl bg-[#F6F5F0] p-4">
-              <p className="text-sm font-semibold">Perlu diketahui</p>
-              <ul className="mt-3 space-y-2 text-xs leading-5 text-[#575653]">
-                <li>• Minimal penarikan adalah Rp10.000.</li>
-                <li>• Nominal tidak boleh melebihi saldo tersedia.</li>
-                <li>• Pengajuan baru akan berstatus Diproses.</li>
-                <li>• Data belum disimpan ke database.</li>
-              </ul>
+            <div className="mt-5 rounded-xl border border-[#EFECE6] bg-[#FBF9F5] p-3 text-[11px] leading-relaxed text-[#575653]">
+              Pendapatan masuk ke dompet pemilik secara instan begitu penyewa menyetujui checklist pengembalian barang.
             </div>
           </aside>
         </div>
 
-        <section className="overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white shadow-sm">
-          <div className="flex flex-col gap-4 border-b border-[#DCD8CE] p-5 sm:p-6">
-            <div>
-              <h2 className="text-lg font-bold">Riwayat Transaksi</h2>
-              <p className="mt-1 text-sm text-[#575653]">
-                Pantau pendapatan dan pengajuan penarikan dana.
-              </p>
+        {/* Transaction History Ledger DataTable */}
+        <DataTable
+          columns={columns}
+          data={transaksiTampil}
+          rowKey={(item) => item.id}
+          toolbar={
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+              <div>
+                <h2 className="text-sm font-bold text-[#141413]">
+                  Buku Besar Mutasi Dompet Pemilik
+                </h2>
+                <p className="text-xs text-[#575653]">
+                  Catatan rilis Escrow sewa masuk dan penarikan dana keluar
+                </p>
+              </div>
+              <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+                <SearchInput
+                  value={kataKunci}
+                  onChange={setKataKunci}
+                  placeholder="Cari kode referensi atau mutasi..."
+                  className="sm:w-64"
+                />
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  aria-label="Filter tipe mutasi"
+                  className="h-10 rounded-xl border border-[#DCD8CE] bg-white px-3 text-xs font-medium text-[#141413] focus:border-[#141413] focus:outline-none"
+                >
+                  <option value="semua">Semua Mutasi</option>
+                  <option value="masuk">Rilis Sewa Masuk</option>
+                  <option value="keluar">Penarikan Keluar</option>
+                </select>
+              </div>
             </div>
+          }
+          footer={`Menampilkan ${transaksiTampil.length} dari ${transaksi.length} catatan mutasi.`}
+        />
+      </main>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <input
-                type="search"
-                value={kataKunci}
-                onChange={(event) => setKataKunci(event.target.value)}
-                placeholder="Cari transaksi atau status..."
-                aria-label="Cari transaksi"
-                className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm outline-none focus:border-[#141413] focus:ring-2 focus:ring-blue-100"
-              />
-
-              <select
-                value={filter}
-                onChange={(event) => setFilter(event.target.value)}
-                aria-label="Filter transaksi"
-                className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 text-sm outline-none focus:border-[#141413] focus:ring-2 focus:ring-blue-100"
-              >
-                <option value="semua">Semua transaksi</option>
-                <option value="masuk">Pendapatan masuk</option>
-                <option value="keluar">Penarikan dana</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px] text-left text-sm">
-              <thead className="bg-[#F6F5F0] text-xs uppercase tracking-wide text-[#575653]">
-                <tr>
-                  <th className="px-5 py-4 font-semibold">Tanggal</th>
-                  <th className="px-5 py-4 font-semibold">Keterangan</th>
-                  <th className="px-5 py-4 font-semibold">Nominal</th>
-                  <th className="px-5 py-4 font-semibold">Rekening</th>
-                  <th className="px-5 py-4 font-semibold">Status</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-[#EFECE6]">
-                {transaksiTampil.map((item) => (
-                  <tr key={item.id} className="transition hover:bg-[#F6F5F0]">
-                    <td className="whitespace-nowrap px-5 py-4 text-[#575653]">
-                      {item.tanggal}
-                    </td>
-
-                    <td className="px-5 py-4 font-medium text-[#141413]">
-                      {item.keterangan}
-                    </td>
-
-                    <td
-                      className={`whitespace-nowrap px-5 py-4 font-semibold ${
-                        item.tipe === "masuk"
-                          ? "text-[#1B4332]"
-                          : "text-[#141413]"
-                      }`}
-                    >
-                      {item.tipe === "masuk" ? "+" : "-"}
-                      {formatRupiah(item.nominal)}
-                    </td>
-
-                    <td className="px-5 py-4 text-[#575653]">
-                      {item.rekening || "—"}
-                    </td>
-
-                    <td className="px-5 py-4">
-                      <span
-                        className={`inline-flex whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
-                          item.status === "Berhasil"
-                            ? "bg-[#E9F3ED] text-[#1B4332]"
-                            : item.status === "Diproses"
-                              ? "bg-amber-50 text-amber-700"
-                              : "bg-red-50 text-red-700"
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-
-                {transaksiTampil.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="px-5 py-12 text-center text-sm text-[#575653]"
-                    >
-                      Tidak ada transaksi yang sesuai dengan pencarian.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="border-t border-[#DCD8CE] px-5 py-4 text-xs text-[#575653]">
-            Menampilkan {transaksiTampil.length} dari {transaksi.length} transaksi.
-            Semua data pada halaman ini merupakan simulasi frontend.
-          </div>
-        </section>
-
-        <footer className="mt-6 text-center text-xs leading-5 text-[#78756F]">
-          SewaKit · Saldo dan Penarikan Dana · Mode Simulasi
-        </footer>
-      </div>
-
+      {/* Payout Confirmation Modal */}
       {konfirmasi && rekeningTerpilih && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"
-          role="presentation"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#141413]/45 p-4 backdrop-blur-[2px]"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setKonfirmasi(false);
-            }
+            if (event.target === event.currentTarget) setKonfirmasi(false);
           }}
         >
           <section
             role="dialog"
             aria-modal="true"
-            aria-labelledby="judul-konfirmasi"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white shadow-xl"
           >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#EFECE6] text-[#C83E2B]">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                className="h-6 w-6"
-                aria-hidden="true"
-              >
-                <rect x="3" y="5" width="18" height="14" rx="2" />
-                <path d="M3 10h18" />
-              </svg>
-            </div>
-
-            <h2 id="judul-konfirmasi" className="text-xl font-bold">
-              Konfirmasi Penarikan
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-[#575653]">
-              Periksa kembali detail pengajuan penarikan dana simulasi kamu.
-            </p>
-
-            <div className="my-5 space-y-4 rounded-xl bg-[#F6F5F0] p-4">
-              <div>
-                <p className="text-xs text-[#575653]">Nominal penarikan</p>
-                <p className="mt-1 text-xl font-bold text-[#C83E2B]">
-                  {formatRupiah(Number(nominal))}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-[#575653]">Bank tujuan</p>
-                <p className="mt-1 text-sm font-semibold">
-                  {rekeningTerpilih.nama}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-[#575653]">Nomor rekening</p>
-                <p className="mt-1 text-sm font-semibold">
-                  {rekeningTerpilih.nomor}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-[#575653]">Sisa saldo setelah pengajuan</p>
-                <p className="mt-1 text-sm font-semibold">
-                  {formatRupiah(saldo - Number(nominal))}
-                </p>
-              </div>
-            </div>
-
-            <p className="mb-5 text-xs leading-5 text-[#575653]">
-              Dengan melanjutkan, saldo simulasi akan langsung dikurangi.
-              Status transaksi baru adalah Diproses, bukan transfer sungguhan.
-            </p>
-
-            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <div className="flex items-center justify-between border-b border-[#EFECE6] bg-[#FBF9F5] px-5 py-3.5">
+              <h2 className="text-sm font-bold text-[#141413]">
+                Otorisasi Pencairan Saldo Pemilik
+              </h2>
               <button
                 type="button"
                 onClick={() => setKonfirmasi(false)}
-                className="rounded-xl border border-[#DCD8CE] px-4 py-3 text-sm font-semibold hover:bg-[#F6F5F0]"
+                className="rounded-lg p-1 text-[#78756F] hover:bg-[#EFECE6] hover:text-[#141413]"
               >
-                Batal
+                <X className="size-4" />
               </button>
-              <button
-                type="button"
-                onClick={konfirmasiPenarikan}
-                className="rounded-xl bg-[#141413] px-4 py-3 text-sm font-semibold text-white hover:bg-[#141413]"
-              >
-                Konfirmasi Penarikan
-              </button>
+            </div>
+
+            <div className="space-y-4 p-5 text-xs">
+              <dl className="space-y-2.5 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-4">
+                <div className="flex justify-between">
+                  <dt className="text-[#575653]">Nominal Pencairan</dt>
+                  <dd className="font-mono text-base font-bold text-[#C83E2B]">
+                    {formatRupiah(Number(nominal))}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-[#575653]">Bank &amp; Nomor Rekening</dt>
+                  <dd className="font-mono font-semibold text-[#141413]">
+                    {rekeningTerpilih.nama} • {rekeningTerpilih.nomor}
+                  </dd>
+                </div>
+                <div className="flex justify-between border-t border-[#DCD8CE] pt-2">
+                  <dt className="text-[#575653]">Sisa Saldo Dompet</dt>
+                  <dd className="font-mono font-semibold text-[#141413]">
+                    {formatRupiah(saldo - Number(nominal))}
+                  </dd>
+                </div>
+              </dl>
+
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={konfirmasiPenarikan}
+                  className="flex-1 rounded-xl bg-[#141413] py-2.5 font-semibold text-[#F6F5F0] transition hover:bg-[#1B4332]"
+                >
+                  Konfirmasi &amp; Cairkan Sekarang
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setKonfirmasi(false)}
+                  className="rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 font-medium text-[#575653] hover:bg-[#F6F5F0]"
+                >
+                  Batal
+                </button>
+              </div>
             </div>
           </section>
         </div>
       )}
-    </main>
+    </div>
   );
 }

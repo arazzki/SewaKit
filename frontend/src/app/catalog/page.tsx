@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { DUMMY_ITEMS } from "@/data/dummyItems";
 import CatalogView from "./_components/CatalogView";
 import PageHeader from "@/components/PageHeader";
@@ -9,25 +11,44 @@ export const metadata: Metadata = {
   description: "Cari dan sewa alat penunjang kuliah dari sesama mahasiswa.",
 };
 
+function CatalogSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="h-36 animate-pulse rounded-2xl border border-[#DCD8CE] bg-white" />
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <div
+            key={n}
+            className="h-96 animate-pulse rounded-2xl border border-[#DCD8CE] bg-white"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function CatalogPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F5F0]">
       <PageHeader
-        eyebrow="01 / INVENTARIS KAMPUS"
+        eyebrow="01 / INVENTARIS LABORATORIUM & KAMPUS"
         title="Katalog Peralatan Praktikum & Multimedia"
-        description="Sewa alat penunjang kuliah langsung dari sesama mahasiswa Telkom University dengan proteksi deposit dan serah terima COD di kampus."
+        description="Sewa instrumen praktikum, board IoT, dan perangkat dokumentasi langsung dari sesama mahasiswa Telkom University dengan proteksi deposit escrow."
         actions={
           <Link
             href="/rentals/request"
-            className="rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-medium text-[#F6F5F0] hover:bg-[#C83E2B] transition"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
           >
-            Ajukan Booking Alat →
+            <span>Ajukan Booking Alat</span>
+            <ArrowUpRight className="size-3.5" />
           </Link>
         }
       />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
-        <CatalogView items={DUMMY_ITEMS} />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+        <Suspense fallback={<CatalogSkeleton />}>
+          <CatalogView items={DUMMY_ITEMS} />
+        </Suspense>
       </main>
     </div>
   );

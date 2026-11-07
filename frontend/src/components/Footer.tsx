@@ -1,27 +1,16 @@
 import Link from "next/link";
-import { MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { MapPin, ShieldCheck } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#DCD8CE] bg-[#141413] text-[#A09D95] mt-auto">
+    <footer className="mt-auto border-t border-[#262523] bg-[#141413] text-[#A09D95]">
       <div className="mx-auto max-w-7xl px-6 py-14">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
-          {/* Brand Column */}
+          {/* Standardized Dark-Theme Brand Column */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C83E2B] font-mono text-xs font-bold text-white">
-                SK
-              </div>
-              <div>
-                <span className="text-lg font-bold tracking-tight text-[#F6F5F0] block leading-none">
-                  SewaKit
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
-                  Campus Equipment Exchange
-                </span>
-              </div>
-            </div>
-            <p className="text-sm text-[#A09D95] leading-relaxed max-w-sm">
+            <BrandLogo size="md" theme="dark" showTagline />
+            <p className="max-w-sm text-sm leading-relaxed text-[#A09D95]">
               Infrastruktur sewa-menyewa alat praktikum, perangkat IoT, instrumen laboratorium, dan perlengkapan riset antar mahasiswa Telkom University dengan proteksi rekber (escrow).
             </p>
             <div className="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
@@ -34,28 +23,28 @@ export default function Footer() {
 
           {/* Katalog */}
           <div>
-            <h3 className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#F6F5F0] mb-4">
+            <h3 className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#F6F5F0]">
               Kategori Inventaris
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/catalog" className="hover:text-[#F6F5F0] transition">
-                  Perangkat IoT & Mikrokontroler
+                <Link href="/catalog" className="transition hover:text-[#F6F5F0]">
+                  Perangkat IoT &amp; Mikrokontroler
                 </Link>
               </li>
               <li>
-                <Link href="/catalog" className="hover:text-[#F6F5F0] transition">
-                  Kamera & Multimedia
+                <Link href="/catalog" className="transition hover:text-[#F6F5F0]">
+                  Kamera &amp; Multimedia
                 </Link>
               </li>
               <li>
-                <Link href="/catalog" className="hover:text-[#F6F5F0] transition">
+                <Link href="/catalog" className="transition hover:text-[#F6F5F0]">
                   Instrumen Pengukuran Lab
                 </Link>
               </li>
               <li>
-                <Link href="/catalog" className="hover:text-[#F6F5F0] transition">
-                  Logistik Acara & Kepanitiaan
+                <Link href="/catalog" className="transition hover:text-[#F6F5F0]">
+                  Logistik Acara &amp; Kepanitiaan
                 </Link>
               </li>
             </ul>
@@ -63,33 +52,33 @@ export default function Footer() {
 
           {/* Alur Penyewa */}
           <div>
-            <h3 className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#F6F5F0] mb-4">
+            <h3 className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#F6F5F0]">
               Transaksi Penyewa
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/rentals/request" className="hover:text-[#F6F5F0] transition">
-                  Booking & Hold 24 Jam
+                <Link href="/rentals/request" className="transition hover:text-[#F6F5F0]">
+                  Booking &amp; Hold 24 Jam
                 </Link>
               </li>
               <li>
-                <Link href="/payments" className="hover:text-[#F6F5F0] transition">
+                <Link href="/payments" className="transition hover:text-[#F6F5F0]">
                   Pembayaran Xendit Sandbox
                 </Link>
               </li>
               <li>
-                <Link href="/handover" className="hover:text-[#F6F5F0] transition">
+                <Link href="/handover" className="transition hover:text-[#F6F5F0]">
                   Protokol Serah Terima COD
                 </Link>
               </li>
               <li>
-                <Link href="/disputes" className="hover:text-[#F6F5F0] transition">
-                  Manajemen Deposit & Klaim
+                <Link href="/disputes" className="transition hover:text-[#F6F5F0]">
+                  Manajemen Deposit &amp; Klaim
                 </Link>
               </li>
               <li>
-                <Link href="/rentals/cancellation" className="hover:text-[#F6F5F0] transition">
-                  Pembatalan & No-Show
+                <Link href="/rentals/cancellation" className="transition hover:text-[#F6F5F0]">
+                  Pembatalan &amp; No-Show
                 </Link>
               </li>
             </ul>
@@ -97,32 +86,32 @@ export default function Footer() {
 
           {/* Pemilik & Admin */}
           <div>
-            <h3 className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#F6F5F0] mb-4">
-              Pemilik & Moderasi
+            <h3 className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#F6F5F0]">
+              Pemilik &amp; Moderasi
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/owner/items" className="hover:text-[#F6F5F0] transition">
+                <Link href="/owner/items" className="transition hover:text-[#F6F5F0]">
                   Kelola Barang Sewaan
                 </Link>
               </li>
               <li>
-                <Link href="/owner/wallet" className="hover:text-[#F6F5F0] transition">
-                  Dompet & Pencairan Dana
+                <Link href="/owner/wallet" className="transition hover:text-[#F6F5F0]">
+                  Dompet &amp; Pencairan Dana
                 </Link>
               </li>
               <li>
-                <Link href="/reviews" className="hover:text-[#F6F5F0] transition">
-                  Reputasi & Ulasan Dua Arah
+                <Link href="/reviews" className="transition hover:text-[#F6F5F0]">
+                  Reputasi &amp; Ulasan Dua Arah
                 </Link>
               </li>
               <li>
-                <Link href="/admin/dashboard" className="hover:text-[#F6F5F0] transition">
+                <Link href="/admin/dashboard" className="transition hover:text-[#F6F5F0]">
                   Dashboard Admin
                 </Link>
               </li>
               <li>
-                <Link href="/admin/categories" className="hover:text-[#F6F5F0] transition">
+                <Link href="/admin/categories" className="transition hover:text-[#F6F5F0]">
                   Master Kategori Alat
                 </Link>
               </li>
@@ -130,7 +119,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-[#262523] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#78756F]">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#262523] pt-6 text-xs text-[#78756F] sm:flex-row">
           <p className="font-mono">
             © 2026 SEWAKIT — S1 TEKNOLOGI INFORMASI, TELKOM UNIVERSITY.
           </p>

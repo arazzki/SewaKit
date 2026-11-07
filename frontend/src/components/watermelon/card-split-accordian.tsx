@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import React, { useState, type FC } from 'react';
-import Link from 'next/link';
-import { motion, MotionConfig, type Transition } from 'motion/react';
-import { ChevronDown, ArrowUpRight, ShieldCheck, Clock, MapPin, CreditCard, Sparkles } from 'lucide-react';
-import { HiCursorArrowRipple } from 'react-icons/hi2';
-import { IoIosTimer } from 'react-icons/io';
-import { PiHandTap } from 'react-icons/pi';
-import useMeasure from 'react-use-measure';
+import React, { useState, type FC } from "react";
+import Link from "next/link";
+import { motion, MotionConfig, type Transition } from "motion/react";
+import {
+  ChevronDown,
+  ArrowUpRight,
+  ShieldCheck,
+  Clock,
+  CreditCard,
+  ScanLine,
+  Award,
+} from "lucide-react";
+import useMeasure from "react-use-measure";
 
 export interface AccordionItemData {
   id: number;
@@ -33,7 +38,7 @@ interface AccordionProps {
 }
 
 const springTransition: Transition = {
-  type: 'spring',
+  type: "spring",
   stiffness: 600,
   damping: 50,
   mass: 1,
@@ -42,62 +47,62 @@ const springTransition: Transition = {
 export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   {
     id: 1,
-    title: '01 / Penahanan Jadwal (Hold 24 Jam) Anti-Bentrok',
-    tag: 'Booking Engine',
-    icon: <IoIosTimer className="size-5 text-[#C83E2B]" />,
+    title: "01 / Penahanan Jadwal (Hold 24 Jam) Anti-Bentrok",
+    tag: "BOOKING ENGINE",
+    icon: <Clock className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
     content:
-      'Setiap pengajuan sewa otomatis mengunci kalender ketersediaan alat selama 24 jam. Mahasiswa lain tidak dapat menyerobot tanggal yang sama sementara pemilik meninjau permintaan Anda.',
+      "Setiap pengajuan sewa otomatis mengunci kalender ketersediaan alat selama 24 jam. Mahasiswa lain tidak dapat menyerobot tanggal yang sama sementara pemilik meninjau permintaan Anda.",
     links: [
-      { label: 'Ajukan Sewa Alat', href: '/rentals/request' },
-      { label: 'Eksplorasi Katalog', href: '/catalog' },
+      { label: "Ajukan Sewa Alat", href: "/rentals/request" },
+      { label: "Eksplorasi Katalog", href: "/catalog" },
     ],
   },
   {
     id: 2,
-    title: '02 / Rekening Bersama (Escrow) & Deposit Jaminan',
-    tag: 'Xendit Payment',
-    icon: <CreditCard className="size-4 text-[#1B4332]" />,
+    title: "02 / Rekening Bersama (Escrow) & Deposit Jaminan",
+    tag: "XENDIT GATEWAY",
+    icon: <CreditCard className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
     content:
-      'Setelah disetujui pemilik, penyewa memiliki waktu 2 jam untuk menyelesaikan pembayaran via QRIS atau Virtual Account. Dana sewa dan deposit ditahan di sistem hingga alat kembali dengan aman.',
+      "Setelah disetujui pemilik, penyewa memiliki waktu 2 jam untuk menyelesaikan pembayaran via QRIS atau Virtual Account. Dana sewa dan deposit ditahan di sistem hingga alat kembali dengan aman.",
     links: [
-      { label: 'Gateway Pembayaran', href: '/payments' },
-      { label: 'Pusat Deposit & Klaim', href: '/disputes' },
+      { label: "Gateway Pembayaran", href: "/payments" },
+      { label: "Pusat Deposit & Klaim", href: "/disputes" },
     ],
   },
   {
     id: 3,
-    title: '03 / Verifikasi Serah Terima COD di Titik Kampus',
-    tag: 'Handover Protocol',
-    icon: <PiHandTap className="size-5 -rotate-12 text-[#141413]" />,
+    title: "03 / Verifikasi Serah Terima COD di Titik Kampus",
+    tag: "HANDOVER PROTOCOL",
+    icon: <ScanLine className="size-4 text-[#141413]" strokeWidth={1.75} />,
     content:
-      'Pertemuan dilakukan langsung di area Telkom University (Lobi TULT, GKU, Open Library, atau Student Center). Dilengkapi kode verifikasi 2 arah, checklist fisik, dan dokumentasi foto sebelum/sesudah.',
+      "Pertemuan dilakukan langsung di area Telkom University (Lobi TULT, GKU, Open Library, atau Student Center). Dilengkapi token OTP 6 digit, checklist fisik, dan dokumentasi foto sebelum/sesudah.",
     links: [
-      { label: 'Buka Modul Serah Terima', href: '/handover' },
-      { label: 'Laporan No-Show COD', href: '/rentals/cancellation' },
+      { label: "Buka Modul Serah Terima", href: "/handover" },
+      { label: "Laporan No-Show COD", href: "/rentals/cancellation" },
     ],
   },
   {
     id: 4,
-    title: '04 / Kalkulasi Denda Proporsional & Pencairan Otomatis',
-    tag: 'Automated Settlement',
-    icon: <ShieldCheck className="size-4 text-[#1B4332]" />,
+    title: "04 / Kalkulasi Denda Proporsional & Pencairan Otomatis",
+    tag: "AUTOMATED SETTLEMENT",
+    icon: <ShieldCheck className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
     content:
-      'Jika pengembalian tepat waktu dan sesuai checklist, deposit dikembalikan 100% ke penyewa dan uang sewa langsung cair ke dompet pemilik. Keterlambatan dihitung transparan per jam.',
+      "Jika pengembalian tepat waktu dan sesuai checklist, deposit dikembalikan 100% ke penyewa dan uang sewa langsung cair ke dompet pemilik. Keterlambatan dihitung transparan per hari.",
     links: [
-      { label: 'Dompet Pemilik Alat', href: '/owner/wallet' },
-      { label: 'Kelola Inventaris', href: '/owner/items' },
+      { label: "Dompet Pemilik Alat", href: "/owner/wallet" },
+      { label: "Kelola Inventaris", href: "/owner/items" },
     ],
   },
   {
     id: 5,
-    title: '05 / Reputasi Dua Arah & Moderasi Komunitas Kampus',
-    tag: 'Trust & Safety',
-    icon: <HiCursorArrowRipple className="size-5 -rotate-6 text-[#C83E2B]" />,
+    title: "05 / Reputasi Dua Arah & Moderasi Komunitas Kampus",
+    tag: "TRUST & SAFETY",
+    icon: <Award className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
     content:
-      'Setiap mahasiswa terverifikasi dengan NIM & program studi. Penyewa dan pemilik saling memberikan rating dan ulasan pasca transaksi untuk menjaga standar peralatan praktikum.',
+      "Setiap mahasiswa terverifikasi dengan NIM dan program studi. Penyewa dan pemilik saling memberikan rating dan ulasan pasca transaksi untuk menjaga standar peralatan praktikum.",
     links: [
-      { label: 'Ulasan Komunitas', href: '/reviews' },
-      { label: 'Panel Moderasi Admin', href: '/admin/dashboard' },
+      { label: "Ulasan Komunitas", href: "/reviews" },
+      { label: "Panel Moderasi Admin", href: "/admin/dashboard" },
     ],
   },
 ];
@@ -120,37 +125,38 @@ const AccordionItem: FC<AccordionItemProps> = ({
 
   const isAlone = (isAfterOpen && isLast) || (isBeforeOpen && isFirst);
 
-  const BORDER_WIDTH = '1px';
-  const BORDER_STYLE = 'solid';
+  const BORDER_WIDTH = "1px";
+  const BORDER_STYLE = "solid";
   const borderTopWidth =
-    isFirst || isAfterOpen || isOpen ? BORDER_WIDTH : '0px';
+    isFirst || isAfterOpen || isOpen ? BORDER_WIDTH : "0px";
   const borderBottomWidth =
-    isLast || isBeforeOpen || isOpen ? BORDER_WIDTH : '0px';
+    isLast || isBeforeOpen || isOpen ? BORDER_WIDTH : "0px";
   const borderLeftWidth = BORDER_WIDTH;
   const borderRightWidth = BORDER_WIDTH;
 
+  const RADIUS = 14;
   let borderTopLeftRadius = 0;
   let borderTopRightRadius = 0;
   let borderBottomLeftRadius = 0;
   let borderBottomRightRadius = 0;
 
   if (isOpen || isAlone) {
-    borderTopLeftRadius = 20;
-    borderTopRightRadius = 20;
-    borderBottomLeftRadius = 20;
-    borderBottomRightRadius = 20;
+    borderTopLeftRadius = RADIUS;
+    borderTopRightRadius = RADIUS;
+    borderBottomLeftRadius = RADIUS;
+    borderBottomRightRadius = RADIUS;
   } else if (isBeforeOpen) {
-    borderBottomLeftRadius = 20;
-    borderBottomRightRadius = 20;
+    borderBottomLeftRadius = RADIUS;
+    borderBottomRightRadius = RADIUS;
   } else if (isAfterOpen) {
-    borderTopLeftRadius = 20;
-    borderTopRightRadius = 20;
+    borderTopLeftRadius = RADIUS;
+    borderTopRightRadius = RADIUS;
   } else if (isFirst) {
-    borderTopLeftRadius = 20;
-    borderTopRightRadius = 20;
+    borderTopLeftRadius = RADIUS;
+    borderTopRightRadius = RADIUS;
   } else if (isLast) {
-    borderBottomLeftRadius = 20;
-    borderBottomRightRadius = 20;
+    borderBottomLeftRadius = RADIUS;
+    borderBottomRightRadius = RADIUS;
   }
 
   return (
@@ -165,8 +171,8 @@ const AccordionItem: FC<AccordionItemProps> = ({
           }}
           className={`overflow-hidden border-solid transition-colors will-change-transform ${
             isOpen
-              ? 'border-[#141413] bg-white shadow-[0_12px_32px_-12px_rgba(20,20,19,0.12)]'
-              : 'border-[#DCD8CE] bg-[#FBF9F5] hover:bg-white'
+              ? "border-[#141413] bg-white shadow-[0_8px_24px_-12px_rgba(20,20,19,0.12)]"
+              : "border-[#DCD8CE] bg-[#FBF9F5] hover:bg-white"
           }`}
           style={{
             borderTopWidth,
@@ -174,20 +180,20 @@ const AccordionItem: FC<AccordionItemProps> = ({
             borderLeftWidth,
             borderRightWidth,
             borderStyle: BORDER_STYLE,
-            marginBlock: isOpen ? '12px' : '0px',
+            marginBlock: isOpen ? "8px" : "0px",
           }}
         >
           <button
             type="button"
             onClick={() => setOpenId(isOpen ? null : item.id)}
-            className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left"
+            className="flex w-full cursor-pointer items-center justify-between gap-4 px-4 py-3.5 text-left"
           >
-            <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex min-w-0 items-center gap-3">
               <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                   isOpen
-                    ? 'border-[#141413] bg-[#141413] text-white [&>*]:text-white'
-                    : 'border-[#E2DFD7] bg-[#F3F1EC] text-[#141413]'
+                    ? "border-[#141413] bg-[#141413] text-white [&>*]:text-white"
+                    : "border-[#DCD8CE] bg-[#F3F1EC] text-[#141413]"
                 }`}
               >
                 {item.icon}
@@ -199,7 +205,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
                     {item.tag}
                   </span>
                 )}
-                <span className="block truncate text-sm font-semibold tracking-tight text-[#141413] md:text-base">
+                <span className="block truncate text-sm font-semibold tracking-tight text-[#141413]">
                   {item.title}
                 </span>
               </div>
@@ -207,13 +213,13 @@ const AccordionItem: FC<AccordionItemProps> = ({
 
             <motion.div
               animate={{ rotate: isOpen ? 180 : 0 }}
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border ${
+              className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border ${
                 isOpen
-                  ? 'border-[#C83E2B] bg-[#C83E2B] text-white'
-                  : 'border-[#E2DFD7] bg-white text-[#575653]'
+                  ? "border-[#C83E2B] bg-[#C83E2B] text-white"
+                  : "border-[#DCD8CE] bg-white text-[#575653]"
               }`}
             >
-              <ChevronDown className="size-4" />
+              <ChevronDown className="size-3.5" />
             </motion.div>
           </button>
 
@@ -226,18 +232,18 @@ const AccordionItem: FC<AccordionItemProps> = ({
             className="overflow-hidden will-change-transform"
           >
             <div ref={ref}>
-              <div className="border-t border-[#EFECE6] px-5 pb-5 pt-3.5 text-sm leading-relaxed text-[#575653]">
+              <div className="border-t border-[#EFECE6] px-4 pb-4 pt-3 text-xs leading-relaxed text-[#575653]">
                 <p>{item.content}</p>
                 {item.links && item.links.length > 0 && (
-                  <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                  <div className="mt-3.5 flex flex-wrap items-center gap-2">
                     {item.links.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#141413] bg-[#141413] px-3 py-1.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B] hover:border-[#C83E2B]"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#141413] bg-[#141413] px-3 py-1.5 text-xs font-medium text-[#F6F5F0] transition hover:border-[#C83E2B] hover:bg-[#C83E2B]"
                       >
                         <span>{link.label}</span>
-                        <ArrowUpRight className="size-3.5" />
+                        <ArrowUpRight className="size-3" />
                       </Link>
                     ))}
                   </div>
@@ -254,14 +260,14 @@ const AccordionItem: FC<AccordionItemProps> = ({
 export const AccordionApp: FC<AccordionProps> = ({
   items,
   defaultOpenId = 1,
-  className = '',
+  className = "",
 }) => {
   const defaultItems = items ?? SEWAKIT_ACCORDION_ITEMS;
   const [openId, setOpenId] = useState<number | null>(defaultOpenId);
   const openIndex = defaultItems.findIndex((item) => item.id === openId);
 
   return (
-    <div className={`w-full transition-colors duration-500 ${className}`}>
+    <div className={`w-full ${className}`}>
       <ul className="w-full">
         {defaultItems.map((item, index) => (
           <AccordionItem

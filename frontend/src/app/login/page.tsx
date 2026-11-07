@@ -2,7 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Lock } from 'lucide-react';
+import {
+  ShieldCheck,
+  GraduationCap,
+  CheckCircle2,
+  KeyRound,
+  ArrowRight,
+  Lock,
+} from 'lucide-react';
+import BrandLogo from '@/components/BrandLogo';
 
 export default function LoginPage() {
   const [roleTab, setRoleTab] = useState<'mahasiswa' | 'admin'>('mahasiswa');
@@ -22,35 +30,41 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center bg-[#F6F5F0] px-4 py-12">
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 border border-[#DCD8CE] shadow-[0_12px_32px_-12px_rgba(20,20,19,0.08)]">
-        <div className="mb-6">
+    <div className="flex min-h-[82vh] flex-col items-center justify-center bg-[#F6F5F0] bg-tech-grid px-4 py-12">
+      <div className="w-full max-w-md rounded-2xl border border-[#DCD8CE] bg-white p-7 sm:p-8 shadow-[0_10px_28px_-14px_rgba(20,20,19,0.10)]">
+        {/* Official Standardized BrandLogo */}
+        <div className="mb-6 flex items-center justify-between border-b border-[#EFECE6] pb-5">
+          <BrandLogo size="lg" theme="light" showTagline />
+        </div>
+
+        <div className="mb-5">
           <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-            PORTAL OTENTIKASI
+            01 / PORTAL OTENTIKASI SSO
           </span>
-          <h1 className="text-2xl font-bold tracking-tight text-[#141413] mt-1">
+          <h1 className="mt-1 text-xl font-bold tracking-tight text-[#141413]">
             Masuk ke Akun SewaKit
           </h1>
-          <p className="text-xs text-[#575653] mt-1">
-            Gunakan kredensial mahasiswa Telkom University atau akun moderator.
+          <p className="mt-1 text-xs leading-relaxed text-[#575653]">
+            Gunakan kredensial mahasiswa Telkom University terverifikasi atau akun moderator kampus.
           </p>
         </div>
 
         {/* Pilihan Login Mahasiswa vs Admin (OTP) */}
-        <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-[#EFECE6] p-1 mb-6 text-xs font-medium">
+        <div className="mb-6 grid grid-cols-2 gap-1.5 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-1 text-xs font-medium">
           <button
             type="button"
             onClick={() => {
               setRoleTab('mahasiswa');
               setFeedback(null);
             }}
-            className={`rounded-lg py-2 transition ${
+            className={`inline-flex items-center justify-center gap-1.5 rounded-lg py-2 transition ${
               roleTab === 'mahasiswa'
-                ? 'bg-[#141413] text-[#F6F5F0]'
+                ? 'bg-[#141413] text-[#F6F5F0] font-semibold'
                 : 'text-[#575653] hover:text-[#141413]'
             }`}
           >
-            Mahasiswa (NIM/Email)
+            <GraduationCap className="size-3.5" />
+            <span>Mahasiswa (NIM)</span>
           </button>
           <button
             type="button"
@@ -58,26 +72,28 @@ export default function LoginPage() {
               setRoleTab('admin');
               setFeedback(null);
             }}
-            className={`rounded-lg py-2 transition ${
+            className={`inline-flex items-center justify-center gap-1.5 rounded-lg py-2 transition ${
               roleTab === 'admin'
-                ? 'bg-[#141413] text-[#F6F5F0]'
+                ? 'bg-[#141413] text-[#F6F5F0] font-semibold'
                 : 'text-[#575653] hover:text-[#141413]'
             }`}
           >
-            Moderator (OTP 2FA)
+            <ShieldCheck className="size-3.5" />
+            <span>Moderator (2FA)</span>
           </button>
         </div>
 
         {feedback && (
-          <div className="mb-5 rounded-xl bg-[#E9F3ED] border border-[#1B4332]/25 p-3.5 text-xs font-medium text-[#1B4332]">
-            ✓ {feedback}
+          <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] p-3.5 text-xs font-medium text-[#1B4332]">
+            <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
+            <span>{feedback}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {roleTab === 'mahasiswa' ? (
             <div>
-              <label className="block text-xs font-medium text-[#575653] mb-1.5">
+              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
                 Email Kampus / NIM
               </label>
               <input
@@ -86,12 +102,12 @@ export default function LoginPage() {
                 placeholder="nama@student.telkomuniversity.ac.id"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
+                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
               />
             </div>
           ) : (
             <div>
-              <label className="block text-xs font-medium text-[#575653] mb-1.5">
+              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
                 Username Administrator
               </label>
               <input
@@ -100,56 +116,65 @@ export default function LoginPage() {
                 placeholder="admin.sewakit"
                 value={adminUsername}
                 onChange={(e) => setAdminUsername(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
+                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 font-mono text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-[#575653] mb-1.5">
+            <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
               Kata Sandi
             </label>
-            <input
-              type="password"
-              required
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
-            />
+            <div className="relative">
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#78756F]" />
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] py-2.5 pl-10 pr-4 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+              />
+            </div>
           </div>
 
           {roleTab === 'admin' && (
             <div>
-              <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                Kode Verifikasi OTP (6 Digit)
+              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                Token Verifikasi OTP (6 Digit)
               </label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                placeholder="123456"
-                value={adminOtp}
-                onChange={(e) => setAdminOtp(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 font-mono text-sm tracking-widest text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
-              />
+              <div className="relative">
+                <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#C83E2B]" />
+                <input
+                  type="text"
+                  required
+                  maxLength={6}
+                  placeholder="849201"
+                  value={adminOtp}
+                  onChange={(e) => setAdminOtp(e.target.value)}
+                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] py-2.5 pl-10 pr-4 font-mono text-sm font-bold tracking-[0.25em] text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                />
+              </div>
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-[#141413] py-3 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#141413] py-3 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
           >
-            {roleTab === 'mahasiswa' ? 'Masuk ke Akun' : 'Verifikasi & Masuk Admin'}
+            <span>
+              {roleTab === 'mahasiswa' ? 'Masuk ke Akun Mahasiswa' : 'Verifikasi & Masuk Admin'}
+            </span>
+            <ArrowRight className="size-3.5" />
           </button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-[#575653]">
-          Belum memiliki akun mahasiswa?{' '}
+        <div className="mt-6 flex items-center justify-between border-t border-[#EFECE6] pt-4 text-xs text-[#575653]">
+          <span>Belum memiliki akun civitas?</span>
           <Link href="/register" className="font-semibold text-[#C83E2B] hover:underline">
-            Daftar Sekarang
+            Daftar NIM Sekarang →
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
