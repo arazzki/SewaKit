@@ -258,22 +258,22 @@ export default function CancellationAndNoShowPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F6F5F0]">
+    <div className="flex min-h-screen flex-col bg-canvas">
       <PageHeader
-        eyebrow="03B / PROTEKSI PEMBATALAN & SLA COD"
-        title="Pembatalan Pesanan & Laporan No-Show"
-        description="Kalkulasi refund escrow transparan, scheduler pembatalan otomatis (Hold 24J & Batas Bayar 2J), serta klaim kompensasi ketidakhadiran COD."
+        eyebrow="Pembatalan Sewa"
+        title="Pembatalan Pesanan & Laporan Tidak Hadir COD"
+        description="Cek perhitungan pengembalian dana rekber serta laporkan jika pihak lawan tidak hadir saat jadwal COD."
         actions={
           <>
             <Link
               href="/rentals/request"
-              className="rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#141413] transition hover:bg-[#EFECE6]"
+              className="rounded-xl border border-hairline bg-surface px-3.5 py-2 text-xs font-semibold text-ink transition hover:bg-surface-muted"
             >
               ← Pengajuan Sewa
             </Link>
             <Link
               href="/disputes"
-              className="rounded-xl border border-[#141413] bg-[#141413] px-3.5 py-2 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B] hover:border-[#C83E2B]"
+              className="rounded-xl border border-ink bg-ink px-3.5 py-2 text-xs font-semibold text-canvas transition hover:bg-accent hover:border-accent"
             >
               Pusat Deposit &amp; Klaim →
             </Link>
@@ -283,7 +283,7 @@ export default function CancellationAndNoShowPage() {
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-8">
         {actionAlert && (
-          <div className="mb-6 flex items-center justify-between gap-4 rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] px-5 py-3.5 text-xs font-medium text-[#1B4332]">
+          <div className="mb-6 flex items-center justify-between gap-4 rounded-xl border border-forest/25 bg-forest-subtle px-5 py-3.5 text-xs font-medium text-forest">
             <span className="inline-flex items-center gap-2">
               <CheckCircle2 className="size-4 shrink-0" />
               <span>{actionAlert}</span>
@@ -299,14 +299,14 @@ export default function CancellationAndNoShowPage() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="mb-6 flex flex-wrap gap-2 border-b border-[#DCD8CE] pb-4">
+        <div className="mb-6 flex flex-wrap gap-2 border-b border-hairline pb-4">
           <button
             type="button"
             onClick={() => setActiveTab("manual")}
             className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-semibold transition ${
               activeTab === "manual"
-                ? "bg-[#141413] text-[#F6F5F0]"
-                : "border border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413] hover:text-[#141413]"
+                ? "bg-ink text-canvas"
+                : "border border-hairline bg-surface text-ink-muted hover:border-ink hover:text-ink"
             }`}
           >
             <RotateCcw className="size-3.5" />
@@ -317,8 +317,8 @@ export default function CancellationAndNoShowPage() {
             onClick={() => setActiveTab("auto")}
             className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-semibold transition ${
               activeTab === "auto"
-                ? "bg-[#141413] text-[#F6F5F0]"
-                : "border border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413] hover:text-[#141413]"
+                ? "bg-ink text-canvas"
+                : "border border-hairline bg-surface text-ink-muted hover:border-ink hover:text-ink"
             }`}
           >
             <Timer className="size-3.5" />
@@ -329,8 +329,8 @@ export default function CancellationAndNoShowPage() {
             onClick={() => setActiveTab("noshow")}
             className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-semibold transition ${
               activeTab === "noshow"
-                ? "bg-[#141413] text-[#F6F5F0]"
-                : "border border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413] hover:text-[#141413]"
+                ? "bg-ink text-canvas"
+                : "border border-hairline bg-surface text-ink-muted hover:border-ink hover:text-ink"
             }`}
           >
             <ShieldAlert className="size-3.5" />
@@ -341,23 +341,23 @@ export default function CancellationAndNoShowPage() {
         {/* TAB 1: MANUAL CANCEL */}
         {activeTab === "manual" && (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6 lg:col-span-8">
-              <h3 className="text-base font-bold text-[#141413]">
+            <div className="rounded-2xl border border-hairline bg-surface p-6 lg:col-span-8">
+              <h3 className="text-base font-bold text-ink">
                 Formulir Pembatalan &amp; Kalkulasi Pengembalian Dana
               </h3>
-              <p className="mt-1 mb-6 text-xs text-[#575653]">
+              <p className="mt-1 mb-6 text-xs text-ink-muted">
                 Sistem menghitung otomatis porsi pengembalian biaya sewa dan deposit escrow berdasarkan jarak waktu ke jadwal COD.
               </p>
 
               <form onSubmit={handleConfirmManualCancel} className="space-y-5">
                 <div>
-                  <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                     Pilih Nomor Transaksi Aktif
                   </label>
                   <select
                     value={selectedOrderId}
                     onChange={(e) => setSelectedOrderId(e.target.value)}
-                    className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-3 text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                    className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-3 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                   >
                     {orders.map((o) => (
                       <option key={o.id} value={o.id}>
@@ -368,7 +368,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                     Parameter Waktu &amp; Pihak Pembatal
                   </label>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -400,21 +400,21 @@ export default function CancellationAndNoShowPage() {
                         onClick={() => setScenario(opt.key)}
                         className={`rounded-xl border p-3.5 text-left text-xs transition ${
                           scenario === opt.key
-                            ? "border-[#141413] bg-[#FBF9F5] ring-1 ring-[#141413]"
-                            : "border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413]"
+                            ? "border-ink bg-surface-subtle ring-1 ring-ink"
+                            : "border-hairline bg-surface text-ink-muted hover:border-ink"
                         }`}
                       >
-                        <span className="mb-0.5 block font-bold text-[#141413]">
+                        <span className="mb-0.5 block font-bold text-ink">
                           {opt.title}
                         </span>
-                        <span className="text-[#575653]">{opt.desc}</span>
+                        <span className="text-ink-muted">{opt.desc}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                     Alasan Pembatalan
                   </label>
                   <textarea
@@ -422,62 +422,62 @@ export default function CancellationAndNoShowPage() {
                     value={cancelReason}
                     onChange={(e) => setCancelReason(e.target.value)}
                     placeholder="Contoh: Jadwal praktikum laboratorium diundur ke minggu depan oleh asisten..."
-                    className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-3 text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                    className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-3 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={!cancelReason.trim()}
-                  className="w-full rounded-xl bg-[#C83E2B] px-6 py-3.5 text-xs font-semibold text-white transition hover:bg-[#A63120] disabled:cursor-not-allowed disabled:bg-[#DCD8CE] disabled:text-[#78756F]"
+                  className="w-full rounded-xl bg-accent px-6 py-3.5 text-xs font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:bg-hairline disabled:text-ink-subtle"
                 >
                   Konfirmasi Pembatalan &amp; Proses Refund Escrow
                 </button>
               </form>
             </div>
 
-            <div className="h-fit rounded-2xl border border-[#DCD8CE] bg-white p-6 lg:col-span-4">
+            <div className="h-fit rounded-2xl border border-hairline bg-surface p-6 lg:col-span-4">
               <Badge variant="rented" dot>
                 SIMULASI REFUND ESCROW
               </Badge>
-              <h4 className="mt-3 text-base font-bold text-[#141413]">
+              <h4 className="mt-3 text-base font-bold text-ink">
                 {selectedOrder.itemName}
               </h4>
-              <p className="mt-1 font-mono text-xs text-[#575653]">
+              <p className="mt-1 font-mono text-xs text-ink-muted">
                 COD: {selectedOrder.codSchedule}
               </p>
 
-              <dl className="my-5 space-y-2.5 border-y border-[#EFECE6] py-4 text-xs">
+              <dl className="my-5 space-y-2.5 border-y border-surface-muted py-4 text-xs">
                 <div className="flex justify-between">
-                  <dt className="text-[#575653]">Biaya Sewa Terbayar</dt>
-                  <dd className="font-mono font-semibold text-[#141413]">
+                  <dt className="text-ink-muted">Biaya Sewa Terbayar</dt>
+                  <dd className="font-mono font-semibold text-ink">
                     {formatRupiah(selectedOrder.isPaid ? selectedOrder.rentalCost : 0)}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-[#575653]">Deposit Jaminan</dt>
-                  <dd className="font-mono font-semibold text-[#141413]">
+                  <dt className="text-ink-muted">Deposit Jaminan</dt>
+                  <dd className="font-mono font-semibold text-ink">
                     {formatRupiah(
                       selectedOrder.isPaid ? selectedOrder.depositAmount : 0,
                     )}
                   </dd>
                 </div>
-                <div className="flex justify-between border-t border-[#EFECE6] pt-2.5">
-                  <dt className="font-bold text-[#141413]">Refund ke Penyewa</dt>
-                  <dd className="font-mono text-sm font-bold text-[#1B4332]">
+                <div className="flex justify-between border-t border-surface-muted pt-2.5">
+                  <dt className="font-bold text-ink">Refund ke Penyewa</dt>
+                  <dd className="font-mono text-sm font-bold text-forest">
                     {formatRupiah(preview.refundRenter)}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="font-bold text-[#141413]">Kompensasi Pemilik</dt>
-                  <dd className="font-mono text-sm font-bold text-[#C83E2B]">
+                  <dt className="font-bold text-ink">Kompensasi Pemilik</dt>
+                  <dd className="font-mono text-sm font-bold text-accent">
                     {formatRupiah(preview.ownerComp)}
                   </dd>
                 </div>
               </dl>
 
-              <div className="rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-3.5 text-xs leading-relaxed text-[#575653]">
-                <strong className="text-[#141413]">Aturan Diterapkan:</strong>{" "}
+              <div className="rounded-xl border border-hairline bg-surface-subtle p-3.5 text-xs leading-relaxed text-ink-muted">
+                <strong className="text-ink">Aturan Diterapkan:</strong>{" "}
                 {preview.ruleDesc}
               </div>
             </div>
@@ -490,11 +490,11 @@ export default function CancellationAndNoShowPage() {
             {orders.map((o) => (
               <div
                 key={o.id}
-                className="flex flex-col justify-between rounded-2xl border border-[#DCD8CE] bg-white p-6"
+                className="flex flex-col justify-between rounded-2xl border border-hairline bg-surface p-6"
               >
                 <div>
                   <div className="mb-3 flex items-center justify-between gap-2">
-                    <span className="rounded-md border border-[#DCD8CE] bg-[#F6F5F0] px-2.5 py-1 font-mono text-xs font-bold text-[#141413]">
+                    <span className="rounded-md border border-hairline bg-canvas px-2.5 py-1 font-mono text-xs font-bold text-ink">
                       {o.id}
                     </span>
                     <Badge
@@ -512,36 +512,36 @@ export default function CancellationAndNoShowPage() {
                     </Badge>
                   </div>
 
-                  <h4 className="mb-2 text-base font-bold text-[#141413]">
+                  <h4 className="mb-2 text-base font-bold text-ink">
                     {o.itemName}
                   </h4>
 
-                  <div className="mb-4 space-y-1 text-xs text-[#575653]">
+                  <div className="mb-4 space-y-1 text-xs text-ink-muted">
                     <p>
-                      Penyewa: <strong className="text-[#141413]">{o.renterName}</strong> • Pemilik:{" "}
-                      <strong className="text-[#141413]">{o.ownerName}</strong>
+                      Penyewa: <strong className="text-ink">{o.renterName}</strong> • Pemilik:{" "}
+                      <strong className="text-ink">{o.ownerName}</strong>
                     </p>
                     <p>
                       Timer SLA:{" "}
-                      <strong className="font-mono text-[#9A5B13]">
+                      <strong className="font-mono text-warning-ink">
                         {o.timeRemaining}
                       </strong>
                     </p>
                   </div>
 
                   {o.cancelSummary && (
-                    <div className="mb-4 rounded-xl border border-[#C83E2B]/30 bg-[#FDF2F0] p-3 text-xs text-[#9E2A1B]">
+                    <div className="mb-4 rounded-xl border border-accent/30 bg-accent-subtle p-3 text-xs text-accent-ink">
                       {o.cancelSummary}
                     </div>
                   )}
                 </div>
 
-                <div className="border-t border-[#EFECE6] pt-3.5">
+                <div className="border-t border-surface-muted pt-3.5">
                   {o.status === "MENUNGGU_PEMBAYARAN_2_JAM" && (
                     <button
                       type="button"
                       onClick={() => handleTriggerAutoCancel(o.id, "2H_PAYMENT")}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-canvas transition hover:bg-accent"
                     >
                       <Timer className="size-3.5" />
                       <span>Simulasikan Lewat Batas Bayar 2 Jam (Auto-Cancel)</span>
@@ -551,7 +551,7 @@ export default function CancellationAndNoShowPage() {
                     <button
                       type="button"
                       onClick={() => handleTriggerAutoCancel(o.id, "24H_HOLD")}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-canvas transition hover:bg-accent"
                     >
                       <Timer className="size-3.5" />
                       <span>Simulasikan Lewat Hold 24 Jam (Auto-Cancel)</span>
@@ -559,7 +559,7 @@ export default function CancellationAndNoShowPage() {
                   )}
                   {o.status !== "MENUNGGU_PEMBAYARAN_2_JAM" &&
                     o.status !== "MENUNGGU_RESPON_24_JAM" && (
-                      <span className="block text-center font-mono text-xs text-[#78756F]">
+                      <span className="block text-center font-mono text-xs text-ink-subtle">
                         STATUS AKHIR: {o.status.replace(/_/g, " ")}
                       </span>
                     )}
@@ -572,23 +572,23 @@ export default function CancellationAndNoShowPage() {
         {/* TAB 3: NO-SHOW */}
         {activeTab === "noshow" && (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6 lg:col-span-8">
-              <h3 className="text-base font-bold text-[#141413]">
+            <div className="rounded-2xl border border-hairline bg-surface p-6 lg:col-span-8">
+              <h3 className="text-base font-bold text-ink">
                 Formulir Klaim No-Show Titik COD Kampus
               </h3>
-              <p className="mt-1 mb-6 text-xs text-[#575653]">
+              <p className="mt-1 mb-6 text-xs text-ink-muted">
                 Jika salah satu pihak tidak hadir di titik temu kampus setelah melewati toleransi tunggu 30 menit, transaksi dibatalkan dengan pembagian kompensasi otomatis.
               </p>
 
               <form onSubmit={handleReportNoShow} className="space-y-5">
                 <div>
-                  <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                     Pilih Transaksi Terjadwal COD
                   </label>
                   <select
                     value={noShowOrderId}
                     onChange={(e) => setNoShowOrderId(e.target.value)}
-                    className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-3 text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                    className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-3 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                   >
                     {orders.map((o) => (
                       <option key={o.id} value={o.id}>
@@ -599,7 +599,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                     Pihak yang Tidak Hadir (No-Show)
                   </label>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -608,11 +608,11 @@ export default function CancellationAndNoShowPage() {
                       onClick={() => setNoShowParty("RENTER_ABSENT")}
                       className={`rounded-xl border p-4 text-left text-xs transition ${
                         noShowParty === "RENTER_ABSENT"
-                          ? "border-[#C83E2B] bg-[#FDF2F0] ring-1 ring-[#C83E2B]"
-                          : "border-[#DCD8CE] bg-white text-[#575653]"
+                          ? "border-accent bg-accent-subtle ring-1 ring-accent"
+                          : "border-hairline bg-surface text-ink-muted"
                       }`}
                     >
-                      <span className="mb-1 block font-bold text-[#141413]">
+                      <span className="mb-1 block font-bold text-ink">
                         Penyewa Tidak Hadir (Dilaporkan Pemilik)
                       </span>
                       Deposit dikembalikan ke Penyewa; biaya sewa diteruskan ke Pemilik sebagai kompensasi waktu tunggu.
@@ -623,11 +623,11 @@ export default function CancellationAndNoShowPage() {
                       onClick={() => setNoShowParty("OWNER_ABSENT")}
                       className={`rounded-xl border p-4 text-left text-xs transition ${
                         noShowParty === "OWNER_ABSENT"
-                          ? "border-[#C83E2B] bg-[#FDF2F0] ring-1 ring-[#C83E2B]"
-                          : "border-[#DCD8CE] bg-white text-[#575653]"
+                          ? "border-accent bg-accent-subtle ring-1 ring-accent"
+                          : "border-hairline bg-surface text-ink-muted"
                       }`}
                     >
-                      <span className="mb-1 block font-bold text-[#141413]">
+                      <span className="mb-1 block font-bold text-ink">
                         Pemilik Tidak Hadir (Dilaporkan Penyewa)
                       </span>
                       Dana Sewa + Deposit dikembalikan 100% utuh ke Penyewa &amp; akun Pemilik tercatat penalti SLA.
@@ -637,7 +637,7 @@ export default function CancellationAndNoShowPage() {
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                    <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                       Durasi Menunggu di Titik COD (Menit)
                     </label>
                     <input
@@ -645,27 +645,27 @@ export default function CancellationAndNoShowPage() {
                       min={30}
                       value={waitedMinutes}
                       onChange={(e) => setWaitedMinutes(Number(e.target.value))}
-                      className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 font-mono text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                      className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-2.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                    <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                       Lampiran Foto Bukti Kehadiran
                     </label>
                     <div className="relative">
-                      <Camera className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#78756F]" />
+                      <Camera className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-subtle" />
                       <input
                         type="text"
                         value={proofFileName}
                         onChange={(e) => setProofFileName(e.target.value)}
-                        className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] py-2.5 pl-10 pr-4 font-mono text-xs text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                        className="w-full rounded-xl border border-hairline bg-surface-subtle py-2.5 pl-10 pr-4 font-mono text-xs text-ink focus:border-ink focus:bg-surface focus:outline-none"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+                  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                     Kronologi Kejadian
                   </label>
                   <textarea
@@ -673,13 +673,13 @@ export default function CancellationAndNoShowPage() {
                     value={noShowNotes}
                     onChange={(e) => setNoShowNotes(e.target.value)}
                     placeholder="Contoh: Sudah menunggu di Lobi Gedung TULT sejak pukul 10:00 WIB dan menghubungi via WhatsApp namun tidak aktif..."
-                    className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-3 text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                    className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-3 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#C83E2B] px-6 py-3.5 text-xs font-semibold text-white transition hover:bg-[#A63120]"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-xs font-semibold text-white transition hover:bg-accent-hover"
                 >
                   <AlertTriangle className="size-4" />
                   <span>Kirim Laporan No-Show &amp; Eksekusi Kompensasi</span>
@@ -687,21 +687,21 @@ export default function CancellationAndNoShowPage() {
               </form>
             </div>
 
-            <div className="h-fit space-y-4 rounded-2xl border border-[#DCD8CE] bg-white p-6 lg:col-span-4">
+            <div className="h-fit space-y-4 rounded-2xl border border-hairline bg-surface p-6 lg:col-span-4">
               <Badge variant="hold" dot>
                 KEPUTUSAN OTOMATIS NO-SHOW
               </Badge>
-              <h4 className="text-base font-bold text-[#141413]">
+              <h4 className="text-base font-bold text-ink">
                 {selectedNoShowOrder.itemName}
               </h4>
-              <p className="text-xs text-[#575653]">
-                Titik COD: <strong className="text-[#141413]">{selectedNoShowOrder.codLocation}</strong>
+              <p className="text-xs text-ink-muted">
+                Titik COD: <strong className="text-ink">{selectedNoShowOrder.codLocation}</strong>
               </p>
 
-              <dl className="space-y-2.5 border-y border-[#EFECE6] py-4 text-xs">
+              <dl className="space-y-2.5 border-y border-surface-muted py-4 text-xs">
                 <div className="flex justify-between">
-                  <dt className="text-[#575653]">Refund ke Penyewa</dt>
-                  <dd className="font-mono text-sm font-bold text-[#1B4332]">
+                  <dt className="text-ink-muted">Refund ke Penyewa</dt>
+                  <dd className="font-mono text-sm font-bold text-forest">
                     {formatRupiah(
                       noShowParty === "RENTER_ABSENT"
                         ? selectedNoShowOrder.depositAmount
@@ -711,8 +711,8 @@ export default function CancellationAndNoShowPage() {
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-[#575653]">Kompensasi Pemilik</dt>
-                  <dd className="font-mono text-sm font-bold text-[#C83E2B]">
+                  <dt className="text-ink-muted">Kompensasi Pemilik</dt>
+                  <dd className="font-mono text-sm font-bold text-accent">
                     {formatRupiah(
                       noShowParty === "RENTER_ABSENT"
                         ? selectedNoShowOrder.rentalCost
@@ -722,7 +722,7 @@ export default function CancellationAndNoShowPage() {
                 </div>
               </dl>
 
-              <p className="text-xs leading-relaxed text-[#575653]">
+              <p className="text-xs leading-relaxed text-ink-muted">
                 Klaim No-Show wajib melampirkan foto timestamp di lokasi CCTV kampus setelah menunggu minimal <strong>30 menit</strong> dari jam kesepakatan.
               </p>
             </div>

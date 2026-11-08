@@ -13,13 +13,13 @@ const SIZE_MAP = {
   sm: {
     icon: "h-7 w-7",
     wordmark: "text-sm",
-    tagline: "text-[10px]",
+    tagline: "text-xs",
     gap: "gap-2.5",
   },
   md: {
     icon: "h-9 w-9",
     wordmark: "text-base",
-    tagline: "text-[11px]",
+    tagline: "text-xs",
     gap: "gap-3",
   },
   lg: {
@@ -42,7 +42,6 @@ export default function BrandLogo({
 
   const content = (
     <>
-      {/* Official SewaKit Vector Emblem (Modular P2P S-Trace) */}
       <svg
         viewBox="0 0 40 40"
         fill="none"
@@ -60,8 +59,8 @@ export default function BrandLogo({
           className={cx(
             "transition-colors duration-200",
             isDark
-              ? "fill-[#1D1D1B] group-hover:fill-[#262523]"
-              : "fill-[#141413] group-hover:fill-[#1F1E1C]",
+              ? "fill-ink-elevated group-hover:fill-ink-border"
+              : "fill-ink group-hover:fill-ink-elevated",
           )}
         />
         <rect
@@ -73,24 +72,22 @@ export default function BrandLogo({
           strokeWidth="1"
           className={cx(
             "transition-colors duration-200",
-            isDark
-              ? "stroke-[#33312E] group-hover:stroke-[#C83E2B]/60"
-              : "stroke-[#2C2B28] group-hover:stroke-[#C83E2B]/60",
+            "stroke-ink-border group-hover:stroke-accent/60",
           )}
         />
         <path
           d="M 21.8 11.5 H 14 A 2.8 2.8 0 0 0 11.2 14.3 V 17.2 A 2.8 2.8 0 0 0 14 20 H 26 A 2.8 2.8 0 0 1 28.8 22.8 V 25.7 A 2.8 2.8 0 0 1 26 28.5 H 18.2"
-          stroke="#F6F5F0"
+          className="stroke-canvas"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="27.5" cy="11.5" r="2.6" fill="#C83E2B" />
+        <circle cx="27.5" cy="11.5" r="2.6" className="fill-accent" />
         <circle
           cx="12.5"
           cy="28.5"
           r="2.2"
-          fill={isDark ? "#8E8B83" : "#D5D2CA"}
+          className={isDark ? "fill-ink-faint" : "fill-ink-inverse-muted"}
         />
       </svg>
 
@@ -98,7 +95,7 @@ export default function BrandLogo({
         <span
           className={cx(
             "block font-extrabold tracking-tight",
-            isDark ? "text-[#F6F5F0]" : "text-[#141413]",
+            isDark ? "text-canvas" : "text-ink",
             s.wordmark,
           )}
         >
@@ -108,11 +105,11 @@ export default function BrandLogo({
           <span
             className={cx(
               "mt-1 block truncate",
-              isDark ? "text-[#8E8B83]" : "text-[#78756F]",
+              isDark ? "text-ink-faint" : "text-ink-subtle",
               s.tagline,
             )}
           >
-            Bursa Alat Praktikum &amp; Riset Kampus
+            Sewa Alat Praktikum &amp; Kegiatan Kampus
           </span>
         )}
       </div>

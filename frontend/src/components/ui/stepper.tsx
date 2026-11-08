@@ -40,14 +40,14 @@ export function Stepper({
               <div className="flex flex-col items-center">
                 <div
                   className={cx(
-                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border font-mono text-[11px] font-bold transition",
+                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold transition",
                     isDisputeStep
-                      ? "border-[#B42318] bg-[#B42318] text-white"
+                      ? "border-danger bg-danger text-white"
                       : isDone
-                        ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
+                        ? "border-ink bg-ink text-canvas"
                         : isActive
-                          ? "border-[#C83E2B] bg-[#C83E2B]/10 text-[#C83E2B]"
-                          : "border-[#DCD8CE] bg-[#F6F5F0] text-[#78756F]",
+                          ? "border-accent bg-accent/10 text-accent"
+                          : "border-hairline bg-canvas text-ink-subtle",
                   )}
                 >
                   {isDisputeStep ? (
@@ -55,14 +55,14 @@ export function Stepper({
                   ) : isDone ? (
                     <Check className="size-3.5" />
                   ) : (
-                    step.code ?? `0${index + 1}`
+                    index + 1
                   )}
                 </div>
                 {index < steps.length - 1 && (
                   <div
                     className={cx(
                       "mt-1 h-5 w-px",
-                      isDone ? "bg-[#141413]" : "bg-[#DCD8CE]",
+                      isDone ? "bg-ink" : "bg-hairline",
                     )}
                   />
                 )}
@@ -72,18 +72,18 @@ export function Stepper({
                   className={cx(
                     "text-xs font-semibold",
                     isDisputeStep
-                      ? "text-[#B42318]"
+                      ? "text-danger"
                       : isActive
-                        ? "text-[#C83E2B]"
+                        ? "text-accent"
                         : isDone
-                          ? "text-[#141413]"
-                          : "text-[#78756F]",
+                          ? "text-ink"
+                          : "text-ink-subtle",
                   )}
                 >
                   {step.label}
                 </p>
                 {step.description && (
-                  <p className="mt-0.5 text-[11px] text-[#78756F]">
+                  <p className="mt-0.5 text-xs text-ink-subtle">
                     {step.description}
                   </p>
                 )}
@@ -116,39 +116,39 @@ export function Stepper({
             className={cx(
               "rounded-xl border p-3 transition",
               isDisputeStep
-                ? "border-[#FECDCA] bg-[#FEF3F2]"
+                ? "border-danger-border bg-danger-subtle"
                 : isActive
-                  ? "border-[#C83E2B] bg-[#FBF9F5]"
+                  ? "border-accent bg-surface-subtle"
                   : isDone
-                    ? "border-[#141413]/25 bg-white"
-                    : "border-[#DCD8CE] bg-[#F6F5F0]/70",
+                    ? "border-ink/25 bg-surface"
+                    : "border-hairline bg-canvas/70",
             )}
           >
             <div className="flex items-center justify-between gap-2">
               <span
                 className={cx(
-                  "font-mono text-[10px] font-bold uppercase tracking-wider",
+                  "text-xs font-semibold",
                   isDisputeStep
-                    ? "text-[#B42318]"
+                    ? "text-danger"
                     : isActive
-                      ? "text-[#C83E2B]"
+                      ? "text-accent"
                       : isDone
-                        ? "text-[#1B4332]"
-                        : "text-[#78756F]",
+                        ? "text-forest"
+                        : "text-ink-subtle",
                 )}
               >
-                {step.code ?? `TAHAP 0${index + 1}`}
+                {step.code ?? `Tahap ${index + 1}`}
               </span>
               <span
                 className={cx(
-                  "flex h-5 w-5 items-center justify-center rounded-md border text-[10px] font-mono font-bold",
+                  "flex h-5 w-5 items-center justify-center rounded-md border font-mono text-xs font-bold",
                   isDisputeStep
-                    ? "border-[#B42318] bg-[#B42318] text-white"
+                    ? "border-danger bg-danger text-white"
                     : isDone
-                      ? "border-[#1B4332] bg-[#1B4332] text-white"
+                      ? "border-forest bg-forest text-white"
                       : isActive
-                        ? "border-[#C83E2B] bg-[#C83E2B] text-white"
-                        : "border-[#DCD8CE] bg-white text-[#78756F]",
+                        ? "border-accent bg-accent text-white"
+                        : "border-hairline bg-surface text-ink-subtle",
                 )}
               >
                 {isDisputeStep ? (
@@ -164,16 +164,16 @@ export function Stepper({
               className={cx(
                 "mt-1.5 text-xs font-semibold leading-snug",
                 isDisputeStep
-                  ? "text-[#B42318]"
+                  ? "text-danger"
                   : isActive || isDone
-                    ? "text-[#141413]"
-                    : "text-[#78756F]",
+                    ? "text-ink"
+                    : "text-ink-subtle",
               )}
             >
               {step.label}
             </p>
             {step.description && (
-              <p className="mt-0.5 text-[11px] text-[#78756F] line-clamp-1">
+              <p className="mt-0.5 text-xs text-ink-subtle line-clamp-1">
                 {step.description}
               </p>
             )}

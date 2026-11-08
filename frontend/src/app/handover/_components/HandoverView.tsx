@@ -29,27 +29,27 @@ import {
 const PROTOCOL_STEPS: readonly StepItem[] = [
   {
     key: "SIAP_COD",
-    code: "01 / TITIK COD",
-    label: "Inspeksi Awal & Token OTP",
-    description: "Cek fisik & tukar 6 digit",
+    code: "Tahap 1",
+    label: "Ambil Barang COD",
+    description: "Cek fisik & konfirmasi kode",
   },
   {
     key: "DISEWA",
-    code: "02 / MASA SEWA",
-    label: "Pemakaian Instrumen",
-    description: "Deposit ditahan di Escrow",
+    code: "Tahap 2",
+    label: "Masa Pemakaian",
+    description: "Deposit disimpan di rekber",
   },
   {
     key: "MENUNGGU_KONFIRMASI_PENGEMBALIAN",
-    code: "03 / KOMPARASI",
-    label: "Audit Pengembalian",
-    description: "Komparasi foto awal vs akhir",
+    code: "Tahap 3",
+    label: "Cek Pengembalian",
+    description: "Cocokkan kondisi awal & akhir",
   },
   {
     key: "SELESAI",
-    code: "04 / PENYELESAIAN",
-    label: "Rilis Deposit Otomatis",
-    description: "Pencairan saldo & deposit",
+    code: "Tahap 4",
+    label: "Selesai & Dana Cair",
+    description: "Deposit kembali & sewa cair",
   },
 ];
 
@@ -83,11 +83,11 @@ export default function HandoverView({
       {/* Left Sidebar: Role Simulator & Active Handover Queue (4 Columns) */}
       <aside className="space-y-4 lg:col-span-4">
         {/* Role Simulator Switch */}
-        <div className="rounded-2xl border border-[#DCD8CE] bg-white p-4">
-          <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#78756F]">
+        <div className="rounded-2xl border border-hairline bg-surface p-4">
+          <span className="block text-xs font-semibold text-ink-subtle">
             MODE PERSPEKTIF SIMULASI
           </span>
-          <div className="mt-2.5 grid grid-cols-2 gap-1.5 rounded-xl bg-[#EFECE6] p-1">
+          <div className="mt-2.5 grid grid-cols-2 gap-1.5 rounded-xl bg-surface-muted p-1">
             {(["PENYEWA", "PEMILIK"] as const).map((option) => (
               <button
                 key={option}
@@ -96,8 +96,8 @@ export default function HandoverView({
                 aria-pressed={role === option}
                 className={`inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition ${
                   role === option
-                    ? "bg-[#141413] text-[#F6F5F0] shadow-2xs"
-                    : "text-[#575653] hover:text-[#141413]"
+                    ? "bg-ink text-canvas shadow-2xs"
+                    : "text-ink-muted hover:text-ink"
                 }`}
               >
                 {option === "PENYEWA" ? (
@@ -113,7 +113,7 @@ export default function HandoverView({
 
         {/* Active COD Transactions Queue */}
         <div className="space-y-2.5">
-          <div className="px-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#78756F]">
+          <div className="px-1 text-xs font-semibold text-ink-subtle">
             Daftar Transaksi COD ({rentals.length})
           </div>
           {rentals.map((rental) => {
@@ -127,25 +127,25 @@ export default function HandoverView({
                 onClick={() => setSelectedId(rental.id)}
                 className={`w-full rounded-2xl border p-4 text-left transition ${
                   isSelected
-                    ? "border-[#141413] bg-white ring-2 ring-[#141413]/10"
-                    : "border-[#DCD8CE] bg-white/85 hover:border-[#141413] hover:bg-white"
+                    ? "border-ink bg-surface ring-2 ring-ink/10"
+                    : "border-hairline bg-surface/85 hover:border-ink hover:bg-surface"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-xs font-bold text-[#141413]">
+                  <span className="font-mono text-xs font-bold text-ink">
                     {rental.id}
                   </span>
                   <StatusBadge status={rental.status} />
                 </div>
-                <p className="mt-2 line-clamp-1 text-sm font-bold text-[#141413]">
+                <p className="mt-2 line-clamp-1 text-sm font-bold text-ink">
                   {rental.itemName}
                 </p>
-                <div className="mt-2 flex items-center justify-between gap-2 font-mono text-[11px] text-[#575653]">
+                <div className="mt-2 flex items-center justify-between gap-2 font-mono text-xs text-ink-muted">
                   <span>
                     {formatDate(rental.startDate)} – {formatDate(rental.endDate)}
                   </span>
                   {late && (
-                    <span className="inline-flex items-center gap-1 font-semibold text-[#B42318]">
+                    <span className="inline-flex items-center gap-1 font-semibold text-danger">
                       <AlertTriangle className="size-3" />
                       Terlambat
                     </span>
@@ -159,12 +159,12 @@ export default function HandoverView({
 
       {/* Right Main Sheet: Official COD Inspection Protocol (8 Columns) */}
       {selected ? (
-        <section className="overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white lg:col-span-8">
+        <section className="overflow-hidden rounded-2xl border border-hairline bg-surface lg:col-span-8">
           {/* Official Protocol Header with Standardized BrandLogo */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#EFECE6] bg-[#FBF9F5] px-6 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-muted bg-surface-subtle px-6 py-4">
             <BrandLogo size="sm" theme="light" showTagline={false} href={null} />
             <div className="flex items-center gap-2">
-              <span className="rounded-md border border-[#DCD8CE] bg-white px-2.5 py-1 font-mono text-xs font-bold text-[#141413]">
+              <span className="rounded-md border border-hairline bg-surface px-2.5 py-1 font-mono text-xs font-bold text-ink">
                 {selected.id}
               </span>
               <StatusBadge status={selected.status} />
@@ -174,46 +174,46 @@ export default function HandoverView({
           <div className="space-y-6 p-6">
             {/* Equipment Title & Campus COD Meeting Point Card */}
             <div>
-              <h2 className="text-xl font-bold tracking-tight text-[#141413]">
+              <h2 className="text-xl font-bold tracking-tight text-ink">
                 {selected.itemName}
               </h2>
 
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <div className="rounded-xl border border-[#EFECE6] bg-[#FBF9F5] p-3">
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase text-[#78756F]">
-                    <MapPin className="size-3 text-[#C83E2B]" />
+                <div className="rounded-xl border border-surface-muted bg-surface-subtle p-3">
+                  <span className="flex items-center gap-1.5 font-mono text-xs uppercase text-ink-subtle">
+                    <MapPin className="size-3 text-accent" />
                     Titik Temu CCTV Kampus
                   </span>
-                  <p className="mt-1 text-xs font-bold text-[#141413]">
+                  <p className="mt-1 text-xs font-bold text-ink">
                     {selected.codLocation}
                   </p>
-                  <p className="font-mono text-[11px] text-[#575653]">
+                  <p className="font-mono text-xs text-ink-muted">
                     Jadwal: {selected.codTime}
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#EFECE6] bg-[#FBF9F5] p-3">
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase text-[#78756F]">
-                    <Calendar className="size-3 text-[#141413]" />
+                <div className="rounded-xl border border-surface-muted bg-surface-subtle p-3">
+                  <span className="flex items-center gap-1.5 font-mono text-xs uppercase text-ink-subtle">
+                    <Calendar className="size-3 text-ink" />
                     Pihak Terverifikasi NIM
                   </span>
-                  <p className="mt-1 text-xs text-[#141413]">
+                  <p className="mt-1 text-xs text-ink">
                     Penyewa: <strong>{selected.renterName}</strong>
                   </p>
-                  <p className="text-xs text-[#575653]">
+                  <p className="text-xs text-ink-muted">
                     Pemilik: <strong>{selected.ownerName}</strong>
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#1B4332]/20 bg-[#E9F3ED]/50 p-3">
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase text-[#1B4332]">
+                <div className="rounded-xl border border-forest/20 bg-forest-subtle/50 p-3">
+                  <span className="flex items-center gap-1.5 font-mono text-xs uppercase text-forest">
                     <ShieldCheck className="size-3" />
                     Jaminan Escrow Aktif
                   </span>
-                  <p className="mt-1 font-mono text-sm font-bold text-[#1B4332]">
+                  <p className="mt-1 font-mono text-sm font-bold text-forest">
                     {formatRupiah(selected.depositAmount)}
                   </p>
-                  <p className="font-mono text-[10px] text-[#1B4332]/80">
+                  <p className="font-mono text-xs text-forest/80">
                     {formatDate(selected.startDate)} – {formatDate(selected.endDate)}
                   </p>
                 </div>
@@ -233,7 +233,7 @@ export default function HandoverView({
               }
             />
 
-            <div className="border-t border-[#EFECE6] pt-5">
+            <div className="border-t border-surface-muted pt-5">
               {selected.status === "SIAP_COD" && (
                 <PickupPanel
                   key={`${selected.id}-${role}`}
@@ -266,7 +266,7 @@ export default function HandoverView({
           </div>
         </section>
       ) : (
-        <p className="text-sm text-[#575653] lg:col-span-8">
+        <p className="text-sm text-ink-muted lg:col-span-8">
           Belum ada sewa yang perlu diserahterimakan.
         </p>
       )}

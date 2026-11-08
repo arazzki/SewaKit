@@ -140,7 +140,7 @@ export default function AdminDashboardPage() {
       key: "id",
       header: "ID Audit",
       render: (trx) => (
-        <span className="font-mono font-bold text-[#141413]">{trx.id}</span>
+        <span className="font-mono font-bold text-ink">{trx.id}</span>
       ),
     },
     {
@@ -148,8 +148,8 @@ export default function AdminDashboardPage() {
       header: "Mahasiswa Penyewa",
       render: (trx) => (
         <div>
-          <p className="font-semibold text-[#141413]">{trx.renter}</p>
-          <span className="font-mono text-[10px] text-[#78756F]">
+          <p className="font-semibold text-ink">{trx.renter}</p>
+          <span className="font-mono text-xs text-ink-subtle">
             NIM {trx.nim}
           </span>
         </div>
@@ -158,14 +158,14 @@ export default function AdminDashboardPage() {
     {
       key: "item",
       header: "Instrumen Praktikum",
-      render: (trx) => <span className="text-[#141413]">{trx.item}</span>,
+      render: (trx) => <span className="text-ink">{trx.item}</span>,
     },
     {
       key: "cod",
       header: "Titik COD",
       render: (trx) => (
-        <span className="inline-flex items-center gap-1 text-[#575653]">
-          <MapPin className="size-3 text-[#C83E2B]" />
+        <span className="inline-flex items-center gap-1 text-ink-muted">
+          <MapPin className="size-3 text-accent" />
           {trx.codPoint}
         </span>
       ),
@@ -175,7 +175,7 @@ export default function AdminDashboardPage() {
       header: "Nilai Escrow",
       align: "right",
       render: (trx) => (
-        <span className="font-mono font-semibold text-[#141413]">
+        <span className="font-mono font-semibold text-ink">
           {formatRupiah(trx.escrowValue)}
         </span>
       ),
@@ -184,7 +184,7 @@ export default function AdminDashboardPage() {
       key: "date",
       header: "Timestamp",
       render: (trx) => (
-        <span className="font-mono text-[11px] text-[#575653]">{trx.date}</span>
+        <span className="font-mono text-xs text-ink-muted">{trx.date}</span>
       ),
     },
     {
@@ -200,23 +200,23 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0]">
+    <div className="min-h-screen bg-canvas">
       <PageHeader
-        eyebrow="PLATFORM OPERATIONS MONITOR"
-        title="Pusat Moderasi & Audit Ekosistem SewaKit"
-        description="Pemantauan real-time volume rekening bersama (escrow), kepadatan titik COD kampus, dan audit transaksi civitas."
+        eyebrow="Moderasi Kampus"
+        title="Dashboard Moderator SewaKit"
+        description="Pantau transaksi berjalan, dana rekber tertahan, titik COD kampus, dan laporan kendala pengguna."
         actions={
           <>
             <Link
               href="/disputes"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2.5 text-xs font-medium text-[#141413] transition hover:border-[#141413]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-xs font-medium text-ink transition hover:border-ink"
             >
-              <Scale className="size-3.5 text-[#C83E2B]" />
+              <Scale className="size-3.5 text-accent" />
               <span>Mediasi Sengketa</span>
             </Link>
             <Link
               href="/admin/categories"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-xs font-medium text-canvas transition hover:bg-accent"
             >
               <span>Master Kategori Alat</span>
               <ArrowUpRight className="size-3.5" />
@@ -233,23 +233,23 @@ export default function AdminDashboardPage() {
             return (
               <div
                 key={stat.code}
-                className="flex flex-col justify-between rounded-2xl border border-[#DCD8CE] bg-white p-5"
+                className="flex flex-col justify-between rounded-2xl border border-hairline bg-surface p-5"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#78756F]">
+                  <span className="text-xs font-semibold text-ink-subtle">
                     {stat.code}
                   </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#EFECE6] bg-[#F6F5F0] text-[#141413]">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-surface-muted bg-canvas text-ink">
                     <IconComponent className="size-4" />
                   </div>
                 </div>
                 <div>
-                  <p className="font-mono text-2xl font-bold text-[#141413]">
+                  <p className="font-mono text-2xl font-bold text-ink">
                     {stat.value}
                   </p>
                   <div className="mt-1 flex items-center justify-between gap-2 text-xs">
-                    <span className="text-[#575653]">{stat.name}</span>
-                    <span className="font-mono text-[10px] text-[#1B4332]">
+                    <span className="text-ink-muted">{stat.name}</span>
+                    <span className="font-mono text-xs text-forest">
                       {stat.delta}
                     </span>
                   </div>
@@ -260,13 +260,13 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Campus COD Distribution Strip */}
-        <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 sm:p-6">
+        <div className="rounded-2xl border border-hairline bg-surface p-5 sm:p-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
+              <span className="text-xs font-semibold text-accent">
                 DISTRIBUSI TITIK PERTEMUAN KAMPUS
               </span>
-              <h2 className="text-sm font-bold text-[#141413] sm:text-base">
+              <h2 className="text-sm font-bold text-ink sm:text-base">
                 Kepadatan Aktivitas Serah Terima COD per Gedung
               </h2>
             </div>
@@ -279,21 +279,21 @@ export default function AdminDashboardPage() {
             {COD_ZONE_METRICS.map((z) => (
               <div
                 key={z.zone}
-                className="rounded-xl border border-[#EFECE6] bg-[#FBF9F5] p-3.5"
+                className="rounded-xl border border-surface-muted bg-surface-subtle p-3.5"
               >
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[#141413]">{z.zone}</span>
-                  <span className="font-mono font-bold text-[#C83E2B]">
+                  <span className="font-bold text-ink">{z.zone}</span>
+                  <span className="font-mono font-bold text-accent">
                     {z.share}%
                   </span>
                 </div>
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[#EFECE6]">
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
                   <div
                     style={{ width: `${z.share}%` }}
-                    className="h-full rounded-full bg-[#141413]"
+                    className="h-full rounded-full bg-ink"
                   />
                 </div>
-                <span className="mt-1.5 block font-mono text-[10px] text-[#78756F]">
+                <span className="mt-1.5 block font-mono text-xs text-ink-subtle">
                   {z.count} minggu ini
                 </span>
               </div>
@@ -309,10 +309,10 @@ export default function AdminDashboardPage() {
           toolbar={
             <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
               <div>
-                <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                <span className="block text-xs font-semibold text-ink-subtle">
                   REAL-TIME AUDIT LOG
                 </span>
-                <h2 className="text-base font-bold text-[#141413]">
+                <h2 className="text-base font-bold text-ink">
                   Jejak Aktivitas Transaksi &amp; Escrow Kampus
                 </h2>
               </div>
@@ -325,10 +325,10 @@ export default function AdminDashboardPage() {
                     key={tab}
                     type="button"
                     onClick={() => setStatusFilter(tab)}
-                    className={`rounded-lg px-3 py-1.5 font-mono text-[11px] font-semibold transition ${
+                    className={`rounded-lg px-3 py-1.5 font-mono text-xs font-semibold transition ${
                       statusFilter === tab
-                        ? "bg-[#141413] text-[#F6F5F0]"
-                        : "border border-[#DCD8CE] bg-[#FBF9F5] text-[#575653] hover:border-[#141413] hover:text-[#141413]"
+                        ? "bg-ink text-canvas"
+                        : "border border-hairline bg-surface-subtle text-ink-muted hover:border-ink hover:text-ink"
                     }`}
                   >
                     {tab}

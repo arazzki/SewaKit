@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 function CatalogSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="h-36 animate-pulse rounded-2xl border border-[#DCD8CE] bg-white" />
+      <div className="h-36 animate-pulse rounded-2xl border border-hairline bg-surface" />
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3, 4, 5, 6].map((n) => (
           <div
             key={n}
-            className="h-96 animate-pulse rounded-2xl border border-[#DCD8CE] bg-white"
+            className="h-96 animate-pulse rounded-2xl border border-hairline bg-surface"
           />
         ))}
       </div>
@@ -29,17 +29,17 @@ function CatalogSkeleton() {
 
 export default function CatalogPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F6F5F0]">
+    <div className="flex min-h-screen flex-col bg-canvas">
       <PageHeader
-        eyebrow="01 / INVENTARIS LABORATORIUM & KAMPUS"
-        title="Katalog Peralatan Praktikum & Multimedia"
-        description="Sewa instrumen praktikum, board IoT, dan perangkat dokumentasi langsung dari sesama mahasiswa Telkom University dengan proteksi deposit escrow."
+        eyebrow="Katalog Alat"
+        title="Peralatan Praktikum & Kegiatan Kampus"
+        description="Cari dan sewa alat ukur laboratorium, kit IoT, kamera, hingga perlengkapan kepanitiaan langsung dari sesama mahasiswa Telkom University."
         actions={
           <Link
             href="/rentals/request"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-xs font-medium text-canvas transition hover:bg-accent"
           >
-            <span>Ajukan Booking Alat</span>
+            <span>Ajukan Sewa</span>
             <ArrowUpRight className="size-3.5" />
           </Link>
         }

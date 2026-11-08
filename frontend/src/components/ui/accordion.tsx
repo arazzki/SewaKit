@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, type FC } from "react";
-import Link from "next/link";
 import { motion, MotionConfig, type Transition } from "motion/react";
 import {
   ChevronDown,
@@ -13,6 +12,7 @@ import {
   Award,
 } from "lucide-react";
 import useMeasure from "react-use-measure";
+import Button from "@/components/ui/button";
 
 export interface AccordionItemData {
   id: number;
@@ -31,7 +31,7 @@ interface AccordionItemProps {
   openIndex: number;
 }
 
-interface AccordionProps {
+export interface AccordionProps {
   items?: AccordionItemData[];
   defaultOpenId?: number | null;
   className?: string;
@@ -47,62 +47,57 @@ const springTransition: Transition = {
 export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   {
     id: 1,
-    title: "01 / Penahanan Jadwal (Hold 24 Jam) Anti-Bentrok",
-    tag: "BOOKING ENGINE",
-    icon: <Clock className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
+    title: "Jadwal Dikunci 24 Jam Saat Pengajuan",
+    icon: <Clock className="size-4 text-accent" strokeWidth={1.75} />,
     content:
-      "Setiap pengajuan sewa otomatis mengunci kalender ketersediaan alat selama 24 jam. Mahasiswa lain tidak dapat menyerobot tanggal yang sama sementara pemilik meninjau permintaan Anda.",
+      "Begitu kamu mengajukan sewa, tanggal tersebut otomatis ditahan selama 24 jam supaya tidak diserobot penyewa lain selagi pemilik meninjau permintaanmu.",
     links: [
-      { label: "Ajukan Sewa Alat", href: "/rentals/request" },
-      { label: "Eksplorasi Katalog", href: "/catalog" },
+      { label: "Ajukan Sewa", href: "/rentals/request" },
+      { label: "Lihat Katalog", href: "/catalog" },
     ],
   },
   {
     id: 2,
-    title: "02 / Rekening Bersama (Escrow) & Deposit Jaminan",
-    tag: "XENDIT GATEWAY",
-    icon: <CreditCard className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
+    title: "Pembayaran Sewa & Deposit via Rekber",
+    icon: <CreditCard className="size-4 text-forest" strokeWidth={1.75} />,
     content:
-      "Setelah disetujui pemilik, penyewa memiliki waktu 2 jam untuk menyelesaikan pembayaran via QRIS atau Virtual Account. Dana sewa dan deposit ditahan di sistem hingga alat kembali dengan aman.",
+      "Setelah disetujui pemilik, kamu punya waktu 2 jam untuk membayar lewat QRIS atau Virtual Account. Uang sewa dan deposit disimpan di sistem sampai barang kembali.",
     links: [
-      { label: "Gateway Pembayaran", href: "/payments" },
-      { label: "Pusat Deposit & Klaim", href: "/disputes" },
+      { label: "Halaman Pembayaran", href: "/payments" },
+      { label: "Info Deposit", href: "/disputes" },
     ],
   },
   {
     id: 3,
-    title: "03 / Verifikasi Serah Terima COD di Titik Kampus",
-    tag: "HANDOVER PROTOCOL",
-    icon: <ScanLine className="size-4 text-[#141413]" strokeWidth={1.75} />,
+    title: "Ketemuan & Cek Fisik COD di Kampus",
+    icon: <ScanLine className="size-4 text-ink" strokeWidth={1.75} />,
     content:
-      "Pertemuan dilakukan langsung di area Telkom University (Lobi TULT, GKU, Open Library, atau Student Center). Dilengkapi token OTP 6 digit, checklist fisik, dan dokumentasi foto sebelum/sesudah.",
+      "Serah terima dilakukan langsung di area Telkom University (Lobi TULT, GKU, Open Library, atau Student Center) sambil mencocokkan kelengkapan dan foto kondisi barang.",
     links: [
-      { label: "Buka Modul Serah Terima", href: "/handover" },
-      { label: "Laporan No-Show COD", href: "/rentals/cancellation" },
+      { label: "Serah Terima COD", href: "/handover" },
+      { label: "Pembatalan Sewa", href: "/rentals/cancellation" },
     ],
   },
   {
     id: 4,
-    title: "04 / Kalkulasi Denda Proporsional & Pencairan Otomatis",
-    tag: "AUTOMATED SETTLEMENT",
-    icon: <ShieldCheck className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
+    title: "Deposit Kembali Utuh Saat Alat Dikembalikan",
+    icon: <ShieldCheck className="size-4 text-forest" strokeWidth={1.75} />,
     content:
-      "Jika pengembalian tepat waktu dan sesuai checklist, deposit dikembalikan 100% ke penyewa dan uang sewa langsung cair ke dompet pemilik. Keterlambatan dihitung transparan per hari.",
+      "Kalau alat dikembalikan tepat waktu dan kondisinya sesuai saat pengambilan, deposit langsung kembali 100% ke penyewa dan uang sewa cair ke pemilik.",
     links: [
-      { label: "Dompet Pemilik Alat", href: "/owner/wallet" },
-      { label: "Kelola Inventaris", href: "/owner/items" },
+      { label: "Dompet Pemilik", href: "/owner/wallet" },
+      { label: "Kelola Barang", href: "/owner/items" },
     ],
   },
   {
     id: 5,
-    title: "05 / Reputasi Dua Arah & Moderasi Komunitas Kampus",
-    tag: "TRUST & SAFETY",
-    icon: <Award className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
+    title: "Ulasan Dua Arah Antar Mahasiswa",
+    icon: <Award className="size-4 text-accent" strokeWidth={1.75} />,
     content:
-      "Setiap mahasiswa terverifikasi dengan NIM dan program studi. Penyewa dan pemilik saling memberikan rating dan ulasan pasca transaksi untuk menjaga standar peralatan praktikum.",
+      "Penyewa dan pemilik alat bisa saling memberi penilaian setelah transaksi selesai agar kondisi barang dan ketepatan waktu COD tetap terjaga.",
     links: [
-      { label: "Ulasan Komunitas", href: "/reviews" },
-      { label: "Panel Moderasi Admin", href: "/admin/dashboard" },
+      { label: "Lihat Ulasan", href: "/reviews" },
+      { label: "Moderasi Kampus", href: "/admin/dashboard" },
     ],
   },
 ];
@@ -131,8 +126,6 @@ const AccordionItem: FC<AccordionItemProps> = ({
     isFirst || isAfterOpen || isOpen ? BORDER_WIDTH : "0px";
   const borderBottomWidth =
     isLast || isBeforeOpen || isOpen ? BORDER_WIDTH : "0px";
-  const borderLeftWidth = BORDER_WIDTH;
-  const borderRightWidth = BORDER_WIDTH;
 
   const RADIUS = 14;
   let borderTopLeftRadius = 0;
@@ -171,14 +164,14 @@ const AccordionItem: FC<AccordionItemProps> = ({
           }}
           className={`overflow-hidden border-solid transition-colors will-change-transform ${
             isOpen
-              ? "border-[#141413] bg-white shadow-[0_8px_24px_-12px_rgba(20,20,19,0.12)]"
-              : "border-[#DCD8CE] bg-[#FBF9F5] hover:bg-white"
+              ? "border-ink bg-surface shadow-card"
+              : "border-hairline bg-surface-subtle hover:bg-surface"
           }`}
           style={{
             borderTopWidth,
             borderBottomWidth,
-            borderLeftWidth,
-            borderRightWidth,
+            borderLeftWidth: BORDER_WIDTH,
+            borderRightWidth: BORDER_WIDTH,
             borderStyle: BORDER_STYLE,
             marginBlock: isOpen ? "8px" : "0px",
           }}
@@ -192,8 +185,8 @@ const AccordionItem: FC<AccordionItemProps> = ({
               <div
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                   isOpen
-                    ? "border-[#141413] bg-[#141413] text-white [&>*]:text-white"
-                    : "border-[#DCD8CE] bg-[#F3F1EC] text-[#141413]"
+                    ? "border-ink bg-ink text-white [&>*]:text-white"
+                    : "border-hairline bg-surface-muted text-ink"
                 }`}
               >
                 {item.icon}
@@ -201,11 +194,11 @@ const AccordionItem: FC<AccordionItemProps> = ({
 
               <div className="min-w-0">
                 {item.tag && (
-                  <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                  <span className="block text-xs font-medium text-ink-subtle">
                     {item.tag}
                   </span>
                 )}
-                <span className="block truncate text-sm font-semibold tracking-tight text-[#141413]">
+                <span className="block truncate text-sm font-semibold tracking-tight text-ink">
                   {item.title}
                 </span>
               </div>
@@ -215,8 +208,8 @@ const AccordionItem: FC<AccordionItemProps> = ({
               animate={{ rotate: isOpen ? 180 : 0 }}
               className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border ${
                 isOpen
-                  ? "border-[#C83E2B] bg-[#C83E2B] text-white"
-                  : "border-[#DCD8CE] bg-white text-[#575653]"
+                  ? "border-accent bg-accent text-white"
+                  : "border-hairline bg-surface text-ink-muted"
               }`}
             >
               <ChevronDown className="size-3.5" />
@@ -232,19 +225,15 @@ const AccordionItem: FC<AccordionItemProps> = ({
             className="overflow-hidden will-change-transform"
           >
             <div ref={ref}>
-              <div className="border-t border-[#EFECE6] px-4 pb-4 pt-3 text-xs leading-relaxed text-[#575653]">
+              <div className="border-t border-surface-muted px-4 pb-4 pt-3 text-xs leading-relaxed text-ink-muted">
                 <p>{item.content}</p>
                 {item.links && item.links.length > 0 && (
                   <div className="mt-3.5 flex flex-wrap items-center gap-2">
                     {item.links.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#141413] bg-[#141413] px-3 py-1.5 text-xs font-medium text-[#F6F5F0] transition hover:border-[#C83E2B] hover:bg-[#C83E2B]"
-                      >
+                      <Button key={link.href} href={link.href} size="xs">
                         <span>{link.label}</span>
                         <ArrowUpRight className="size-3" />
-                      </Link>
+                      </Button>
                     ))}
                   </div>
                 )}
@@ -257,7 +246,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
   );
 };
 
-export const AccordionApp: FC<AccordionProps> = ({
+export const Accordion: FC<AccordionProps> = ({
   items,
   defaultOpenId = 1,
   className = "",
@@ -284,4 +273,5 @@ export const AccordionApp: FC<AccordionProps> = ({
   );
 };
 
-export default AccordionApp;
+export const AccordionApp = Accordion;
+export default Accordion;

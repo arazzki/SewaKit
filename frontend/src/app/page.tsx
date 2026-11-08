@@ -1,13 +1,11 @@
 import Link from "next/link";
-import { DUMMY_ITEMS, getCategoryName } from "@/data/dummyItems";
+import { DUMMY_ITEMS, getCategoryName, type CategorySlug } from "@/data/dummyItems";
 import { formatRupiah } from "@/lib/format";
 import ItemCard from "@/app/catalog/_components/ItemCard";
 import Badge from "@/components/ui/badge";
-import {
-  AccordionApp,
-  SEWAKIT_ACCORDION_ITEMS,
-  type AccordionItemData,
-} from "@/components/watermelon/card-split-accordian";
+import Button from "@/components/ui/button";
+import Card from "@/components/ui/card";
+import SectionHeading from "@/components/ui/section-heading";
 import {
   ArrowUpRight,
   Cpu,
@@ -20,96 +18,113 @@ import {
   MapPin,
   ShieldCheck,
   Clock,
+  CreditCard,
   ScanLine,
   Star,
 } from "lucide-react";
 
-const CATEGORIES_BENTO = [
+const CATEGORIES: {
+  name: string;
+  slug: CategorySlug;
+  desc: string;
+  icon: typeof Cpu;
+}[] = [
   {
-    name: "Perangkat IoT & Elektronika",
+    name: "IoT & Elektronika",
     slug: "iot-elektronika",
-    code: "CAT-01",
-    desc: "Oscilloscope Rigol, ESP32, Arduino R3, Raspberry Pi 4, dan instrumen ukur.",
-    count: "6 SKU Aktif",
+    desc: "Oscilloscope Rigol, ESP32, Arduino R3, Raspberry Pi 4, dan alat ukur rangkaian.",
     icon: Cpu,
   },
   {
-    name: "Komputer & Multimedia",
+    name: "Kamera & Multimedia",
     slug: "komputer-multimedia",
-    code: "CAT-02",
-    desc: "Kamera Mirrorless Sony A6400, Tripod Fluid-Head, dan Pen Tablet Grafis.",
-    count: "3 SKU Aktif",
+    desc: "Kamera mirrorless Sony A6400, tripod video, dan pen tablet untuk tugas desain.",
     icon: Camera,
   },
   {
-    name: "Instrumen Akademik & Lab",
+    name: "Praktikum & Akademik",
     slug: "akademik",
-    code: "CAT-03",
-    desc: "Kalkulator Saintifik 552 Fungsi, Jas Lab Oxford Steril, dan Safety Goggles.",
-    count: "2 SKU Aktif",
+    desc: "Kalkulator saintifik, jas lab bersih, dan kacamata pelindung praktikum.",
     icon: FlaskConical,
   },
   {
-    name: "Logistik Acara & Kepanitiaan",
+    name: "Acara & Kepanitiaan",
     slug: "acara-kegiatan",
-    code: "CAT-04",
-    desc: "Handy Talky Dual-Band Sepasang, Proyektor Full HD 3.000 Lumen, dan kabel.",
-    count: "2 SKU Aktif",
+    desc: "Handy talky sepasang, proyektor Full HD, dan perlengkapan kegiatan himpunan.",
     icon: Radio,
   },
 ];
 
 const CAMPUS_COD_ZONES = [
-  { code: "COD-01", name: "Lobi Gedung TULT", detail: "CCTV 24J • Meja Inspeksi" },
-  { code: "COD-02", name: "Selasar GKU", detail: "Area Publik Utama" },
-  { code: "COD-03", name: "Open Library Lt. 5", detail: "Gedung Manterawu" },
-  { code: "COD-04", name: "Student Center", detail: "Pos Kegiatan Mahasiswa" },
+  { name: "Lobi Gedung TULT", detail: "Area lobi utama, terang & ramai" },
+  { name: "Selasar GKU", detail: "Mudah dijangkau di sela jam kuliah" },
+  { name: "Open Library Lt. 5", detail: "Gedung Manterawu" },
+  { name: "Student Center", detail: "Dekat area kegiatan UKM & himpunan" },
 ];
 
-const ROLE_ACCORDION_ITEMS: AccordionItemData[] = [
+const HOW_IT_WORKS_STEPS = [
   {
-    id: 101,
-    title: "Alur Mahasiswa Penyewa (Renter Workspace)",
-    tag: "01 / RENTER FLOW",
-    icon: <UserCheck className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
-    content:
-      "Cari alat praktikum yang tersedia, kunci jadwal selama 24 jam agar tidak diserobot, bayar sewa beserta deposit jaminan via Xendit Sandbox, dan lakukan serah terima COD di area kampus.",
+    step: "1",
+    title: "Pilih Alat & Tanggal",
+    desc: "Cari alat di katalog lalu ajukan tanggal sewa. Jadwal otomatis ditahan 24 jam selagi menunggu konfirmasi pemilik.",
+    href: "/catalog",
+    cta: "Cari di Katalog",
+    icon: Clock,
+  },
+  {
+    step: "2",
+    title: "Bayar Lewat Rekber",
+    desc: "Setelah disetujui pemilik, selesaikan pembayaran sewa beserta deposit jaminan dalam waktu 2 jam via QRIS atau VA.",
+    href: "/payments",
+    cta: "Lihat Pembayaran",
+    icon: CreditCard,
+  },
+  {
+    step: "3",
+    title: "Ketemuan & Cek Fisik COD",
+    desc: "Ambil barang langsung di titik COD kampus sambil mencocokkan kondisi fisik dan kelengkapan bersama pemilik.",
+    href: "/handover",
+    cta: "Alur Serah Terima",
+    icon: ScanLine,
+  },
+  {
+    step: "4",
+    title: "Kembalikan & Deposit Cair",
+    desc: "Begitu barang dikembalikan tepat waktu dengan kondisi aman, deposit kembali utuh ke penyewa dan uang sewa cair ke pemilik.",
+    href: "/disputes",
+    cta: "Aturan Deposit",
+    icon: ShieldCheck,
+  },
+];
+
+const WORKSPACE_SHORTCUTS = [
+  {
+    title: "Mahasiswa Penyewa",
+    desc: "Ajukan sewa, cek status persetujuan, dan kelola jadwal pengambilan barang.",
+    icon: UserCheck,
     links: [
       { label: "Katalog Alat", href: "/catalog" },
-      { label: "Pengajuan & Hold 24J", href: "/rentals/request" },
-      { label: "Pembayaran Xendit", href: "/payments" },
-      { label: "Serah Terima COD", href: "/handover" },
-      { label: "Deposit & Sengketa", href: "/disputes" },
-      { label: "Pembatalan & No-Show", href: "/rentals/cancellation" },
+      { label: "Ajukan Sewa", href: "/rentals/request" },
+      { label: "Pembatalan", href: "/rentals/cancellation" },
     ],
   },
   {
-    id: 102,
-    title: "Panel Pemilik Alat (Merchant Console)",
-    tag: "02 / OWNER WORKSPACE",
-    icon: <Wallet className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
-    content:
-      "Monetisasi instrumen praktikum atau kamera yang sedang menganggur di kos. Atur tarif harian, nilai deposit jaminan, setujui permintaan sewa, serta tarik saldo pendapatan ke rekening bank.",
+    title: "Pemilik Alat",
+    desc: "Sewakan alat praktikum atau kamera yang jarang dipakai supaya tetap produktif.",
+    icon: Wallet,
     links: [
-      { label: "Kelola Barang Sewaan", href: "/owner/items" },
-      { label: "Dompet & Penarikan Dana", href: "/owner/wallet" },
-      { label: "Tinjau Pengajuan Masuk", href: "/rentals/request" },
-      { label: "Ulasan Dua Arah", href: "/reviews" },
+      { label: "Barang Saya", href: "/owner/items" },
+      { label: "Dompet & Penarikan", href: "/owner/wallet" },
+      { label: "Ulasan", href: "/reviews" },
     ],
   },
   {
-    id: 103,
-    title: "Moderasi, Kategori & Akun (Governance)",
-    tag: "03 / PLATFORM OPS",
-    icon: <SlidersHorizontal className="size-4 text-[#141413]" strokeWidth={1.75} />,
-    content:
-      "Verifikasi identitas mahasiswa berbasis NIM Telkom University, pengelolaan taksonomi inventaris kampus, pemantauan audit trail transaksi, dan mediasi klaim sengketa deposit.",
+    title: "Moderator Kampus",
+    desc: "Pantau transaksi berjalan, kelola kategori alat, dan bantu mediasi kendala deposit.",
+    icon: SlidersHorizontal,
     links: [
       { label: "Dashboard Admin", href: "/admin/dashboard" },
-      { label: "Kelola Kategori", href: "/admin/categories" },
-      { label: "Profil Mahasiswa", href: "/profile" },
-      { label: "Notifikasi Sistem", href: "/notifications" },
-      { label: "Login / Register", href: "/auth/login" },
+      { label: "Kategori Alat", href: "/admin/categories" },
     ],
   },
 ];
@@ -119,128 +134,123 @@ export default function HomePage() {
   const featuredItems = DUMMY_ITEMS.slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0] text-[#141413]">
-      {/* 1. BENTO GRID HERO ARCHITECTURE */}
-      <section className="border-b border-[#DCD8CE] bg-[#F6F5F0]">
+    <div className="min-h-screen bg-canvas text-ink">
+      {/* Hero */}
+      <section className="border-b border-hairline bg-canvas">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-            {/* Primary Editorial Hero Tile (7 Columns) */}
-            <div className="bg-tech-grid flex flex-col justify-between rounded-2xl border border-[#DCD8CE] bg-white p-6 sm:p-8 lg:col-span-7">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <Card className="flex flex-col justify-between p-6 sm:p-8 lg:col-span-7">
               <div className="space-y-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="available" dot>
-                    CIVITAS TELKOM UNIVERSITY TERVERIFIKASI
+                    Mahasiswa Telkom University
                   </Badge>
-                  <span className="rounded-md border border-[#DCD8CE] bg-[#F6F5F0] px-2 py-0.5 font-mono text-[10px] font-medium text-[#575653]">
-                    ESCROW REKBER XENDIT
-                  </span>
+                  <Badge variant="neutral">Rekber &amp; Deposit Aman</Badge>
                 </div>
 
-                <h1 className="text-3xl font-bold tracking-tight text-[#141413] sm:text-4xl lg:text-[2.85rem] lg:leading-[1.1]">
-                  Infrastruktur sewa alat praktikum &amp; riset kampus,{" "}
-                  <span className="underline decoration-[#C83E2B] decoration-2 underline-offset-6">
-                    tanpa beli baru.
+                <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]">
+                  Sewa alat praktikum &amp; kegiatan kampus,{" "}
+                  <span className="underline decoration-accent decoration-2 underline-offset-6">
+                    tanpa harus beli baru.
                   </span>
                 </h1>
 
-                <p className="max-w-xl text-sm leading-relaxed text-[#575653] sm:text-base">
-                  Pinjam oscilloscope, board IoT ESP32, kamera mirrorless, hingga HT kepanitiaan langsung dari sesama mahasiswa Telkom University. Dilengkapi penahanan jadwal 24 jam, proteksi deposit escrow, dan protokol inspeksi fisik COD.
+                <p className="max-w-xl text-sm leading-relaxed text-ink-muted sm:text-base">
+                  Pinjam oscilloscope, kit ESP32, kamera mirrorless, sampai HT kepanitiaan langsung dari sesama mahasiswa Tel-U. Jadwal dikunci otomatis saat pengajuan, uang deposit aman di rekber, dan serah terima dilakukan COD di area kampus.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-2.5 pt-1">
-                  <Link
-                    href="/catalog"
-                    className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#141413] px-5 text-sm font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
-                  >
-                    <span>Eksplorasi Katalog Alat</span>
+                  <Button href="/catalog" size="lg">
+                    <span>Lihat Katalog Alat</span>
                     <ArrowUpRight className="size-4" />
-                  </Link>
-                  <Link
+                  </Button>
+                  <Button
                     href="/rentals/request"
-                    className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 text-sm font-medium text-[#141413] transition hover:border-[#141413] hover:bg-white"
+                    variant="outline"
+                    size="lg"
+                    className="bg-surface-subtle hover:bg-surface"
                   >
-                    <Clock className="size-4 text-[#C83E2B]" />
-                    <span>Booking &amp; Hold 24 Jam</span>
-                  </Link>
+                    <Clock className="size-4 text-accent" />
+                    <span>Ajukan Sewa</span>
+                  </Button>
                   <Link
                     href="/owner/items"
-                    className="inline-flex h-11 items-center px-2 font-mono text-xs font-semibold text-[#575653] underline underline-offset-4 transition hover:text-[#141413]"
+                    className="inline-flex h-11 items-center px-2 text-xs font-semibold text-ink-muted underline underline-offset-4 transition hover:text-ink"
                   >
-                    Sewakan Alatmu →
+                    Punya alat nganggur? Sewakan →
                   </Link>
                 </div>
               </div>
 
-              {/* Tabular Specification Metrics Strip */}
-              <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[#EFECE6] pt-6 sm:grid-cols-4">
+              <div className="mt-8 grid grid-cols-2 gap-4 border-t border-surface-muted pt-6 sm:grid-cols-4">
                 <div>
-                  <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
-                    Hold Jadwal
+                  <span className="block text-xs text-ink-subtle">
+                    Tahan Jadwal
                   </span>
-                  <span className="mt-1 block font-mono text-xl font-bold text-[#141413]">
+                  <span className="mt-1 block font-mono text-xl font-bold text-ink">
                     24 Jam
                   </span>
-                  <span className="text-[11px] text-[#575653]">Anti-bentrok kalender</span>
+                  <span className="text-xs text-ink-muted">Anti bentrok tanggal</span>
                 </div>
-                <div className="border-l border-[#EFECE6] pl-4">
-                  <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                <div className="border-l border-surface-muted pl-4">
+                  <span className="block text-xs text-ink-subtle">
                     Batas Bayar
                   </span>
-                  <span className="mt-1 block font-mono text-xl font-bold text-[#C83E2B]">
-                    120 Menit
+                  <span className="mt-1 block font-mono text-xl font-bold text-accent">
+                    2 Jam
                   </span>
-                  <span className="text-[11px] text-[#575653]">QRIS &amp; Virtual Account</span>
+                  <span className="text-xs text-ink-muted">QRIS &amp; Virtual Account</span>
                 </div>
-                <div className="border-t border-[#EFECE6] pt-3 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
-                  <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
-                    Titik COD
+                <div className="border-t border-surface-muted pt-3 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
+                  <span className="block text-xs text-ink-subtle">
+                    Lokasi COD
                   </span>
-                  <span className="mt-1 block font-mono text-xl font-bold text-[#1B4332]">
-                    5 Gedung
+                  <span className="mt-1 block font-mono text-xl font-bold text-forest">
+                    {CAMPUS_COD_ZONES.length} Titik
                   </span>
-                  <span className="text-[11px] text-[#575653]">Area pantauan CCTV</span>
+                  <span className="text-xs text-ink-muted">Di dalam area kampus</span>
                 </div>
-                <div className="border-l border-t border-[#EFECE6] pl-4 pt-3 sm:border-t-0 sm:pt-0">
-                  <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
-                    Inspeksi COD
+                <div className="border-l border-t border-surface-muted pl-4 pt-3 sm:border-t-0 sm:pt-0">
+                  <span className="block text-xs text-ink-subtle">
+                    Total Koleksi
                   </span>
-                  <span className="mt-1 block font-mono text-xl font-bold text-[#141413]">
-                    OTP 6-Digit
+                  <span className="mt-1 block font-mono text-xl font-bold text-ink">
+                    {DUMMY_ITEMS.length} Alat
                   </span>
-                  <span className="text-[11px] text-[#575653]">Checklist 2 arah</span>
+                  <span className="text-xs text-ink-muted">Siap dipakai praktikum</span>
                 </div>
               </div>
-            </div>
+            </Card>
 
-            {/* Secondary Bento Stack (5 Columns) */}
-            <div className="flex flex-col gap-4 lg:col-span-5">
-              {/* Spotlight Hardware Unit Card */}
-              <div className="group relative overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white">
-                <div className="relative h-48 w-full overflow-hidden border-b border-[#EFECE6] bg-[#EFECE6]">
+            <div className="flex flex-col gap-5 lg:col-span-5">
+              {/* Spotlight Item */}
+              <Card className="group relative overflow-hidden">
+                <div className="relative h-48 w-full overflow-hidden border-b border-surface-muted bg-surface-muted">
                   <img
                     src={spotlightItem.imageUrl}
                     alt={spotlightItem.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#141413]/70 via-[#141413]/15 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/15 to-transparent" />
                   <div className="absolute left-3.5 top-3.5 flex items-center gap-2">
-                    <Badge variant="dark">UNIT SOROTAN LAB</Badge>
+                    <Badge variant="dark">Pilihan Minggu Ini</Badge>
                     <Badge variant="available" dot>
-                      Siap COD Hari Ini
+                      Tersedia
                     </Badge>
                   </div>
                   <div className="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between text-white">
                     <div>
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-[#E2DFD7]">
-                        {spotlightItem.sku} • {getCategoryName(spotlightItem.category)}
+                      <span className="text-xs text-ink-inverse-muted">
+                        <span className="font-mono">{spotlightItem.sku}</span> •{" "}
+                        {getCategoryName(spotlightItem.category)}
                       </span>
                       <h2 className="text-sm font-bold leading-snug sm:text-base">
                         {spotlightItem.name}
                       </h2>
                     </div>
                     {spotlightItem.rating && (
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded bg-white/95 px-2 py-0.5 font-mono text-[11px] font-bold text-[#141413]">
-                        <Star className="size-3 fill-[#C83E2B] text-[#C83E2B]" />
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded bg-surface/95 px-2 py-0.5 font-mono text-xs font-bold text-ink">
+                        <Star className="size-3 fill-accent text-accent" />
                         {spotlightItem.rating.toFixed(1)}
                       </span>
                     )}
@@ -250,125 +260,116 @@ export default function HomePage() {
                 <div className="flex items-center justify-between gap-3 p-4">
                   <div className="flex items-center gap-4">
                     <div>
-                      <span className="block font-mono text-[10px] uppercase text-[#78756F]">
-                        Tarif Harian
+                      <span className="block text-xs text-ink-subtle">
+                        Harga sewa / hari
                       </span>
-                      <span className="font-mono text-base font-bold text-[#141413]">
+                      <span className="font-mono text-base font-bold text-ink">
                         {formatRupiah(spotlightItem.pricePerDay)}
                       </span>
                     </div>
-                    <div className="h-7 w-px bg-[#EFECE6]" />
+                    <div className="h-7 w-px bg-surface-muted" />
                     <div>
-                      <span className="block font-mono text-[10px] uppercase text-[#78756F]">
-                        Titik Ambil
+                      <span className="block text-xs text-ink-subtle">
+                        Lokasi COD
                       </span>
-                      <span className="text-xs font-semibold text-[#141413]">
+                      <span className="text-xs font-semibold text-ink">
                         {spotlightItem.codLocation}
                       </span>
                     </div>
                   </div>
 
-                  <Link
-                    href={`/catalog/${spotlightItem.id}`}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-[#141413] bg-[#141413] px-3.5 text-xs font-medium text-[#F6F5F0] transition hover:border-[#C83E2B] hover:bg-[#C83E2B]"
-                  >
-                    <span>Lihat Datasheet</span>
+                  <Button href={`/catalog/${spotlightItem.id}`} size="sm">
+                    <span>Lihat Detail</span>
                     <ArrowUpRight className="size-3.5" />
-                  </Link>
+                  </Button>
                 </div>
-              </div>
+              </Card>
 
-              {/* Campus COD Zone Bento Tile */}
-              <div className="flex-1 rounded-2xl border border-[#DCD8CE] bg-white p-5">
+              {/* Campus COD Locations */}
+              <Card className="flex-1 p-5">
                 <div className="mb-3.5 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <ScanLine className="size-4 text-[#C83E2B]" />
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#141413]">
-                      Zona Serah Terima COD Resmi Kampus
+                    <MapPin className="size-4 text-accent" />
+                    <h3 className="text-xs font-bold text-ink">
+                      Titik Ketemuan COD di Kampus
                     </h3>
                   </div>
                   <Link
                     href="/handover"
-                    className="font-mono text-[11px] font-semibold text-[#C83E2B] hover:underline"
+                    className="text-xs font-semibold text-accent hover:underline"
                   >
-                    Protokol COD →
+                    Panduan COD →
                   </Link>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {CAMPUS_COD_ZONES.map((zone) => (
                     <div
-                      key={zone.code}
-                      className="flex items-start gap-2.5 rounded-xl border border-[#EFECE6] bg-[#FBF9F5] p-2.5"
+                      key={zone.name}
+                      className="rounded-xl border border-surface-muted bg-surface-subtle p-3"
                     >
-                      <MapPin className="mt-0.5 size-3.5 shrink-0 text-[#1B4332]" />
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="truncate text-xs font-semibold text-[#141413]">
-                            {zone.name}
-                          </span>
-                        </div>
-                        <span className="block font-mono text-[10px] text-[#78756F]">
-                          {zone.code} • {zone.detail}
-                        </span>
-                      </div>
+                      <span className="block truncate text-xs font-semibold text-ink">
+                        {zone.name}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-ink-subtle">
+                        {zone.detail}
+                      </span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. KATEGORI INVENTARIS KAMPUS (BENTO 4-COL) */}
-      <section className="mx-auto max-w-7xl border-b border-[#DCD8CE] px-4 py-14 sm:px-6">
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-              01 / TAKSONOMI PERANGKAT KERAS
-            </span>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight text-[#141413] sm:text-3xl">
-              Klasifikasi Inventaris Kampus
-            </h2>
-          </div>
-          <Link
-            href="/catalog"
-            className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-[#141413] transition hover:text-[#C83E2B]"
-          >
-            <span>Buka Filter Katalog</span>
-            <ArrowUpRight className="size-4" />
-          </Link>
-        </div>
+      {/* Kategori Alat */}
+      <section className="mx-auto max-w-7xl border-b border-hairline px-4 py-14 sm:px-6">
+        <SectionHeading
+          eyebrow="Kategori Alat"
+          title="Cari Sesuai Kebutuhan Kuliah & Kegiatan"
+          action={
+            <Link
+              href="/catalog"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink transition hover:text-accent"
+            >
+              <span>Semua Kategori</span>
+              <ArrowUpRight className="size-4" />
+            </Link>
+          }
+        />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES_BENTO.map((cat) => {
+          {CATEGORIES.map((cat) => {
             const IconComponent = cat.icon;
+            const itemCount = DUMMY_ITEMS.filter(
+              (item) => item.category === cat.slug,
+            ).length;
             return (
               <Link
-                key={cat.code}
+                key={cat.slug}
                 href={`/catalog?category=${cat.slug}`}
-                className="group flex flex-col justify-between rounded-2xl border border-[#DCD8CE] bg-white p-5 transition hover:border-[#141413] hover:shadow-[0_10px_28px_-14px_rgba(20,20,19,0.12)]"
+                className="group flex flex-col justify-between rounded-2xl border border-hairline bg-surface p-5 transition hover:border-ink hover:shadow-card"
               >
                 <div>
                   <div className="mb-4 flex items-center justify-between">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] text-[#141413] transition group-hover:border-[#141413] group-hover:bg-[#141413] group-hover:text-[#F6F5F0]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-hairline bg-canvas text-ink transition group-hover:border-ink group-hover:bg-ink group-hover:text-canvas">
                       <IconComponent className="size-4.5" strokeWidth={1.6} />
                     </div>
-                    <span className="rounded-md border border-[#EFECE6] bg-[#FBF9F5] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#575653]">
-                      {cat.code} • {cat.count}
+                    <span className="rounded-md border border-surface-muted bg-surface-subtle px-2 py-0.5 text-xs font-medium text-ink-muted">
+                      <span className="font-mono font-semibold text-ink">{itemCount}</span> alat
                     </span>
                   </div>
-                  <h3 className="text-sm font-bold text-[#141413] transition group-hover:text-[#C83E2B] sm:text-base">
+                  <h3 className="text-base font-bold text-ink transition group-hover:text-accent">
                     {cat.name}
                   </h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-[#575653]">
+                  <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">
                     {cat.desc}
                   </p>
                 </div>
 
-                <div className="mt-5 flex items-center justify-between border-t border-[#EFECE6] pt-3 font-mono text-[11px] font-medium text-[#141413]">
-                  <span>Filter Kategori</span>
+                <div className="mt-5 flex items-center justify-between border-t border-surface-muted pt-3 text-xs font-medium text-ink">
+                  <span>Lihat alat</span>
                   <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
               </Link>
@@ -377,25 +378,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. KATALOG INSTRUMEN & PERALATAN POPULER */}
-      <section className="mx-auto max-w-7xl border-b border-[#DCD8CE] px-4 py-14 sm:px-6">
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-              02 / UNIT SIAP SERAH TERIMA COD
-            </span>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight text-[#141413] sm:text-3xl">
-              Instrumen Praktikum &amp; Multimedia Terpopuler
-            </h2>
-          </div>
-          <Link
-            href="/catalog"
-            className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#141413] bg-white px-4 text-xs font-medium text-[#141413] transition hover:bg-[#141413] hover:text-[#F6F5F0]"
-          >
-            <span>Lihat Seluruh Katalog ({DUMMY_ITEMS.length} Unit)</span>
-            <ArrowUpRight className="size-3.5" />
-          </Link>
-        </div>
+      {/* Katalog Populer */}
+      <section className="mx-auto max-w-7xl border-b border-hairline px-4 py-14 sm:px-6">
+        <SectionHeading
+          eyebrow="Siap Disewa"
+          title="Alat yang Sering Dipinjam Mahasiswa"
+          action={
+            <Button
+              href="/catalog"
+              variant="outline"
+              className="border-ink hover:bg-ink hover:text-canvas"
+            >
+              <span>Lihat Semua ({DUMMY_ITEMS.length} Alat)</span>
+              <ArrowUpRight className="size-3.5" />
+            </Button>
+          }
+        />
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {featuredItems.map((item) => (
@@ -404,58 +402,79 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. ARSITEKTUR PROTOKOL & NAVIGASI PERAN */}
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
-          {/* Left: System Protocol Accordion */}
-          <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 sm:p-6 lg:col-span-6">
-            <div className="mb-4 flex items-center justify-between border-b border-[#EFECE6] pb-3.5">
-              <div>
-                <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-                  03 / PROTOKOL KEAMANAN TRANSAKSI
-                </span>
-                <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#141413]">
-                  Mekanisme Hold, Escrow &amp; Inspeksi Fisik
-                </h2>
-              </div>
-              <Badge variant="outline">5 Tahap</Badge>
-            </div>
+      {/* Cara Kerja & Akses Cepat */}
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 space-y-10">
+        <div>
+          <SectionHeading
+            eyebrow="Cara Kerja"
+            title="Alur Sewa yang Jelas dari Awal Sampai Kembali"
+            description="Dirancang supaya penyewa tenang soal ketersediaan alat, dan pemilik aman soal kondisi barangnya."
+          />
 
-            <AccordionApp items={SEWAKIT_ACCORDION_ITEMS} defaultOpenId={1} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {HOW_IT_WORKS_STEPS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card key={item.step} className="flex flex-col justify-between p-5">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas text-ink">
+                        <Icon className="size-4 text-accent" />
+                      </div>
+                      <span className="font-mono text-xs font-bold text-ink-subtle">
+                        Langkah {item.step}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-bold text-ink">{item.title}</h3>
+                    <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  <Link
+                    href={item.href}
+                    className="mt-4 inline-flex items-center gap-1 border-t border-surface-muted pt-3 text-xs font-semibold text-ink transition hover:text-accent"
+                  >
+                    <span>{item.cta}</span>
+                    <ArrowUpRight className="size-3.5" />
+                  </Link>
+                </Card>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Right: Role Workspace Portal */}
-          <div className="space-y-4 lg:col-span-6">
-            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5 sm:p-6">
-              <div className="mb-4 flex items-center justify-between border-b border-[#EFECE6] pb-3.5">
-                <div>
-                  <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#1B4332]">
-                    04 / AKSES MODUL BERDASARKAN PERAN
-                  </span>
-                  <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#141413]">
-                    Portal Penyewa, Pemilik &amp; Moderator
-                  </h2>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          {WORKSPACE_SHORTCUTS.map((role) => {
+            const Icon = role.icon;
+            return (
+              <Card key={role.title} variant="subtle" className="p-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-surface text-ink">
+                    <Icon className="size-4" />
+                  </div>
+                  <h3 className="text-sm font-bold text-ink">{role.title}</h3>
                 </div>
-                <Badge variant="available">Terintegrasi</Badge>
-              </div>
-
-              <AccordionApp items={ROLE_ACCORDION_ITEMS} defaultOpenId={101} />
-            </div>
-
-            <div className="flex items-start gap-3.5 rounded-2xl border border-[#DCD8CE] bg-[#FBF9F5] p-5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#1B4332]/20 bg-[#E9F3ED] text-[#1B4332]">
-                <ShieldCheck className="size-4.5" />
-              </div>
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#141413]">
-                  Jaminan Keamanan Rekber &amp; Verifikasi NIM
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#575653]">
-                  Seluruh pemilik dan penyewa wajib terautentikasi melalui SSO / NIM Telkom University. Dana deposit ditahan penuh oleh sistem dan dikembalikan otomatis begitu checklist fisik pengembalian disetujui kedua belah pihak.
+                <p className="mt-2 text-xs leading-relaxed text-ink-muted">
+                  {role.desc}
                 </p>
-              </div>
-            </div>
-          </div>
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {role.links.map((link) => (
+                    <Button
+                      key={link.href}
+                      href={link.href}
+                      variant="outline"
+                      size="xs"
+                      className="text-xs"
+                    >
+                      <span>{link.label}</span>
+                      <ArrowUpRight className="size-3" />
+                    </Button>
+                  ))}
+                </div>
+              </Card>
+            );
+          })}
         </div>
       </section>
     </div>

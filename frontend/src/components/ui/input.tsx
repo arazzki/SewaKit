@@ -13,7 +13,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={cx(
-            "h-10 w-full rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-sm text-[#141413] placeholder:text-[#8E8B83] transition focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/10 disabled:cursor-not-allowed disabled:bg-[#EFECE6] disabled:text-[#78756F]",
+            "h-10 w-full rounded-xl border border-hairline bg-surface px-3.5 py-2 text-sm text-ink placeholder:text-ink-faint transition focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-ink-subtle",
             className,
           )}
           {...props}
@@ -24,14 +24,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative flex items-center">
         {leftIcon && (
-          <span className="pointer-events-none absolute left-3.5 flex items-center text-[#78756F]">
+          <span className="pointer-events-none absolute left-3.5 flex items-center text-ink-subtle">
             {leftIcon}
           </span>
         )}
         <input
           ref={ref}
           className={cx(
-            "h-10 w-full rounded-xl border border-[#DCD8CE] bg-white py-2 text-sm text-[#141413] placeholder:text-[#8E8B83] transition focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/10 disabled:cursor-not-allowed disabled:bg-[#EFECE6] disabled:text-[#78756F]",
+            "h-10 w-full rounded-xl border border-hairline bg-surface py-2 text-sm text-ink placeholder:text-ink-faint transition focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-ink-subtle",
             leftIcon ? "pl-10" : "px-3.5",
             rightSlot ? "pr-16" : "pr-3.5",
             className,

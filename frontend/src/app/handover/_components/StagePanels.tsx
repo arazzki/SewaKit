@@ -35,7 +35,7 @@ type PanelProps = {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
-      <h3 className="text-sm font-bold tracking-tight text-[#141413] sm:text-base">
+      <h3 className="text-sm font-bold tracking-tight text-ink sm:text-base">
         {title}
       </h3>
       {children}
@@ -53,10 +53,10 @@ function InfoBox({
   children: ReactNode;
 }) {
   const tones = {
-    slate: "border-[#DCD8CE] bg-[#F6F5F0] text-[#575653]",
-    amber: "border-[#E9C893] bg-[#FEF7EC] text-[#9A5B13]",
-    emerald: "border-[#1B4332]/25 bg-[#E9F3ED] text-[#1B4332]",
-    rose: "border-[#FECDCA] bg-[#FEF3F2] text-[#B42318]",
+    slate: "border-hairline bg-canvas text-ink-muted",
+    amber: "border-warning-border bg-warning-subtle text-warning-ink",
+    emerald: "border-forest/25 bg-forest-subtle text-forest",
+    rose: "border-danger-border bg-danger-subtle text-danger",
   };
   return (
     <div
@@ -81,7 +81,7 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
     if (!rental.pickupChecklist) {
       return (
         <Section title="Langkah 1 — Inspeksi Fisik Komponen Saat Pengambilan COD">
-          <InfoBox icon={<ShieldCheck className="size-4 text-[#141413]" />}>
+          <InfoBox icon={<ShieldCheck className="size-4 text-ink" />}>
             Saat bertemu Pemilik di titik COD kampus, periksa setiap komponen lalu isi checklist kondisi awal di bawah. Dokumentasi ini menjadi acuan sah jika terjadi klaim sengketa.
           </InfoBox>
           <ChecklistForm
@@ -95,14 +95,14 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
     }
     return (
       <Section title="Langkah 2 — Tunjukkan Token OTP 6-Digit kepada Pemilik Alat">
-        <div className="bg-tech-grid rounded-2xl border border-[#DCD8CE] bg-[#FBF9F5] p-6 text-center">
-          <div className="inline-flex items-center gap-1.5 rounded-md border border-[#C83E2B]/25 bg-[#C83E2B]/10 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
+        <div className="bg-tech-grid rounded-2xl border border-hairline bg-surface-subtle p-6 text-center">
+          <div className="inline-flex items-center gap-1.5 rounded-md border border-accent/25 bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
             <KeyRound className="size-3" />
             TOKEN VERIFIKASI SERAH TERIMA
           </div>
 
           <div className="mt-4 flex items-center justify-center gap-3">
-            <span className="rounded-xl border border-[#141413] bg-white px-5 py-3 font-mono text-3xl font-black tracking-[0.25em] text-[#141413] sm:text-4xl">
+            <span className="rounded-xl border border-ink bg-surface px-5 py-3 font-mono text-3xl font-black tracking-[0.25em] text-ink sm:text-4xl">
               {formattedOtp}
             </span>
             <button
@@ -112,18 +112,18 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
                 setCopiedOtp(true);
                 setTimeout(() => setCopiedOtp(false), 2000);
               }}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCD8CE] bg-white text-[#141413] transition hover:border-[#141413]"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-hairline bg-surface text-ink transition hover:border-ink"
               title="Salin kode OTP"
             >
               {copiedOtp ? (
-                <Check className="size-4 text-[#1B4332]" />
+                <Check className="size-4 text-forest" />
               ) : (
                 <Copy className="size-4" />
               )}
             </button>
           </div>
 
-          <p className="mx-auto mt-3 max-w-md text-xs text-[#575653]">
+          <p className="mx-auto mt-3 max-w-md text-xs text-ink-muted">
             Berikan kode 6 digit ini kepada <strong>{rental.ownerName}</strong> hanya setelah unit fisik Anda terima secara langsung di lokasi COD.
           </p>
         </div>
@@ -140,20 +140,20 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
   if (!rental.pickupChecklist) {
     return (
       <Section title="Menunggu Penyewa Menyelesaikan Inspeksi Awal">
-        <InfoBox icon={<Clock className="size-4 text-[#575653]" />}>
+        <InfoBox icon={<Clock className="size-4 text-ink-muted" />}>
           Serahkan instrumen kepada <strong>{rental.renterName}</strong> untuk diperiksa. Setelah Penyewa menyimpan checklist dan foto bukti awal, ia akan memberikan Token OTP 6-digit kepada Anda.
         </InfoBox>
-        <div className="rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-4">
-          <span className="block font-mono text-[10px] font-semibold uppercase tracking-wider text-[#78756F]">
+        <div className="rounded-xl border border-hairline bg-surface-subtle p-4">
+          <span className="block text-xs font-semibold text-ink-subtle">
             DAFTAR KOMPONEN WAJIB DISERAHKAN ({rental.components.length} ITEM)
           </span>
-          <ul className="mt-2.5 grid grid-cols-1 gap-1.5 text-xs font-medium text-[#141413] sm:grid-cols-2">
+          <ul className="mt-2.5 grid grid-cols-1 gap-1.5 text-xs font-medium text-ink sm:grid-cols-2">
             {rental.components.map((component, idx) => (
               <li
                 key={component.id}
-                className="flex items-center gap-2 rounded-lg border border-[#EFECE6] bg-white px-3 py-2"
+                className="flex items-center gap-2 rounded-lg border border-surface-muted bg-surface px-3 py-2"
               >
-                <span className="font-mono text-[10px] text-[#78756F]">
+                <span className="font-mono text-xs text-ink-subtle">
                   0{idx + 1}
                 </span>
                 <span>{component.name}</span>
@@ -179,7 +179,7 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
 
   return (
     <Section title="Verifikasi Token OTP 6-Digit dari Penyewa">
-      <p className="text-xs text-[#575653]">
+      <p className="text-xs text-ink-muted">
         Hasil checklist awal yang dicatat oleh Penyewa:
       </p>
       <ChecklistComparison
@@ -189,10 +189,10 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
       {rental.pickupChecklist.generalNote && (
         <InfoBox>Catatan Penyewa: {rental.pickupChecklist.generalNote}</InfoBox>
       )}
-      <div className="rounded-2xl border border-[#DCD8CE] bg-[#FBF9F5] p-4 sm:p-5">
+      <div className="rounded-2xl border border-hairline bg-surface-subtle p-4 sm:p-5">
         <label
           htmlFor="handover-code"
-          className="block text-xs font-bold uppercase tracking-wider text-[#141413]"
+          className="block text-xs font-bold uppercase tracking-wider text-ink"
         >
           Masukkan Token OTP Serah Terima (6 Digit)
         </label>
@@ -207,12 +207,12 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
               setCodeError("");
             }}
             placeholder="000000"
-            className="h-11 w-44 rounded-xl border border-[#DCD8CE] bg-white px-4 font-mono text-lg font-bold tracking-[0.25em] text-[#141413] focus:border-[#141413] focus:outline-none"
+            className="h-11 w-44 rounded-xl border border-hairline bg-surface px-4 font-mono text-lg font-bold tracking-[0.25em] text-ink focus:border-ink focus:outline-none"
           />
           <button
             type="button"
             onClick={confirmCode}
-            className="h-11 rounded-xl bg-[#141413] px-5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+            className="h-11 rounded-xl bg-ink px-5 text-xs font-semibold text-canvas transition hover:bg-accent"
           >
             Verifikasi &amp; Mulai Masa Sewa
           </button>
@@ -222,13 +222,13 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
               setCodeInput(rental.handoverCode);
               setCodeError("");
             }}
-            className="h-11 rounded-xl border border-[#DCD8CE] bg-white px-3.5 font-mono text-[11px] font-medium text-[#575653] transition hover:border-[#141413] hover:text-[#141413]"
+            className="h-11 rounded-xl border border-hairline bg-surface px-3.5 font-mono text-xs font-medium text-ink-muted transition hover:border-ink hover:text-ink"
           >
             Isi OTP Demo ({rental.handoverCode})
           </button>
         </div>
         {codeError && (
-          <p className="mt-2 text-xs font-semibold text-[#B42318]">{codeError}</p>
+          <p className="mt-2 text-xs font-semibold text-danger">{codeError}</p>
         )}
       </div>
     </Section>
@@ -245,7 +245,7 @@ export function ActiveRentalPanel({ rental, role, onUpdate }: PanelProps) {
       {lateDays > 0 ? (
         <InfoBox
           tone="rose"
-          icon={<AlertTriangle className="size-4 text-[#B42318]" />}
+          icon={<AlertTriangle className="size-4 text-danger" />}
         >
           Masa sewa melewati jatuh tempo selama{" "}
           <strong>{lateDays} hari</strong> ({formatDate(rental.endDate)}).
@@ -254,7 +254,7 @@ export function ActiveRentalPanel({ rental, role, onUpdate }: PanelProps) {
       ) : (
         <InfoBox
           tone="emerald"
-          icon={<CheckCircle2 className="size-4 text-[#1B4332]" />}
+          icon={<CheckCircle2 className="size-4 text-forest" />}
         >
           Masa sewa berjalan aktif. Batas pengembalian COD tanpa denda:{" "}
           <strong>{formatDate(rental.endDate)}</strong>.
@@ -263,7 +263,7 @@ export function ActiveRentalPanel({ rental, role, onUpdate }: PanelProps) {
 
       {role === "PEMILIK" ? (
         <Section title="Inspeksi Pengembalian Alat oleh Pemilik">
-          <p className="text-xs text-[#575653]">
+          <p className="text-xs text-ink-muted">
             Periksa kondisi setiap komponen saat dikembalikan oleh Penyewa dan lampirkan foto bukti akhir.
           </p>
           <ChecklistForm
@@ -280,7 +280,7 @@ export function ActiveRentalPanel({ rental, role, onUpdate }: PanelProps) {
           />
         </Section>
       ) : (
-        <InfoBox icon={<Clock className="size-4 text-[#575653]" />}>
+        <InfoBox icon={<Clock className="size-4 text-ink-muted" />}>
           Kembalikan instrumen kepada <strong>{rental.ownerName}</strong> di{" "}
           <strong>{rental.codLocation}</strong>. Setelah Pemilik mengisi checklist pengembalian, Anda dapat menyetujui atau mengajukan keberatan di layar ini.
         </InfoBox>
@@ -306,35 +306,35 @@ function ReturnSummary({ rental }: { rental: HandoverRental }) {
   const lateDays = rental.returnLateDays ?? 0;
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <div className="rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-3.5">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[#78756F]">
+      <div className="rounded-xl border border-hairline bg-surface-subtle p-3.5">
+        <p className="text-xs font-semibold text-ink-subtle">
           Status Ketepatan Waktu
         </p>
         <p
           className={`mt-1 font-mono text-base font-bold ${
-            lateDays > 0 ? "text-[#B42318]" : "text-[#1B4332]"
+            lateDays > 0 ? "text-danger" : "text-forest"
           }`}
         >
           {lateDays > 0 ? `Terlambat ${lateDays} Hari` : "Tepat Waktu"}
         </p>
       </div>
-      <div className="rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-3.5">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[#78756F]">
+      <div className="rounded-xl border border-hairline bg-surface-subtle p-3.5">
+        <p className="text-xs font-semibold text-ink-subtle">
           Selisih Kondisi Fisik
         </p>
         <p
           className={`mt-1 font-mono text-base font-bold ${
-            worsened > 0 ? "text-[#B42318]" : "text-[#1B4332]"
+            worsened > 0 ? "text-danger" : "text-forest"
           }`}
         >
           {worsened > 0 ? `${worsened} Komponen Berubah` : "0 Selisih (Aman)"}
         </p>
       </div>
-      <div className="rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-3.5">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[#78756F]">
+      <div className="rounded-xl border border-hairline bg-surface-subtle p-3.5">
+        <p className="text-xs font-semibold text-ink-subtle">
           Dana Deposit Escrow
         </p>
-        <p className="mt-1 font-mono text-base font-bold text-[#141413]">
+        <p className="mt-1 font-mono text-base font-bold text-ink">
           {formatRupiah(rental.depositAmount)}
         </p>
       </div>
@@ -385,23 +385,23 @@ export function ReturnReviewPanel({ rental, role, onUpdate }: PanelProps) {
             }}
             rows={3}
             placeholder="Contoh: Probe oscilloscope dikembalikan lengkap 4 unit sesuai dokumentasi foto di meja lobi TULT."
-            className="w-full rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2.5 text-xs text-[#141413] focus:border-[#141413] focus:outline-none"
+            className="w-full rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-xs text-ink focus:border-ink focus:outline-none"
           />
           {reasonError && (
-            <p className="text-xs font-semibold text-[#B42318]">{reasonError}</p>
+            <p className="text-xs font-semibold text-danger">{reasonError}</p>
           )}
           <div className="flex gap-2">
             <button
               type="button"
               onClick={submitObjection}
-              className="rounded-xl bg-[#B42318] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#912018]"
+              className="rounded-xl bg-danger px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-danger-hover"
             >
               Eskalasi Sengketa ke Admin
             </button>
             <button
               type="button"
               onClick={() => setObjecting(false)}
-              className="rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 text-xs font-medium text-[#575653] hover:bg-[#F6F5F0]"
+              className="rounded-xl border border-hairline bg-surface px-4 py-2.5 text-xs font-medium text-ink-muted hover:bg-canvas"
             >
               Batal
             </button>
@@ -412,14 +412,14 @@ export function ReturnReviewPanel({ rental, role, onUpdate }: PanelProps) {
           <button
             type="button"
             onClick={() => onUpdate({ status: "SELESAI" })}
-            className="flex-1 rounded-xl bg-[#141413] px-4 py-3 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#1B4332]"
+            className="flex-1 rounded-xl bg-ink px-4 py-3 text-xs font-semibold text-canvas transition hover:bg-forest"
           >
             Setujui Pemeriksaan &amp; Selesaikan Sewa
           </button>
           <button
             type="button"
             onClick={() => setObjecting(true)}
-            className="flex-1 rounded-xl border border-[#FECDCA] bg-[#FEF3F2] px-4 py-3 text-xs font-semibold text-[#B42318] transition hover:bg-[#B42318] hover:text-white"
+            className="flex-1 rounded-xl border border-danger-border bg-danger-subtle px-4 py-3 text-xs font-semibold text-danger transition hover:bg-danger hover:text-white"
           >
             Ajukan Sengketa Pemeriksaan
           </button>
@@ -438,7 +438,7 @@ export function ClosedPanel({ rental }: { rental: HandoverRental }) {
         <div className="space-y-3">
           <InfoBox
             tone="rose"
-            icon={<AlertTriangle className="size-4 text-[#B42318]" />}
+            icon={<AlertTriangle className="size-4 text-danger" />}
           >
             <strong>Eskalasi Mediasi Admin Aktif.</strong> Alasan keberatan
             Penyewa: &ldquo;{rental.disputeReason}&rdquo;. Deposit dibekukan sementara hingga keputusan moderator keluar.
@@ -446,7 +446,7 @@ export function ClosedPanel({ rental }: { rental: HandoverRental }) {
           <div className="flex flex-wrap gap-2.5">
             <Link
               href="/disputes"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#B42318] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#912018]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-danger px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-danger-hover"
             >
               <Scale className="size-3.5" />
               <span>Buka Ruang Mediasi &amp; Sengketa →</span>
@@ -457,21 +457,21 @@ export function ClosedPanel({ rental }: { rental: HandoverRental }) {
         <div className="space-y-3">
           <InfoBox
             tone="emerald"
-            icon={<CheckCircle2 className="size-4 text-[#1B4332]" />}
+            icon={<CheckCircle2 className="size-4 text-forest" />}
           >
             Protokol serah terima pengembalian selesai dan disahkan kedua pihak. Pencairan pendapatan pemilik serta pengembalian deposit telah diteruskan otomatis oleh sistem Escrow.
           </InfoBox>
           <div className="flex flex-wrap gap-2.5">
             <Link
               href="/reviews"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-canvas transition hover:bg-accent"
             >
               <Star className="size-3.5" />
               <span>Beri Rating &amp; Ulasan Transaksi →</span>
             </Link>
             <Link
               href="/owner/wallet"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#141413] bg-white px-4 py-2.5 text-xs font-semibold text-[#141413] transition hover:bg-[#EFECE6]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-ink bg-surface px-4 py-2.5 text-xs font-semibold text-ink transition hover:bg-surface-muted"
             >
               <Wallet className="size-3.5" />
               <span>Lihat Pencairan Dompet Pemilik →</span>

@@ -2,18 +2,58 @@
 
 :root {
   color-scheme: light;
-  --background: #f6f5f0;
-  --foreground: #141413;
-  --surface: #ffffff;
-  --surface-muted: #efece6;
-  --border-hairline: #dcd8ce;
-  --accent-terracotta: #c83e2b;
-  --accent-forest: #1b4332;
+}
+
+@theme {
+  /* Surfaces & Canvas */
+  --color-canvas: #f6f5f0;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #fbf9f5;
+  --color-surface-muted: #efece6;
+  --color-surface-strong: #e4e0d6;
+  --color-hairline: #dcd8ce;
+
+  /* Typography & Dark Surfaces */
+  --color-ink: #141413;
+  --color-ink-elevated: #1d1d1b;
+  --color-ink-border: #262523;
+  --color-ink-muted: #575653;
+  --color-ink-subtle: #78756f;
+  --color-ink-faint: #8e8b83;
+  --color-ink-inverse-muted: #d5d2ca;
+  --color-ink-inverse-subtle: #a09d95;
+
+  /* Brand Terracotta */
+  --color-accent: #c83e2b;
+  --color-accent-hover: #ae3221;
+  --color-accent-subtle: #fdf2f0;
+  --color-accent-ink: #9e2a1b;
+
+  /* Forest (Verified / Available) */
+  --color-forest: #1b4332;
+  --color-forest-hover: #143326;
+  --color-forest-subtle: #e9f3ed;
+
+  /* Status: Warning / Hold */
+  --color-warning: #d97706;
+  --color-warning-ink: #9a5b13;
+  --color-warning-subtle: #fef7ec;
+  --color-warning-border: #e9c893;
+
+  /* Status: Danger / Destructive */
+  --color-danger: #b42318;
+  --color-danger-hover: #912018;
+  --color-danger-border: #fecdca;
+  --color-danger-subtle: #fef3f2;
+
+  /* Elevation Shadows */
+  --shadow-card: 0 10px 28px -14px rgb(20 20 19 / 0.12);
+  --shadow-popover: 0 14px 34px -12px rgb(20 20 19 / 0.16);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--color-canvas);
+  --color-foreground: var(--color-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -24,8 +64,8 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
@@ -35,7 +75,15 @@ body {
 
 .bg-tech-grid {
   background-image:
-    linear-gradient(to right, rgba(220, 216, 206, 0.45) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(220, 216, 206, 0.45) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-hairline) 45%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-hairline) 45%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 24px 24px;
 }

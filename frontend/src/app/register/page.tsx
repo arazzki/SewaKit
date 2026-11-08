@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import BrandLogo from '@/components/BrandLogo';
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import Input from '@/components/ui/input';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -26,34 +29,26 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-[82vh] items-center justify-center bg-[#F6F5F0] bg-tech-grid px-4 py-12">
-      <div className="w-full max-w-lg rounded-2xl border border-[#DCD8CE] bg-white p-7 sm:p-8 shadow-[0_10px_28px_-14px_rgba(20,20,19,0.10)]">
-        {/* Official Standardized BrandLogo */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[#EFECE6] pb-5">
+    <div className="flex min-h-[82vh] items-center justify-center bg-canvas px-4 py-12">
+      <Card variant="elevated" className="w-full max-w-lg p-7 sm:p-8">
+        <div className="mb-6 flex items-center justify-between border-b border-surface-muted pb-5">
           <BrandLogo size="lg" theme="light" showTagline />
-          <span className="inline-flex items-center gap-1 rounded-md border border-[#1B4332]/20 bg-[#E9F3ED] px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#1B4332]">
-            <ShieldCheck className="size-3" />
-            KYC NIM KAMPUS
-          </span>
         </div>
 
         <div className="mb-5">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-            02 / REGISTRASI CIVITAS AKADEMIKA
-          </span>
-          <h1 className="mt-1 text-xl font-bold tracking-tight text-[#141413]">
-            Daftar Akun Mahasiswa SewaKit
+          <h1 className="text-xl font-bold tracking-tight text-ink">
+            Daftar Akun SewaKit
           </h1>
-          <p className="mt-1 text-xs leading-relaxed text-[#575653]">
-            Verifikasi identitas NIM Telkom University untuk mulai menyewa atau menyewakan perangkat praktikum dengan proteksi escrow.
+          <p className="mt-1 text-xs leading-relaxed text-ink-muted">
+            Gunakan NIM dan email kampus Telkom University untuk mulai menyewa atau menyewakan alat.
           </p>
         </div>
 
         {registered && (
-          <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] p-3.5 text-xs font-medium text-[#1B4332]">
+          <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-forest/25 bg-forest-subtle p-3.5 text-xs font-medium text-forest">
             <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
             <span>
-              Pendaftaran berhasil diverifikasi untuk <strong>{formData.name}</strong> (NIM:{' '}
+              Pendaftaran berhasil untuk <strong>{formData.name}</strong> (NIM:{' '}
               <span className="font-mono">{formData.nim}</span>).
             </span>
           </div>
@@ -62,116 +57,113 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+              <label className="mb-1.5 block text-xs font-medium text-ink">
                 Nama Lengkap
               </label>
-              <input
+              <Input
                 type="text"
                 name="name"
                 required
                 placeholder="Azriel Raihan"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle focus:bg-surface"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
-                NIM Mahasiswa
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                NIM
               </label>
-              <input
+              <Input
                 type="text"
                 name="nim"
                 required
                 placeholder="103032400010"
                 value={formData.nim}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 font-mono text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle font-mono focus:bg-surface"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
-                Email SSO Kampus
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Email Kampus
               </label>
-              <input
+              <Input
                 type="email"
                 name="email"
                 required
                 placeholder="nama@student.telkomuniversity.ac.id"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle focus:bg-surface"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
-                Nomor WhatsApp COD
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Nomor WhatsApp (untuk COD)
               </label>
-              <input
+              <Input
                 type="tel"
                 name="phone"
                 required
                 placeholder="081234567890"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 font-mono text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle font-mono focus:bg-surface"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+              <label className="mb-1.5 block text-xs font-medium text-ink">
                 Kata Sandi
               </label>
-              <input
+              <Input
                 type="password"
                 name="password"
                 required
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle focus:bg-surface"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
-                Konfirmasi Kata Sandi
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Ulangi Kata Sandi
               </label>
-              <input
+              <Input
                 type="password"
                 name="password_confirmation"
                 required
                 placeholder="••••••••"
                 value={formData.password_confirmation}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle focus:bg-surface"
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#141413] py-3 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
-          >
-            <span>Daftarkan Akun Mahasiswa</span>
+          <Button type="submit" size="lg" className="w-full text-xs font-semibold">
+            <span>Daftar Akun</span>
             <ArrowRight className="size-3.5" />
-          </button>
+          </Button>
         </form>
 
-        <div className="mt-6 flex items-center justify-between border-t border-[#EFECE6] pt-4 text-xs text-[#575653]">
-          <span>Sudah terdaftar sebagai civitas?</span>
-          <Link href="/auth/login" className="font-semibold text-[#C83E2B] hover:underline">
+        <div className="mt-6 flex items-center justify-between border-t border-surface-muted pt-4 text-xs text-ink-muted">
+          <span>Sudah punya akun?</span>
+          <Link href="/login" className="font-semibold text-accent hover:underline">
             Masuk di sini →
           </Link>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import Input from '@/components/ui/input';
 import { Plus, Trash2 } from 'lucide-react';
 
 export default function AdminCategoriesPage() {
@@ -36,44 +38,38 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0]">
+    <div className="min-h-screen bg-canvas">
       <PageHeader
-        eyebrow="TAKSONOMI INVENTARIS"
-        title="Manajemen Master Kategori Alat"
-        description="Kelola klasifikasi peralatan praktikum, riset, dan logistik acara mahasiswa."
+        eyebrow="Moderasi Kampus"
+        title="Kelola Kategori Alat"
+        description="Tambah atau atur kategori peralatan praktikum, multimedia, dan kepanitiaan kampus."
         actions={
-          <Link
-            href="/admin/dashboard"
-            className="rounded-xl border border-[#141413] bg-white px-4 py-2.5 text-xs font-medium text-[#141413] hover:bg-[#EFECE6] transition"
-          >
+          <Button href="/admin/dashboard" variant="outline" className="border-ink">
             ← Dashboard Admin
-          </Link>
+          </Button>
         }
       />
 
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
-        <div className="bg-white rounded-2xl p-5 border border-[#DCD8CE]">
+        <Card className="p-5">
           <form onSubmit={handleAddCategory} className="flex flex-col sm:flex-row gap-3">
-            <input
+            <Input
               type="text"
               placeholder="Nama Kategori Baru (contoh: Instrumen Jaringan & Fiber Optik)"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              className="flex-1 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
+              className="flex-1 bg-canvas focus:bg-surface"
             />
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#141413] px-5 py-2.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
-            >
+            <Button type="submit" className="shrink-0">
               <Plus className="size-4" />
               <span>Tambah Kategori</span>
-            </button>
+            </Button>
           </form>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-2xl border border-[#DCD8CE] overflow-hidden">
-          <table className="w-full text-left text-sm text-[#575653]">
-            <thead className="bg-[#F6F5F0] font-mono text-[11px] uppercase tracking-wider text-[#78756F] border-b border-[#DCD8CE]">
+        <Card className="overflow-hidden">
+          <table className="w-full text-left text-sm text-ink-muted">
+            <thead className="bg-canvas text-xs font-semibold text-ink-subtle border-b border-hairline">
               <tr>
                 <th className="px-6 py-3.5">Nama Kategori</th>
                 <th className="px-6 py-3.5">Slug Identifikasi</th>
@@ -81,32 +77,33 @@ export default function AdminCategoriesPage() {
                 <th className="px-6 py-3.5 text-right">Tindakan</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#EFECE6]">
+            <tbody className="divide-y divide-surface-muted">
               {categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-[#FBF9F5]">
-                  <td className="px-6 py-4 font-bold text-[#141413]">{cat.name}</td>
+                <tr key={cat.id} className="hover:bg-surface-subtle">
+                  <td className="px-6 py-4 font-bold text-ink">{cat.name}</td>
                   <td className="px-6 py-4">
-                    <span className="font-mono text-xs bg-[#EFECE6] px-2.5 py-1 rounded-md text-[#575653]">
+                    <span className="font-mono text-xs bg-surface-muted px-2.5 py-1 rounded-md text-ink-muted">
                       /{cat.slug}
                     </span>
                   </td>
-                  <td className="px-6 py-4 font-mono text-xs font-semibold text-[#141413]">
+                  <td className="px-6 py-4 font-mono text-xs font-semibold text-ink">
                     {cat.totalItems} Barang
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button
+                    <Button
+                      variant="danger"
+                      size="xs"
                       onClick={() => handleDelete(cat.id)}
-                      className="inline-flex items-center gap-1 rounded-lg border border-[#C83E2B]/30 bg-[#C83E2B]/10 px-3 py-1.5 text-xs font-medium text-[#C83E2B] hover:bg-[#C83E2B] hover:text-white transition"
                     >
                       <Trash2 className="size-3.5" />
                       <span>Hapus</span>
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </Card>
       </div>
     </div>
   );

@@ -33,18 +33,18 @@ export function DataTable<T>({
   return (
     <div
       className={cx(
-        "overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white",
+        "overflow-hidden rounded-2xl border border-hairline bg-surface",
         className,
       )}
     >
       {toolbar && (
-        <div className="border-b border-[#EFECE6] px-5 py-4">{toolbar}</div>
+        <div className="border-b border-surface-muted px-5 py-4">{toolbar}</div>
       )}
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-[#DCD8CE] bg-[#F6F5F0] font-mono text-[11px] uppercase tracking-wider text-[#78756F]">
+            <tr className="border-b border-hairline bg-canvas text-xs font-semibold text-ink-subtle">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -60,18 +60,18 @@ export function DataTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#EFECE6]">
+          <tbody className="divide-y divide-surface-muted">
             {data.length > 0 ? (
               data.map((row, index) => (
                 <tr
                   key={rowKey(row, index)}
-                  className="transition-colors hover:bg-[#FBF9F5]"
+                  className="transition-colors hover:bg-surface-subtle"
                 >
                   {columns.map((col) => (
                     <td
                       key={col.key}
                       className={cx(
-                        "px-5 py-3.5 align-middle text-xs text-[#141413]",
+                        "px-5 py-3.5 align-middle text-xs text-ink",
                         col.align === "right" && "text-right",
                         col.align === "center" && "text-center",
                         col.className,
@@ -88,10 +88,10 @@ export function DataTable<T>({
                   colSpan={columns.length}
                   className="px-5 py-12 text-center"
                 >
-                  <p className="text-sm font-semibold text-[#141413]">
+                  <p className="text-sm font-semibold text-ink">
                     {emptyTitle}
                   </p>
-                  <p className="mt-1 text-xs text-[#78756F]">
+                  <p className="mt-1 text-xs text-ink-subtle">
                     {emptyDescription}
                   </p>
                 </td>
@@ -102,7 +102,7 @@ export function DataTable<T>({
       </div>
 
       {footer && (
-        <div className="border-t border-[#EFECE6] bg-[#FBF9F5] px-5 py-3 text-xs text-[#78756F]">
+        <div className="border-t border-surface-muted bg-surface-subtle px-5 py-3 text-xs text-ink-subtle">
           {footer}
         </div>
       )}

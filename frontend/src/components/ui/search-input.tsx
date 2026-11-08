@@ -43,14 +43,14 @@ export function SearchInput({
 
   return (
     <div className={cx("relative flex items-center", className)}>
-      <Search className="pointer-events-none absolute left-3.5 size-4 text-[#78756F]" />
+      <Search className="pointer-events-none absolute left-3.5 size-4 text-ink-subtle" />
       <input
         ref={inputRef}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-white pl-10 pr-20 text-sm text-[#141413] placeholder:text-[#8E8B83] transition focus:border-[#141413] focus:outline-none focus:ring-2 focus:ring-[#141413]/10"
+        className="h-10 w-full rounded-xl border border-hairline bg-surface pl-10 pr-20 text-sm text-ink placeholder:text-ink-faint transition focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10"
         {...props}
       />
       <div className="absolute right-2.5 flex items-center gap-1.5">
@@ -62,13 +62,13 @@ export function SearchInput({
               inputRef.current?.focus();
             }}
             aria-label="Bersihkan pencarian"
-            className="flex h-6 w-6 items-center justify-center rounded-md text-[#78756F] hover:bg-[#EFECE6] hover:text-[#141413] transition"
+            className="flex h-6 w-6 items-center justify-center rounded-md text-ink-subtle hover:bg-surface-muted hover:text-ink transition"
           >
             <X className="size-3.5" />
           </button>
         ) : (
           shortcut && (
-            <kbd className="pointer-events-none rounded border border-[#DCD8CE] bg-[#F6F5F0] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#78756F]">
+            <kbd className="pointer-events-none rounded border border-hairline bg-canvas px-1.5 py-0.5 font-mono text-xs font-semibold text-ink-subtle">
               {shortcut}
             </kbd>
           )

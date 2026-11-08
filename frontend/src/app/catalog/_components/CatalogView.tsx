@@ -120,7 +120,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
   return (
     <div className="space-y-6">
       {/* Modern Origin-UI Filter Console */}
-      <div className="rounded-2xl border border-[#DCD8CE] bg-white p-4 sm:p-5">
+      <div className="rounded-2xl border border-hairline bg-surface p-4 sm:p-5">
         {/* Top Row: Search + Sort + Availability Toggle */}
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-12">
           <div className="lg:col-span-6">
@@ -135,12 +135,12 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
 
           <div className="lg:col-span-3">
             <div className="relative flex items-center">
-              <MapPin className="pointer-events-none absolute left-3.5 size-4 text-[#78756F]" />
+              <MapPin className="pointer-events-none absolute left-3.5 size-4 text-ink-subtle" />
               <select
                 aria-label="Filter Titik COD"
                 value={codPoint}
                 onChange={(e) => setCodPoint(e.target.value)}
-                className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-white pl-9 pr-3 text-xs font-medium text-[#141413] focus:border-[#141413] focus:outline-none"
+                className="h-10 w-full rounded-xl border border-hairline bg-surface pl-9 pr-3 text-xs font-medium text-ink focus:border-ink focus:outline-none"
               >
                 {COD_FILTER_OPTIONS.map((loc) => (
                   <option key={loc} value={loc}>
@@ -153,12 +153,12 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
 
           <div className="lg:col-span-3">
             <div className="relative flex items-center">
-              <ArrowUpDown className="pointer-events-none absolute left-3.5 size-4 text-[#78756F]" />
+              <ArrowUpDown className="pointer-events-none absolute left-3.5 size-4 text-ink-subtle" />
               <select
                 aria-label="Urutkan Katalog"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortOption)}
-                className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-white pl-9 pr-3 text-xs font-medium text-[#141413] focus:border-[#141413] focus:outline-none"
+                className="h-10 w-full rounded-xl border border-hairline bg-surface pl-9 pr-3 text-xs font-medium text-ink focus:border-ink focus:outline-none"
               >
                 <option value="rekomendasi">Urutan: Rekomendasi Lab</option>
                 <option value="harga-terendah">Tarif: Terendah ke Tinggi</option>
@@ -171,22 +171,22 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
         </div>
 
         {/* Middle Row: Category Chips */}
-        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[#EFECE6] pt-4">
+        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-surface-muted pt-4">
           <button
             type="button"
             onClick={() => setCategory("semua")}
             className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
               category === "semua"
-                ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
-                : "border-[#DCD8CE] bg-[#FBF9F5] text-[#575653] hover:border-[#141413] hover:text-[#141413]"
+                ? "border-ink bg-ink text-canvas"
+                : "border-hairline bg-surface-subtle text-ink-muted hover:border-ink hover:text-ink"
             }`}
           >
             <span>Semua Kategori</span>
             <span
-              className={`rounded px-1.5 py-0.2 font-mono text-[10px] ${
+              className={`rounded px-1.5 py-0.2 font-mono text-xs ${
                 category === "semua"
-                  ? "bg-white/15 text-[#F6F5F0]"
-                  : "bg-[#EFECE6] text-[#575653]"
+                  ? "bg-surface/15 text-canvas"
+                  : "bg-surface-muted text-ink-muted"
               }`}
             >
               {categoryCounts.semua}
@@ -202,16 +202,16 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
                 onClick={() => setCategory(option.slug)}
                 className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                   active
-                    ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
-                    : "border-[#DCD8CE] bg-[#FBF9F5] text-[#575653] hover:border-[#141413] hover:text-[#141413]"
+                    ? "border-ink bg-ink text-canvas"
+                    : "border-hairline bg-surface-subtle text-ink-muted hover:border-ink hover:text-ink"
                 }`}
               >
                 <span>{option.name}</span>
                 <span
-                  className={`rounded px-1.5 py-0.2 font-mono text-[10px] ${
+                  className={`rounded px-1.5 py-0.2 font-mono text-xs ${
                     active
-                      ? "bg-white/15 text-[#F6F5F0]"
-                      : "bg-[#EFECE6] text-[#575653]"
+                      ? "bg-surface/15 text-canvas"
+                      : "bg-surface-muted text-ink-muted"
                   }`}
                 >
                   {categoryCounts[option.slug] ?? 0}
@@ -222,10 +222,10 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
         </div>
 
         {/* Bottom Row: Price Ceiling Slider + Ready COD Switch */}
-        <div className="mt-4 flex flex-col justify-between gap-4 border-t border-[#EFECE6] pt-3.5 sm:flex-row sm:items-center">
+        <div className="mt-4 flex flex-col justify-between gap-4 border-t border-surface-muted pt-3.5 sm:flex-row sm:items-center">
           <div className="flex flex-1 flex-wrap items-center gap-3 sm:max-w-md">
-            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-[#575653]">
-              <SlidersHorizontal className="size-3.5 text-[#C83E2B]" />
+            <span className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-ink-muted">
+              <SlidersHorizontal className="size-3.5 text-accent" />
               Batas Tarif/Hari:
             </span>
             <input
@@ -235,21 +235,21 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
               step={5000}
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="h-1.5 flex-1 cursor-pointer accent-[#C83E2B]"
+              className="h-1.5 flex-1 cursor-pointer accent-accent"
               aria-label="Rentang tarif maksimal per hari"
             />
-            <span className="rounded-md border border-[#DCD8CE] bg-[#F6F5F0] px-2 py-0.5 font-mono text-xs font-bold text-[#141413]">
+            <span className="rounded-md border border-hairline bg-canvas px-2 py-0.5 font-mono text-xs font-bold text-ink">
               ≤ {formatRupiah(maxPrice)}
             </span>
           </div>
 
           <div className="flex items-center justify-between gap-4 sm:justify-end">
-            <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-medium text-[#141413] select-none">
+            <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-medium text-ink select-none">
               <input
                 type="checkbox"
                 checked={onlyAvailable}
                 onChange={(e) => setOnlyAvailable(e.target.checked)}
-                className="h-4 w-4 rounded border-[#DCD8CE] accent-[#1B4332]"
+                className="h-4 w-4 rounded border-hairline accent-forest"
               />
               <span>Hanya unit siap COD hari ini</span>
             </label>
@@ -258,7 +258,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1 rounded-lg border border-[#C83E2B]/30 bg-[#C83E2B]/10 px-2.5 py-1 text-xs font-medium text-[#C83E2B] transition hover:bg-[#C83E2B] hover:text-white"
+                className="inline-flex items-center gap-1 rounded-lg border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent transition hover:bg-accent hover:text-white"
               >
                 <RotateCcw className="size-3" />
                 <span>Reset</span>
@@ -270,14 +270,14 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
 
       {/* Results Meta Bar */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-xs text-[#575653]">
+        <p className="text-xs text-ink-muted">
           Menampilkan{" "}
-          <span className="font-mono font-bold text-[#141413]">
+          <span className="font-mono font-bold text-ink">
             {filteredItems.length}
           </span>{" "}
           dari <span className="font-mono">{items.length}</span> instrumen terdaftar
         </p>
-        <span className="hidden sm:inline font-mono text-[11px] text-[#78756F]">
+        <span className="hidden sm:inline font-mono text-xs text-ink-subtle">
           Tekan tombol [ / ] untuk fokus pencarian cepat
         </span>
       </div>
@@ -290,20 +290,20 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-[#DCD8CE] bg-white p-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] text-[#575653]">
+        <div className="rounded-2xl border border-dashed border-hairline bg-surface p-12 text-center">
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-hairline bg-canvas text-ink-muted">
             <PackageSearch className="size-5" />
           </div>
-          <p className="text-sm font-bold text-[#141413]">
+          <p className="text-sm font-bold text-ink">
             Tidak ditemukan instrumen yang sesuai
           </p>
-          <p className="mt-1 text-xs text-[#575653]">
+          <p className="mt-1 text-xs text-ink-muted">
             Ubah kata kunci pencarian, naikkan batas harga sewa, atau pilih semua titik COD.
           </p>
           <button
             type="button"
             onClick={resetFilters}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2 text-xs font-medium text-canvas transition hover:bg-accent"
           >
             <RotateCcw className="size-3.5" />
             <span>Reset Seluruh Filter</span>

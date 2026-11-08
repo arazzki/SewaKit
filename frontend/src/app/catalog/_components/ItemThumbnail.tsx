@@ -89,7 +89,7 @@ export default function ItemThumbnail({
   return (
     <div
       className={cx(
-        "relative flex items-center justify-center overflow-hidden bg-[#EFECE6]",
+        "relative flex items-center justify-center overflow-hidden bg-surface-muted",
         sizeClass,
         className,
       )}
@@ -103,20 +103,20 @@ export default function ItemThumbnail({
             onError={() => setImgFailed(true)}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#141413]/35 via-transparent to-transparent opacity-60" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent opacity-60" />
           {size !== "sm" && resolvedSku && (
-            <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded bg-[#141413]/80 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wider text-[#F6F5F0] backdrop-blur-xs">
+            <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded bg-ink/80 px-2 py-0.5 font-mono text-xs font-medium tracking-wider text-canvas backdrop-blur-xs">
               {resolvedSku}
             </span>
           )}
         </>
       ) : (
         <div className="bg-tech-grid relative flex h-full w-full flex-col items-center justify-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#141413]/15 bg-white font-mono text-sm font-bold text-[#141413]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink/15 bg-surface font-mono text-sm font-bold text-ink">
             {getInitials(displayTitle)}
           </div>
           {size !== "sm" && (
-            <span className="mt-2 font-mono text-[10px] font-medium uppercase tracking-widest text-[#575653]">
+            <span className="mt-2 text-xs font-semibold text-ink-muted">
               {label}
             </span>
           )}

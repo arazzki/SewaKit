@@ -118,27 +118,27 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F6F5F0]">
+    <div className="flex min-h-screen flex-col bg-canvas">
       <PageHeader
-        eyebrow="03 / REKENING BERSAMA & GATEWAY PEMBAYARAN"
-        title="Checkout Escrow Xendit Sandbox"
-        description="Dana sewa dan deposit jaminan disimpan aman pada akun penampung SewaKit hingga serah terima fisik COD terverifikasi."
+        eyebrow="Pembayaran Rekber"
+        title="Selesaikan Pembayaran Sewa & Deposit"
+        description="Uang sewa beserta deposit jaminan disimpan di rekening bersama SewaKit sampai barang selesai dikembalikan."
         actions={
           <>
             <Link
               href="/rentals/request"
-              className="rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#141413] transition hover:bg-[#EFECE6]"
+              className="rounded-xl border border-hairline bg-surface px-3.5 py-2 text-xs font-semibold text-ink transition hover:bg-surface-muted"
             >
               ← Pengajuan Sewa
             </Link>
             {!isPaid ? (
-              <div className="inline-flex items-center gap-2.5 rounded-xl border border-[#E9C893] bg-[#FEF7EC] px-3.5 py-2">
-                <Timer className="size-4 text-[#9A5B13]" />
+              <div className="inline-flex items-center gap-2.5 rounded-xl border border-warning-border bg-warning-subtle px-3.5 py-2">
+                <Timer className="size-4 text-warning-ink" />
                 <div className="leading-none">
-                  <span className="block font-mono text-[9px] font-semibold uppercase tracking-widest text-[#9A5B13]">
+                  <span className="block text-xs font-semibold text-warning-ink">
                     BATAS BAYAR 2 JAM
                   </span>
-                  <span className="font-mono text-sm font-bold text-[#141413]">
+                  <span className="font-mono text-sm font-bold text-ink">
                     {formatTimer(secondsLeft)}
                   </span>
                 </div>
@@ -154,16 +154,16 @@ export default function PaymentPage() {
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
         {isPaid && (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#1B4332]/25 bg-[#E9F3ED] p-5">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-forest/25 bg-forest-subtle p-5">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1B4332] text-white">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-forest text-white">
                 <CheckCircle2 className="size-5" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-[#141413]">
+                <h2 className="text-sm font-bold text-ink">
                   Pembayaran Terkonfirmasi (Idempotency Key Verified)
                 </h2>
-                <p className="mt-0.5 text-xs text-[#1B4332]">
+                <p className="mt-0.5 text-xs text-forest">
                   Dana sebesar <strong>{formatRupiah(totalAmount)}</strong> telah diamankan di Escrow. Kontak WhatsApp COD kini terbuka dan siap lanjut ke tahap inspeksi fisik.
                 </p>
               </div>
@@ -171,7 +171,7 @@ export default function PaymentPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/handover"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[#1B4332] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#143326]"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-forest px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-forest-hover"
               >
                 <span>Lanjut ke Protokol COD</span>
                 <ArrowUpRight className="size-3.5" />
@@ -183,13 +183,13 @@ export default function PaymentPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
           {/* Left Column: Payment Channel Selector (7 Columns) */}
           <div className="space-y-4 lg:col-span-7">
-            <div className="overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white">
-              <div className="flex items-center justify-between border-b border-[#EFECE6] bg-[#FBF9F5] px-6 py-4">
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-surface">
+              <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-6 py-4">
                 <div>
-                  <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#78756F]">
+                  <span className="block text-xs font-semibold text-ink-subtle">
                     METODE PEMBAYARAN TERINTEGRASI
                   </span>
-                  <h2 className="mt-0.5 text-base font-bold text-[#141413]">
+                  <h2 className="mt-0.5 text-base font-bold text-ink">
                     Pilih Kanal Pembayaran Xendit
                   </h2>
                 </div>
@@ -207,36 +207,36 @@ export default function PaymentPage() {
                       onClick={() => setSelectedMethod(ch.id)}
                       className={`flex w-full items-center justify-between gap-4 rounded-xl border p-4 text-left transition ${
                         active
-                          ? "border-[#141413] bg-[#FBF9F5] ring-1 ring-[#141413]"
-                          : "border-[#DCD8CE] bg-white hover:border-[#141413]/50"
+                          ? "border-ink bg-surface-subtle ring-1 ring-ink"
+                          : "border-hairline bg-surface hover:border-ink/50"
                       }`}
                     >
                       <div className="flex items-center gap-3.5 min-w-0">
                         <div
                           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${
                             active
-                              ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
-                              : "border-[#DCD8CE] bg-[#F6F5F0] text-[#141413]"
+                              ? "border-ink bg-ink text-canvas"
+                              : "border-hairline bg-canvas text-ink"
                           }`}
                         >
                           <Icon className="size-4.5" />
                         </div>
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm font-bold text-[#141413]">
+                            <span className="text-sm font-bold text-ink">
                               {ch.label}
                             </span>
-                            <span className="rounded border border-[#DCD8CE] bg-[#EFECE6] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#575653]">
+                            <span className="rounded border border-hairline bg-surface-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-ink-muted">
                               {ch.code}
                             </span>
                           </div>
-                          <p className="mt-0.5 truncate text-xs text-[#575653]">
+                          <p className="mt-0.5 truncate text-xs text-ink-muted">
                             {ch.subtitle}
                           </p>
                         </div>
                       </div>
 
-                      <span className="shrink-0 font-mono text-[11px] font-semibold text-[#1B4332]">
+                      <span className="shrink-0 font-mono text-xs font-semibold text-forest">
                         {ch.feeTag}
                       </span>
                     </button>
@@ -247,7 +247,7 @@ export default function PaymentPage() {
                   <button
                     type="button"
                     onClick={() => setShowXenditModal(true)}
-                    className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#141413] px-5 text-sm font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+                    className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 text-sm font-semibold text-canvas transition hover:bg-accent"
                   >
                     <Lock className="size-4" />
                     <span>
@@ -259,9 +259,9 @@ export default function PaymentPage() {
                   <button
                     type="button"
                     disabled
-                    className="mt-4 flex h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-[#DCD8CE] bg-[#EFECE6] text-xs font-semibold text-[#575653]"
+                    className="mt-4 flex h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-muted text-xs font-semibold text-ink-muted"
                   >
-                    <CheckCircle2 className="size-4 text-[#1B4332]" />
+                    <CheckCircle2 className="size-4 text-forest" />
                     <span>Invoice Telah Lunas Terbayar</span>
                   </button>
                 )}
@@ -271,75 +271,75 @@ export default function PaymentPage() {
 
           {/* Right Column: Official Stripe/Xendit Style Invoice Sheet (5 Columns) */}
           <aside className="lg:col-span-5">
-            <div className="overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white">
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-surface">
               {/* Official Brand Invoice Header */}
-              <div className="flex items-center justify-between border-b border-[#EFECE6] bg-[#FBF9F5] px-6 py-4">
+              <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-6 py-4">
                 <BrandLogo
                   size="sm"
                   theme="light"
                   showTagline={false}
                   href={null}
                 />
-                <span className="font-mono text-xs font-bold text-[#141413]">
+                <span className="font-mono text-xs font-bold text-ink">
                   {billDetails.orderId}
                 </span>
               </div>
 
               <div className="space-y-5 p-6">
                 <div>
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
+                  <span className="text-xs font-semibold text-accent">
                     INSTRUMEN DISEWA ({billDetails.sku})
                   </span>
-                  <h3 className="mt-1 text-base font-bold text-[#141413]">
+                  <h3 className="mt-1 text-base font-bold text-ink">
                     {billDetails.itemName}
                   </h3>
-                  <p className="mt-1 text-xs text-[#575653]">
-                    Pemilik: <strong className="text-[#141413]">{billDetails.ownerName}</strong>
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Pemilik: <strong className="text-ink">{billDetails.ownerName}</strong>
                   </p>
-                  <p className="text-xs text-[#575653]">
+                  <p className="text-xs text-ink-muted">
                     Titik COD: {billDetails.codLocation}
                   </p>
                 </div>
 
                 {/* Transparent Line-Item Ledger */}
-                <dl className="space-y-2.5 border-y border-[#EFECE6] py-4 text-xs">
+                <dl className="space-y-2.5 border-y border-surface-muted py-4 text-xs">
                   <div className="flex justify-between">
-                    <dt className="text-[#575653]">
+                    <dt className="text-ink-muted">
                       Sewa Instrumen ({billDetails.rentalDays} Hari)
                     </dt>
-                    <dd className="font-mono font-semibold text-[#141413]">
+                    <dd className="font-mono font-semibold text-ink">
                       {formatRupiah(billDetails.rentalCost)}
                     </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-[#575653]">
+                    <dt className="text-ink-muted">
                       Deposit Jaminan Escrow (Refundable 100%)
                     </dt>
-                    <dd className="font-mono font-semibold text-[#141413]">
+                    <dd className="font-mono font-semibold text-ink">
                       {formatRupiah(billDetails.depositAmount)}
                     </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-[#575653]">Biaya Infrastruktur Gateway</dt>
-                    <dd className="font-mono font-semibold text-[#141413]">
+                    <dt className="text-ink-muted">Biaya Infrastruktur Gateway</dt>
+                    <dd className="font-mono font-semibold text-ink">
                       {formatRupiah(billDetails.adminFee)}
                     </dd>
                   </div>
                 </dl>
 
                 <div className="flex items-baseline justify-between">
-                  <span className="text-sm font-bold text-[#141413]">
+                  <span className="text-sm font-bold text-ink">
                     Total Tagihan Escrow
                   </span>
-                  <span className="font-mono text-2xl font-bold text-[#C83E2B]">
+                  <span className="font-mono text-2xl font-bold text-accent">
                     {formatRupiah(totalAmount)}
                   </span>
                 </div>
 
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-3.5 text-xs leading-relaxed text-[#575653]">
-                  <ShieldCheck className="mt-0.5 size-4 shrink-0 text-[#1B4332]" />
+                <div className="flex items-start gap-2.5 rounded-xl border border-hairline bg-canvas p-3.5 text-xs leading-relaxed text-ink-muted">
+                  <ShieldCheck className="mt-0.5 size-4 shrink-0 text-forest" />
                   <p>
-                    <strong className="text-[#141413]">Proteksi Rekber SewaKit:</strong>{" "}
+                    <strong className="text-ink">Proteksi Rekber SewaKit:</strong>{" "}
                     Deposit {formatRupiah(billDetails.depositAmount)} dikunci pada rekening penampung dan dikembalikan utuh otomatis setelah checklist pengembalian disetujui.
                   </p>
                 </div>
@@ -350,9 +350,9 @@ export default function PaymentPage() {
 
         {/* MODAL SIMULATOR POPUP XENDIT SANDBOX */}
         {showXenditModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#141413]/50 p-4 backdrop-blur-[2px]">
-            <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#DCD8CE] bg-white shadow-xl">
-              <div className="flex items-center justify-between border-b border-[#EFECE6] bg-[#FBF9F5] px-5 py-3.5">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4 backdrop-blur-[2px]">
+            <div className="w-full max-w-md overflow-hidden rounded-2xl border border-hairline bg-surface shadow-xl">
+              <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-5 py-3.5">
                 <BrandLogo
                   size="sm"
                   theme="light"
@@ -364,7 +364,7 @@ export default function PaymentPage() {
                   <button
                     type="button"
                     onClick={() => setShowXenditModal(false)}
-                    className="rounded-lg p-1 text-[#78756F] hover:bg-[#EFECE6] hover:text-[#141413]"
+                    className="rounded-lg p-1 text-ink-subtle hover:bg-surface-muted hover:text-ink"
                   >
                     <X className="size-4" />
                   </button>
@@ -372,40 +372,40 @@ export default function PaymentPage() {
               </div>
 
               <div className="space-y-4 p-5 text-xs">
-                <div className="flex items-center justify-between rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-3.5">
+                <div className="flex items-center justify-between rounded-xl border border-hairline bg-canvas p-3.5">
                   <div>
-                    <span className="block font-mono text-[10px] uppercase text-[#78756F]">
+                    <span className="block font-mono text-xs uppercase text-ink-subtle">
                       Nominal Pembayaran
                     </span>
-                    <span className="font-mono text-xl font-bold text-[#141413]">
+                    <span className="font-mono text-xl font-bold text-ink">
                       {formatRupiah(totalAmount)}
                     </span>
                   </div>
-                  <span className="font-mono text-xs font-semibold text-[#9A5B13]">
+                  <span className="font-mono text-xs font-semibold text-warning-ink">
                     {formatTimer(secondsLeft)}
                   </span>
                 </div>
 
                 {selectedMethod === "qris" ? (
-                  <div className="space-y-3 rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-4 text-center">
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#575653]">
+                  <div className="space-y-3 rounded-xl border border-hairline bg-surface-subtle p-4 text-center">
+                    <span className="text-xs font-semibold text-ink-muted">
                       QRIS DINAMIS SEWAKIT ESCROW
                     </span>
                     {/* Crisp Technical SVG QR Matrix Representation */}
-                    <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-xl border border-[#DCD8CE] bg-white p-3">
-                      <QrCode className="h-28 w-28 text-[#141413]" strokeWidth={1.25} />
+                    <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-xl border border-hairline bg-surface p-3">
+                      <QrCode className="h-28 w-28 text-ink" strokeWidth={1.25} />
                     </div>
-                    <p className="text-[11px] text-[#575653]">
+                    <p className="text-xs text-ink-muted">
                       Pindai melalui aplikasi perbankan atau e-wallet, atau klik tombol simulasi webhook di bawah.
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-2 rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] p-4">
-                    <span className="font-mono text-[10px] uppercase text-[#78756F]">
+                  <div className="space-y-2 rounded-xl border border-hairline bg-surface-subtle p-4">
+                    <span className="font-mono text-xs uppercase text-ink-subtle">
                       Nomor Virtual Account ({selectedMethod.toUpperCase()})
                     </span>
-                    <div className="flex items-center justify-between rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2.5">
-                      <span className="font-mono text-base font-bold tracking-wider text-[#141413]">
+                    <div className="flex items-center justify-between rounded-xl border border-hairline bg-surface px-3.5 py-2.5">
+                      <span className="font-mono text-base font-bold tracking-wider text-ink">
                         8808 9920 2608 81
                       </span>
                       <button
@@ -415,11 +415,11 @@ export default function PaymentPage() {
                           setCopied(true);
                           setTimeout(() => setCopied(false), 2000);
                         }}
-                        className="inline-flex items-center gap-1 rounded-lg border border-[#DCD8CE] bg-[#F6F5F0] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#141413] hover:border-[#141413]"
+                        className="inline-flex items-center gap-1 rounded-lg border border-hairline bg-canvas px-2.5 py-1 font-mono text-xs font-semibold text-ink hover:border-ink"
                       >
                         {copied ? (
                           <>
-                            <Check className="size-3 text-[#1B4332]" />
+                            <Check className="size-3 text-forest" />
                             <span>Tersalin</span>
                           </>
                         ) : (
@@ -438,7 +438,7 @@ export default function PaymentPage() {
                     type="button"
                     disabled={isProcessing}
                     onClick={handleSimulatePayment}
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1B4332] py-3 text-xs font-semibold text-white transition hover:bg-[#143326] disabled:opacity-60"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-forest py-3 text-xs font-semibold text-white transition hover:bg-forest-hover disabled:opacity-60"
                   >
                     <Zap className="size-3.5" />
                     <span>
@@ -450,7 +450,7 @@ export default function PaymentPage() {
                   <button
                     type="button"
                     onClick={() => setShowXenditModal(false)}
-                    className="rounded-xl border border-[#DCD8CE] bg-white px-4 py-3 text-xs font-medium text-[#575653] hover:bg-[#F6F5F0]"
+                    className="rounded-xl border border-hairline bg-surface px-4 py-3 text-xs font-medium text-ink-muted hover:bg-canvas"
                   >
                     Tutup
                   </button>

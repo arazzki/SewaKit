@@ -17,16 +17,16 @@ export default function ChecklistComparison({
   returned?: ChecklistRecord;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-[#DCD8CE] bg-white">
+    <div className="overflow-x-auto rounded-xl border border-hairline bg-surface">
       <table className="w-full text-left text-sm">
-        <thead className="bg-[#F6F5F0] text-xs text-[#575653]">
+        <thead className="bg-canvas text-xs text-ink-muted">
           <tr>
             <th className="px-4 py-2.5 font-medium">Komponen</th>
             <th className="px-4 py-2.5 font-medium">Saat diambil</th>
             {returned && <th className="px-4 py-2.5 font-medium">Saat dikembalikan</th>}
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#EFECE6]">
+        <tbody className="divide-y divide-surface-muted">
           {components.map((component) => {
             const before = pickup?.entries.find((entry) => entry.componentId === component.id);
             const after = returned?.entries.find((entry) => entry.componentId === component.id);
@@ -35,7 +35,7 @@ export default function ChecklistComparison({
 
             return (
               <tr key={component.id} className={worsened ? "bg-rose-50/60" : undefined}>
-                <td className="px-4 py-3 align-top font-medium text-[#141413]">
+                <td className="px-4 py-3 align-top font-medium text-ink">
                   {component.name}
                   {worsened && <span className="mt-1 block text-xs font-semibold text-rose-700">Kondisi berubah</span>}
                 </td>
@@ -43,10 +43,10 @@ export default function ChecklistComparison({
                   {before ? (
                     <>
                       <ConditionBadge condition={before.condition} />
-                      {before.note && <p className="mt-1 text-xs text-[#575653]">{before.note}</p>}
+                      {before.note && <p className="mt-1 text-xs text-ink-muted">{before.note}</p>}
                     </>
                   ) : (
-                    <span className="text-xs text-[#78756F]">Belum diisi</span>
+                    <span className="text-xs text-ink-subtle">Belum diisi</span>
                   )}
                 </td>
                 {returned && (
@@ -54,10 +54,10 @@ export default function ChecklistComparison({
                     {after ? (
                       <>
                         <ConditionBadge condition={after.condition} />
-                        {after.note && <p className="mt-1 text-xs text-[#575653]">{after.note}</p>}
+                        {after.note && <p className="mt-1 text-xs text-ink-muted">{after.note}</p>}
                       </>
                     ) : (
-                      <span className="text-xs text-[#78756F]">Belum diisi</span>
+                      <span className="text-xs text-ink-subtle">Belum diisi</span>
                     )}
                   </td>
                 )}

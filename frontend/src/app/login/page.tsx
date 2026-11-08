@@ -2,180 +2,191 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ShieldCheck,
   GraduationCap,
-  CheckCircle2,
   KeyRound,
   ArrowRight,
   Lock,
 } from 'lucide-react';
 import BrandLogo from '@/components/BrandLogo';
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import Input from '@/components/ui/input';
+import { useRentalSession } from '@/context/RentalSessionContext';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { loginAsStudent, loginAsModerator } = useRentalSession();
   const [roleTab, setRoleTab] = useState<'mahasiswa' | 'admin'>('mahasiswa');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [adminUsername, setAdminUsername] = useState('');
   const [adminOtp, setAdminOtp] = useState('');
-  const [feedback, setFeedback] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (roleTab === 'mahasiswa') {
-      setFeedback(`Sesi Mahasiswa aktif untuk ${email} (JWT Token diterbitkan).`);
+      loginAsStudent(email);
+      router.push('/catalog');
     } else {
-      setFeedback(`Sesi Administrator terverifikasi dengan kode OTP (${adminOtp}).`);
+      loginAsModerator(adminUsername);
+      router.push('/admin/dashboard');
     }
   };
 
   return (
-    <div className="flex min-h-[82vh] flex-col items-center justify-center bg-[#F6F5F0] bg-tech-grid px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-[#DCD8CE] bg-white p-7 sm:p-8 shadow-[0_10px_28px_-14px_rgba(20,20,19,0.10)]">
-        {/* Official Standardized BrandLogo */}
-        <div className="mb-6 flex items-center justify-between border-b border-[#EFECE6] pb-5">
+    <div className="flex min-h-[82vh] flex-col items-center justify-center bg-canvas px-4 py-12">
+      <Card variant="elevated" className="w-full max-w-md p-7 sm:p-8">
+        <div className="mb-6 flex items-center justify-between border-b border-surface-muted pb-5">
           <BrandLogo size="lg" theme="light" showTagline />
         </div>
 
         <div className="mb-5">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-            01 / PORTAL OTENTIKASI SSO
-          </span>
-          <h1 className="mt-1 text-xl font-bold tracking-tight text-[#141413]">
+          <h1 className="text-xl font-bold tracking-tight text-ink">
             Masuk ke Akun SewaKit
           </h1>
-          <p className="mt-1 text-xs leading-relaxed text-[#575653]">
-            Gunakan kredensial mahasiswa Telkom University terverifikasi atau akun moderator kampus.
+          <p className="mt-1 text-xs leading-relaxed text-ink-muted">
+            Masuk dengan email mahasiswa Telkom University atau akun moderator kampus.
           </p>
         </div>
 
-        {/* Pilihan Login Mahasiswa vs Admin (OTP) */}
-        <div className="mb-6 grid grid-cols-2 gap-1.5 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-1 text-xs font-medium">
+        <div className="mb-6 grid grid-cols-2 gap-1.5 rounded-xl border border-hairline bg-canvas p-1 text-xs font-medium">
           <button
             type="button"
-            onClick={() => {
-              setRoleTab('mahasiswa');
-              setFeedback(null);
-            }}
-            className={`inline-flex items-center justify-center gap-1.5 rounded-lg py-2 transition ${
+            onClick={() => setRoleTab('mahasiswa')}
+            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 transition ${
               roleTab === 'mahasiswa'
-                ? 'bg-[#141413] text-[#F6F5F0] font-semibold'
-                : 'text-[#575653] hover:text-[#141413]'
+                ? 'bg-ink text-canvas font-semibold'
+                : 'text-ink-muted hover:text-ink'
             }`}
           >
             <GraduationCap className="size-3.5" />
-            <span>Mahasiswa (NIM)</span>
+            <span>Mahasiswa</span>
           </button>
           <button
             type="button"
-            onClick={() => {
-              setRoleTab('admin');
-              setFeedback(null);
-            }}
-            className={`inline-flex items-center justify-center gap-1.5 rounded-lg py-2 transition ${
+            onClick={() => setRoleTab('admin')}
+            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 transition ${
               roleTab === 'admin'
-                ? 'bg-[#141413] text-[#F6F5F0] font-semibold'
-                : 'text-[#575653] hover:text-[#141413]'
+                ? 'bg-ink text-canvas font-semibold'
+                : 'text-ink-muted hover:text-ink'
             }`}
           >
             <ShieldCheck className="size-3.5" />
-            <span>Moderator (2FA)</span>
+            <span>Moderator</span>
           </button>
         </div>
-
-        {feedback && (
-          <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] p-3.5 text-xs font-medium text-[#1B4332]">
-            <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
-            <span>{feedback}</span>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {roleTab === 'mahasiswa' ? (
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+              <label className="mb-1.5 block text-xs font-medium text-ink">
                 Email Kampus / NIM
               </label>
-              <input
+              <Input
                 type="text"
                 required
                 placeholder="nama@student.telkomuniversity.ac.id"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle focus:bg-surface"
               />
             </div>
           ) : (
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
-                Username Administrator
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Username Moderator
               </label>
-              <input
+              <Input
                 type="text"
                 required
                 placeholder="admin.sewakit"
                 value={adminUsername}
                 onChange={(e) => setAdminUsername(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-4 py-2.5 font-mono text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
+                className="bg-surface-subtle font-mono focus:bg-surface"
               />
             </div>
           )}
 
           <div>
-            <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
+            <label className="mb-1.5 block text-xs font-medium text-ink">
               Kata Sandi
             </label>
-            <div className="relative">
-              <Lock className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#78756F]" />
-              <input
-                type="password"
-                required
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] py-2.5 pl-10 pr-4 text-sm text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
-              />
-            </div>
+            <Input
+              type="password"
+              required
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              leftIcon={<Lock className="size-4" />}
+              className="bg-surface-subtle focus:bg-surface"
+            />
           </div>
 
           {roleTab === 'admin' && (
             <div>
-              <label className="mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[#575653]">
-                Token Verifikasi OTP (6 Digit)
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Kode OTP (6 Digit)
               </label>
-              <div className="relative">
-                <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#C83E2B]" />
-                <input
-                  type="text"
-                  required
-                  maxLength={6}
-                  placeholder="849201"
-                  value={adminOtp}
-                  onChange={(e) => setAdminOtp(e.target.value)}
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] py-2.5 pl-10 pr-4 font-mono text-sm font-bold tracking-[0.25em] text-[#141413] transition focus:border-[#141413] focus:bg-white focus:outline-none"
-                />
-              </div>
+              <Input
+                type="text"
+                required
+                maxLength={6}
+                placeholder="849201"
+                value={adminOtp}
+                onChange={(e) => setAdminOtp(e.target.value)}
+                leftIcon={<KeyRound className="size-4 text-accent" />}
+                className="bg-surface-subtle font-mono font-bold tracking-[0.25em] focus:bg-surface"
+              />
             </div>
           )}
 
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#141413] py-3 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
-          >
-            <span>
-              {roleTab === 'mahasiswa' ? 'Masuk ke Akun Mahasiswa' : 'Verifikasi & Masuk Admin'}
-            </span>
+          <Button type="submit" size="lg" className="w-full text-xs font-semibold">
+            <span>{roleTab === 'mahasiswa' ? 'Masuk' : 'Verifikasi & Masuk'}</span>
             <ArrowRight className="size-3.5" />
-          </button>
+          </Button>
         </form>
 
-        <div className="mt-6 flex items-center justify-between border-t border-[#EFECE6] pt-4 text-xs text-[#575653]">
-          <span>Belum memiliki akun civitas?</span>
-          <Link href="/register" className="font-semibold text-[#C83E2B] hover:underline">
-            Daftar NIM Sekarang →
+        {/* Demo Quick Login (selama backend belum terhubung) */}
+        <div className="mt-5 rounded-xl border border-hairline bg-surface-subtle p-3.5">
+          <p className="text-xs font-medium text-ink-muted">
+            Simulasi cepat tanpa isi form:
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <Button
+              variant="outline"
+              size="xs"
+              className="text-xs"
+              onClick={() => {
+                loginAsStudent();
+                router.push('/rentals/request');
+              }}
+            >
+              Akun Mahasiswa
+            </Button>
+            <Button
+              variant="outline"
+              size="xs"
+              className="text-xs"
+              onClick={() => {
+                loginAsModerator();
+                router.push('/admin/dashboard');
+              }}
+            >
+              Akun Moderator
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-5 flex items-center justify-between border-t border-surface-muted pt-4 text-xs text-ink-muted">
+          <span>Belum punya akun?</span>
+          <Link href="/register" className="font-semibold text-accent hover:underline">
+            Daftar sekarang →
           </Link>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

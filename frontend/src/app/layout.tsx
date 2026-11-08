@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { RentalSessionProvider } from "@/context/RentalSessionContext";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -17,18 +18,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SewaKit - Platform Sewa Alat Kuliah & Praktikum P2P Kampus",
+  title: "SewaKit — Sewa Alat Praktikum & Kegiatan Kampus Tel-U",
   description:
-    "Platform sewa-menyewa peralatan praktikum, perangkat IoT, kamera multimedia, dan perlengkapan acara antar mahasiswa Telkom University.",
+    "Platform sewa-menyewa peralatan praktikum, perangkat IoT, kamera multimedia, dan perlengkapan kepanitiaan antar mahasiswa Telkom University.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-[#F6F5F0] text-[#141413] antialiased">
-        <Navbar />
-        <div className="flex-1 flex flex-col">{children}</div>
-        <Footer />
+      <body className="min-h-full flex flex-col bg-canvas text-ink antialiased">
+        <RentalSessionProvider>
+          <Navbar />
+          <div className="flex-1 flex flex-col">{children}</div>
+          <Footer />
+        </RentalSessionProvider>
         <Toaster position="top-center" richColors />
       </body>
     </html>

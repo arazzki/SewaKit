@@ -247,16 +247,16 @@ export default function KelolaBarangPage() {
             category={item.kategori}
             imageUrl={item.foto || undefined}
             size="sm"
-            className="shrink-0 border border-[#DCD8CE]"
+            className="shrink-0 border border-hairline"
           />
           <div className="min-w-0">
-            <span className="font-mono text-[10px] font-semibold text-[#78756F]">
+            <span className="font-mono text-xs font-semibold text-ink-subtle">
               {item.sku}
             </span>
-            <p className="truncate text-xs font-bold text-[#141413]">
+            <p className="truncate text-xs font-bold text-ink">
               {item.nama}
             </p>
-            <p className="mt-0.5 line-clamp-1 text-[11px] text-[#575653]">
+            <p className="mt-0.5 line-clamp-1 text-xs text-ink-muted">
               {item.spesifikasi}
             </p>
           </div>
@@ -273,7 +273,7 @@ export default function KelolaBarangPage() {
       header: "Tarif / Hari",
       align: "right",
       render: (item) => (
-        <span className="font-mono font-bold text-[#141413]">
+        <span className="font-mono font-bold text-ink">
           {formatRupiah(item.harga)}
         </span>
       ),
@@ -283,7 +283,7 @@ export default function KelolaBarangPage() {
       header: "Deposit Escrow",
       align: "right",
       render: (item) => (
-        <span className="font-mono text-[#575653]">
+        <span className="font-mono text-ink-muted">
           {formatRupiah(item.deposit)}
         </span>
       ),
@@ -293,7 +293,7 @@ export default function KelolaBarangPage() {
       header: "Unit",
       align: "center",
       render: (item) => (
-        <span className="font-mono font-bold text-[#141413]">
+        <span className="font-mono font-bold text-ink">
           {item.stok}
         </span>
       ),
@@ -320,7 +320,7 @@ export default function KelolaBarangPage() {
             type="button"
             onClick={() => toggleStatus(item.id)}
             title="Ubah status tayang"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#DCD8CE] bg-white text-[#575653] transition hover:border-[#141413] hover:text-[#141413]"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-surface text-ink-muted transition hover:border-ink hover:text-ink"
           >
             <Power className="size-3.5" />
           </button>
@@ -328,7 +328,7 @@ export default function KelolaBarangPage() {
             type="button"
             onClick={() => editBarang(item)}
             title="Edit spesifikasi & tarif"
-            className="inline-flex h-8 items-center gap-1 rounded-lg border border-[#DCD8CE] bg-white px-2.5 text-xs font-medium text-[#141413] transition hover:border-[#141413]"
+            className="inline-flex h-8 items-center gap-1 rounded-lg border border-hairline bg-surface px-2.5 text-xs font-medium text-ink transition hover:border-ink"
           >
             <Pencil className="size-3" />
             <span>Edit</span>
@@ -337,7 +337,7 @@ export default function KelolaBarangPage() {
             type="button"
             onClick={() => hapusBarang(item.id)}
             title="Hapus unit"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#FECDCA] bg-[#FEF3F2] text-[#B42318] transition hover:bg-[#B42318] hover:text-white"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-danger-border bg-danger-subtle text-danger transition hover:bg-danger hover:text-white"
           >
             <Trash2 className="size-3.5" />
           </button>
@@ -347,24 +347,24 @@ export default function KelolaBarangPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F6F5F0] text-[#141413]">
+    <div className="flex min-h-screen flex-col bg-canvas text-ink">
       <PageHeader
-        eyebrow="MERCHANT INVENTORY CONSOLE"
-        title="Kelola Inventaris & Tarif Alat Pemilik"
-        description="Atur ketersediaan unit praktikum, nilai jaminan deposit escrow, dan spesifikasi kelengkapan paket COD."
+        eyebrow="Panel Pemilik"
+        title="Kelola Barang Sewaan Saya"
+        description="Atur stok alat, tarif sewa harian, besaran deposit, dan daftar kelengkapan barang untuk COD."
         actions={
           <>
             <Link
               href="/owner/wallet"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2.5 text-xs font-medium text-[#141413] transition hover:border-[#141413]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-xs font-medium text-ink transition hover:border-ink"
             >
-              <Wallet className="size-3.5 text-[#1B4332]" />
+              <Wallet className="size-3.5 text-forest" />
               <span>Dompet Pendapatan</span>
             </Link>
             <button
               type="button"
               onClick={tampilForm ? resetForm : bukaFormTambah}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-xs font-medium text-canvas transition hover:bg-accent"
             >
               {tampilForm ? (
                 <>
@@ -385,44 +385,44 @@ export default function KelolaBarangPage() {
       <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
         {/* High-Density Console Metrics */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="flex items-center justify-between rounded-2xl border border-[#DCD8CE] bg-white p-5">
+          <div className="flex items-center justify-between rounded-2xl border border-hairline bg-surface p-5">
             <div>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+              <span className="text-xs font-semibold text-ink-subtle">
                 INV-01 • JENIS SKU
               </span>
-              <p className="mt-1 font-mono text-2xl font-bold text-[#141413]">
+              <p className="mt-1 font-mono text-2xl font-bold text-ink">
                 {barang.length} SKU
               </p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#EFECE6] bg-[#F6F5F0] text-[#141413]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-surface-muted bg-canvas text-ink">
               <Layers className="size-4.5" />
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-2xl border border-[#DCD8CE] bg-white p-5">
+          <div className="flex items-center justify-between rounded-2xl border border-hairline bg-surface p-5">
             <div>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+              <span className="text-xs font-semibold text-ink-subtle">
                 INV-02 • TOTAL STOK UNIT
               </span>
-              <p className="mt-1 font-mono text-2xl font-bold text-[#141413]">
+              <p className="mt-1 font-mono text-2xl font-bold text-ink">
                 {totalStok} Unit
               </p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#EFECE6] bg-[#F6F5F0] text-[#141413]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-surface-muted bg-canvas text-ink">
               <Package className="size-4.5" />
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-2xl border border-[#DCD8CE] bg-white p-5">
+          <div className="flex items-center justify-between rounded-2xl border border-hairline bg-surface p-5">
             <div>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+              <span className="text-xs font-semibold text-ink-subtle">
                 INV-03 • TAYANG DI KATALOG
               </span>
-              <p className="mt-1 font-mono text-2xl font-bold text-[#1B4332]">
+              <p className="mt-1 font-mono text-2xl font-bold text-forest">
                 {unitAktif} Aktif
               </p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#1B4332]/20 bg-[#E9F3ED] text-[#1B4332]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-forest/20 bg-forest-subtle text-forest">
               <CheckCircle2 className="size-4.5" />
             </div>
           </div>
@@ -432,14 +432,14 @@ export default function KelolaBarangPage() {
         {tampilForm && (
           <form
             onSubmit={simpanBarang}
-            className="rounded-2xl border border-[#141413] bg-white p-6 shadow-sm"
+            className="rounded-2xl border border-ink bg-surface p-6 shadow-sm"
           >
-            <div className="mb-5 flex items-center justify-between border-b border-[#EFECE6] pb-3.5">
+            <div className="mb-5 flex items-center justify-between border-b border-surface-muted pb-3.5">
               <div>
-                <span className="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
+                <span className="block text-xs font-semibold text-accent">
                   {idEdit !== null ? "MODIFIKASI SKU" : "REGISTRASI UNIT BARU"}
                 </span>
-                <h2 className="text-base font-bold text-[#141413]">
+                <h2 className="text-base font-bold text-ink">
                   {idEdit !== null
                     ? "Perbarui Spesifikasi & Tarif Alat"
                     : "Daftarkan Instrumen Sewaan Baru"}
@@ -448,7 +448,7 @@ export default function KelolaBarangPage() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="rounded-lg p-1.5 text-[#78756F] hover:bg-[#F6F5F0] hover:text-[#141413]"
+                className="rounded-lg p-1.5 text-ink-subtle hover:bg-canvas hover:text-ink"
               >
                 <X className="size-4" />
               </button>
@@ -458,7 +458,7 @@ export default function KelolaBarangPage() {
               <div className="md:col-span-2">
                 <label
                   htmlFor="nama"
-                  className="mb-1.5 block text-xs font-medium text-[#575653]"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
                 >
                   Nama Instrumen / Paket Praktikum *
                 </label>
@@ -468,14 +468,14 @@ export default function KelolaBarangPage() {
                   onChange={(e) => setNama(e.target.value)}
                   placeholder="Contoh: Logic Analyzer 8-Channel 24MHz + Klip Uji"
                   required
-                  className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3.5 text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="kategori"
-                  className="mb-1.5 block text-xs font-medium text-[#575653]"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
                 >
                   Klasifikasi Kategori *
                 </label>
@@ -484,7 +484,7 @@ export default function KelolaBarangPage() {
                   value={kategori}
                   onChange={(e) => setKategori(e.target.value)}
                   required
-                  className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3 text-xs font-medium text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3 text-xs font-medium text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 >
                   <option value="">Pilih kategori</option>
                   {DAFTAR_KATEGORI.map((item) => (
@@ -498,7 +498,7 @@ export default function KelolaBarangPage() {
               <div>
                 <label
                   htmlFor="harga"
-                  className="mb-1.5 block text-xs font-medium text-[#575653]"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
                 >
                   Tarif Sewa / Hari (Rp) *
                 </label>
@@ -510,14 +510,14 @@ export default function KelolaBarangPage() {
                   onChange={(e) => setHarga(e.target.value)}
                   required
                   placeholder="25000"
-                  className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3.5 font-mono text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="deposit"
-                  className="mb-1.5 block text-xs font-medium text-[#575653]"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
                 >
                   Jaminan Deposit Escrow (Rp) *
                 </label>
@@ -529,14 +529,14 @@ export default function KelolaBarangPage() {
                   onChange={(e) => setDeposit(e.target.value)}
                   required
                   placeholder="100000"
-                  className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3.5 font-mono text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="stok"
-                  className="mb-1.5 block text-xs font-medium text-[#575653]"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
                 >
                   Kuantitas Unit Tersedia *
                 </label>
@@ -548,14 +548,14 @@ export default function KelolaBarangPage() {
                   onChange={(e) => setStok(e.target.value)}
                   required
                   placeholder="2"
-                  className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3.5 font-mono text-sm text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 />
               </div>
 
               <div className="md:col-span-2">
                 <label
                   htmlFor="spesifikasi"
-                  className="mb-1.5 block text-xs font-medium text-[#575653]"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
                 >
                   Spesifikasi Teknis &amp; Kelengkapan *
                 </label>
@@ -566,16 +566,16 @@ export default function KelolaBarangPage() {
                   placeholder="Rincikan voltase, sensor bawaan, jumlah kabel probe, dan kondisi fisik..."
                   rows={2}
                   required
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#FBF9F5] px-3.5 py-2.5 text-xs text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                  className="w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 py-2.5 text-xs text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 />
               </div>
 
               <div>
-                <span className="mb-1.5 block text-xs font-medium text-[#575653]">
+                <span className="mb-1.5 block text-xs font-medium text-ink-muted">
                   Foto Produk (Maks 2 MB)
                 </span>
-                <label className="flex h-[68px] cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#DCD8CE] bg-[#FBF9F5] px-3 text-xs font-medium text-[#575653] transition hover:border-[#141413] hover:text-[#141413]">
-                  <Camera className="size-4 text-[#C83E2B]" />
+                <label className="flex h-[68px] cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-hairline bg-surface-subtle px-3 text-xs font-medium text-ink-muted transition hover:border-ink hover:text-ink">
+                  <Camera className="size-4 text-accent" />
                   <span>{foto ? "Ganti Foto Produk" : "Unggah Foto Alat"}</span>
                   <input
                     ref={inputFotoRef}
@@ -589,17 +589,17 @@ export default function KelolaBarangPage() {
               </div>
             </div>
 
-            <div className="mt-5 flex items-center gap-2.5 border-t border-[#EFECE6] pt-4">
+            <div className="mt-5 flex items-center gap-2.5 border-t border-surface-muted pt-4">
               <button
                 type="submit"
-                className="rounded-xl bg-[#141413] px-5 py-2.5 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+                className="rounded-xl bg-ink px-5 py-2.5 text-xs font-semibold text-canvas transition hover:bg-accent"
               >
                 {idEdit !== null ? "Simpan Perubahan SKU" : "Terbitkan ke Katalog"}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 text-xs font-medium text-[#575653] hover:bg-[#F6F5F0]"
+                className="rounded-xl border border-hairline bg-surface px-4 py-2.5 text-xs font-medium text-ink-muted hover:bg-canvas"
               >
                 Batal
               </button>
@@ -626,7 +626,7 @@ export default function KelolaBarangPage() {
                   value={filterKategori}
                   onChange={(e) => setFilterKategori(e.target.value)}
                   aria-label="Filter kategori barang"
-                  className="h-10 w-full rounded-xl border border-[#DCD8CE] bg-white px-3.5 text-xs font-medium text-[#141413] focus:border-[#141413] focus:outline-none"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface px-3.5 text-xs font-medium text-ink focus:border-ink focus:outline-none"
                 >
                   <option value="">Semua Kategori Inventaris</option>
                   {DAFTAR_KATEGORI.map((item) => (

@@ -113,28 +113,28 @@ export default function ChecklistForm({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-xl border border-[#DCD8CE] bg-white">
-        <div className="flex items-center justify-between border-b border-[#EFECE6] bg-[#FBF9F5] px-4 py-2.5">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#78756F]">
+      <div className="overflow-hidden rounded-xl border border-hairline bg-surface">
+        <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-4 py-2.5">
+          <span className="text-xs font-semibold text-ink-subtle">
             DAFTAR PEMERIKSAAN KOMPONEN ({components.length})
           </span>
           <button
             type="button"
             onClick={markAllGood}
-            className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[#1B4332] hover:underline"
+            className="inline-flex items-center gap-1 font-mono text-xs font-semibold text-forest hover:underline"
           >
             <CheckCircle2 className="size-3.5" />
             <span>Tandai Semua Baik</span>
           </button>
         </div>
 
-        <div className="divide-y divide-[#EFECE6]">
+        <div className="divide-y divide-surface-muted">
           {components.map((component) => {
             const entry = draft[component.id];
             return (
               <div key={component.id} className="p-4">
                 <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                  <p className="text-xs font-semibold text-[#141413] sm:text-sm">
+                  <p className="text-xs font-semibold text-ink sm:text-sm">
                     {component.name}
                   </p>
                   <div
@@ -157,8 +157,8 @@ export default function ChecklistForm({
                           }
                           className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
                             selected
-                              ? "border-[#141413] bg-[#141413] text-[#F6F5F0]"
-                              : "border-[#DCD8CE] bg-white text-[#575653] hover:border-[#141413]"
+                              ? "border-ink bg-ink text-canvas"
+                              : "border-hairline bg-surface text-ink-muted hover:border-ink"
                           }`}
                         >
                           {option.label}
@@ -175,7 +175,7 @@ export default function ChecklistForm({
                       updateEntry(component.id, { note: event.target.value })
                     }
                     placeholder="Jelaskan detail goresan, kerusakan, atau kekurangan komponen..."
-                    className="mt-2.5 w-full rounded-lg border border-[#DCD8CE] bg-[#FBF9F5] px-3 py-2 text-xs text-[#141413] focus:border-[#141413] focus:bg-white focus:outline-none"
+                    className="mt-2.5 w-full rounded-lg border border-hairline bg-surface-subtle px-3 py-2 text-xs text-ink focus:border-ink focus:bg-surface focus:outline-none"
                   />
                 )}
               </div>
@@ -185,18 +185,18 @@ export default function ChecklistForm({
       </div>
 
       {/* Origin UI-Style Dropzone for Inspection Photos */}
-      <div className="rounded-xl border border-dashed border-[#DCD8CE] bg-[#FBF9F5] p-4">
+      <div className="rounded-xl border border-dashed border-hairline bg-surface-subtle p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold text-[#141413]">
+            <p className="text-xs font-bold text-ink">
               Dokumentasi Foto Inspeksi Fisik (Wajib)
             </p>
-            <p className="mt-0.5 text-[11px] text-[#575653]">
+            <p className="mt-0.5 text-xs text-ink-muted">
               Ambil foto kondisi unit dan kelengkapan kabel di titik temu COD kampus.
             </p>
           </div>
-          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-medium text-[#141413] transition hover:border-[#141413]">
-            <Camera className="size-3.5 text-[#C83E2B]" />
+          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3.5 py-2 text-xs font-medium text-ink transition hover:border-ink">
+            <Camera className="size-3.5 text-accent" />
             <span>Unggah Foto Bukti</span>
             <input
               type="file"
@@ -212,7 +212,7 @@ export default function ChecklistForm({
         </div>
 
         {photos.length > 0 && (
-          <div className="mt-3.5 flex flex-wrap gap-3 border-t border-[#EFECE6] pt-3.5">
+          <div className="mt-3.5 flex flex-wrap gap-3 border-t border-surface-muted pt-3.5">
             {photos.map((photo) => (
               <div key={photo.url} className="relative">
                 <Image
@@ -221,13 +221,13 @@ export default function ChecklistForm({
                   width={88}
                   height={88}
                   unoptimized
-                  className="h-22 w-22 rounded-xl border border-[#DCD8CE] object-cover"
+                  className="h-22 w-22 rounded-xl border border-hairline object-cover"
                 />
                 <button
                   type="button"
                   onClick={() => removePhoto(photo.url)}
                   aria-label={`Hapus foto ${photo.name}`}
-                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#141413] text-white hover:bg-[#C83E2B]"
+                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-white hover:bg-accent"
                 >
                   <X className="size-3" />
                 </button>
@@ -240,7 +240,7 @@ export default function ChecklistForm({
       <div>
         <label
           htmlFor={`note-${filledBy}`}
-          className="block text-xs font-medium text-[#575653]"
+          className="block text-xs font-medium text-ink-muted"
         >
           Catatan Tambahan Serah Terima (Opsional)
         </label>
@@ -250,18 +250,18 @@ export default function ChecklistForm({
           onChange={(event) => setGeneralNote(event.target.value)}
           rows={2}
           placeholder="Contoh: Unit dites menyala normal bersama pemilik di meja Lobi TULT."
-          className="mt-1.5 w-full rounded-xl border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs text-[#141413] focus:border-[#141413] focus:outline-none"
+          className="mt-1.5 w-full rounded-xl border border-hairline bg-surface px-3.5 py-2 text-xs text-ink focus:border-ink focus:outline-none"
         />
       </div>
 
       {error && (
-        <p className="text-xs font-semibold text-[#B42318]">{error}</p>
+        <p className="text-xs font-semibold text-danger">{error}</p>
       )}
 
       <button
         type="button"
         onClick={handleSubmit}
-        className="w-full rounded-xl bg-[#141413] px-4 py-3 text-xs font-semibold text-[#F6F5F0] transition hover:bg-[#C83E2B]"
+        className="w-full rounded-xl bg-ink px-4 py-3 text-xs font-semibold text-canvas transition hover:bg-accent"
       >
         {submitLabel}
       </button>
