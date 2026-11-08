@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
-import { ShieldCheck, CheckCircle2 } from 'lucide-react';
+import Badge from '@/components/ui/badge';
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import Input from '@/components/ui/input';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function ProfilePage() {
   const [user, setUser] = useState({
@@ -23,183 +27,160 @@ export default function ProfilePage() {
 
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSavedAlert('Data profil mahasiswa berhasil diperbarui.');
+    setSavedAlert('Data profil berhasil diperbarui.');
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSavedAlert('Kata sandi keamanan akun berhasil diperbarui.');
+    setSavedAlert('Kata sandi akun berhasil diperbarui.');
     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0]">
+    <div className="min-h-screen bg-canvas">
       <PageHeader
-        eyebrow="IDENTITAS CIVITAS AKADEMIKA"
-        title="Profil & Keamanan Akun Mahasiswa"
-        description="Data identitas NIM dan kontak WhatsApp resmi yang digunakan saat verifikasi serah terima COD."
+        eyebrow="Pengaturan Akun"
+        title="Profil & Keamanan"
+        description="Kelola data identitas mahasiswa dan nomor WhatsApp aktif untuk koordinasi serah terima COD."
       />
 
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
         {savedAlert && (
-          <div className="flex items-center justify-between rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED] px-4 py-3 text-xs font-medium text-[#1B4332]">
+          <div className="flex items-center justify-between rounded-xl border border-forest/25 bg-forest-subtle px-4 py-3 text-xs font-medium text-forest">
             <span className="flex items-center gap-2">
               <CheckCircle2 className="size-4" />
               {savedAlert}
             </span>
-            <button onClick={() => setSavedAlert(null)} className="font-mono underline">
+            <button onClick={() => setSavedAlert(null)} className="font-semibold underline">
               Tutup
             </button>
           </div>
         )}
 
-        {/* Kartu Identitas */}
-        <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE] flex flex-wrap items-center justify-between gap-4">
+        <Card className="p-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-[#141413] flex items-center justify-center text-[#F6F5F0] font-mono text-xl font-bold">
+            <div className="h-14 w-14 rounded-2xl bg-ink flex items-center justify-center text-canvas font-mono text-xl font-bold">
               {user.name.charAt(0)}
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-[#141413]">{user.name}</h2>
-                <span className="inline-flex items-center gap-1 rounded-md border border-[#1B4332]/20 bg-[#E9F3ED] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1B4332]">
-                  <ShieldCheck className="size-3" /> NIM TERVERIFIKASI
-                </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-lg font-bold text-ink">{user.name}</h2>
+                <Badge variant="available" dot>
+                  Mahasiswa Aktif
+                </Badge>
               </div>
-              <p className="font-mono text-xs text-[#575653] mt-1">
-                NIM: {user.nim} • {user.prodi}
+              <p className="text-xs text-ink-muted mt-1">
+                NIM <span className="font-mono font-medium text-ink">{user.nim}</span> • {user.prodi}
               </p>
             </div>
           </div>
-        </div>
+        </Card>
 
-        {/* Form Edit Informasi Akun */}
-        <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE]">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
-            DATA KONTAK COD
-          </span>
-          <h3 className="text-base font-bold text-[#141413] mb-4 mt-0.5">
-            Informasi Pribadi Mahasiswa
+        <Card className="p-6">
+          <h3 className="text-base font-bold text-ink mb-4">
+            Informasi Pribadi &amp; Kontak COD
           </h3>
           <form onSubmit={handleProfileSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
+                <label className="block text-xs font-medium text-ink mb-1.5">
                   Nama Lengkap
                 </label>
-                <input
+                <Input
                   type="text"
                   value={user.name}
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
+                  className="bg-canvas focus:bg-surface"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                  Nomor Induk Mahasiswa (NIM)
+                <label className="block text-xs font-medium text-ink mb-1.5">
+                  NIM
                 </label>
-                <input
-                  type="text"
-                  value={user.nim}
-                  disabled
-                  className="w-full rounded-xl border border-[#EFECE6] bg-[#EFECE6] px-4 py-2.5 font-mono text-sm text-[#78756F] cursor-not-allowed"
-                />
+                <Input type="text" value={user.nim} disabled className="font-mono" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                  Email SSO Kampus
+                <label className="block text-xs font-medium text-ink mb-1.5">
+                  Email Kampus
                 </label>
-                <input
-                  type="email"
-                  value={user.email}
-                  disabled
-                  className="w-full rounded-xl border border-[#EFECE6] bg-[#EFECE6] px-4 py-2.5 text-sm text-[#78756F] cursor-not-allowed"
-                />
+                <Input type="email" value={user.email} disabled />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                  Nomor WhatsApp Aktif (Untuk Janjian COD)
+                <label className="block text-xs font-medium text-ink mb-1.5">
+                  Nomor WhatsApp (untuk COD)
                 </label>
-                <input
+                <Input
                   type="tel"
                   value={user.phone}
                   onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 font-mono text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
+                  className="bg-canvas font-mono focus:bg-surface"
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="rounded-xl bg-[#141413] px-5 py-2.5 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
-            >
-              Simpan Perubahan Profil
-            </button>
+            <Button type="submit">Simpan Perubahan</Button>
           </form>
-        </div>
+        </Card>
 
-        {/* Form Ubah Password */}
-        <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE]">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
-            OTENTIKASI
-          </span>
-          <h3 className="text-base font-bold text-[#141413] mb-4 mt-0.5">
-            Perbarui Kata Sandi
+        <Card className="p-6">
+          <h3 className="text-base font-bold text-ink mb-4">
+            Ubah Kata Sandi
           </h3>
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
+                <label className="block text-xs font-medium text-ink mb-1.5">
                   Kata Sandi Saat Ini
                 </label>
-                <input
+                <Input
                   type="password"
                   value={passwordData.currentPassword}
                   onChange={(e) =>
                     setPasswordData({ ...passwordData, currentPassword: e.target.value })
                   }
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm focus:bg-white focus:border-[#141413] focus:outline-none"
+                  className="bg-canvas focus:bg-surface"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
+                <label className="block text-xs font-medium text-ink mb-1.5">
                   Kata Sandi Baru
                 </label>
-                <input
+                <Input
                   type="password"
                   value={passwordData.newPassword}
                   onChange={(e) =>
                     setPasswordData({ ...passwordData, newPassword: e.target.value })
                   }
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm focus:bg-white focus:border-[#141413] focus:outline-none"
+                  className="bg-canvas focus:bg-surface"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                  Konfirmasi Sandi Baru
+                <label className="block text-xs font-medium text-ink mb-1.5">
+                  Ulangi Sandi Baru
                 </label>
-                <input
+                <Input
                   type="password"
                   value={passwordData.confirmPassword}
                   onChange={(e) =>
                     setPasswordData({ ...passwordData, confirmPassword: e.target.value })
                   }
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm focus:bg-white focus:border-[#141413] focus:outline-none"
+                  className="bg-canvas focus:bg-surface"
                 />
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
-              className="rounded-xl border border-[#141413] bg-white px-5 py-2.5 text-xs font-medium text-[#141413] transition hover:bg-[#141413] hover:text-[#F6F5F0]"
+              variant="outline"
+              className="border-ink hover:bg-ink hover:text-canvas"
             >
               Perbarui Kata Sandi
-            </button>
+            </Button>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   );

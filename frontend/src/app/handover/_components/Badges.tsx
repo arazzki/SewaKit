@@ -1,36 +1,39 @@
 import type { HandoverStatus, ItemCondition } from "@/data/dummyHandovers";
+import Badge, { type BadgeVariant } from "@/components/ui/badge";
 
-const STATUS_STYLES: Record<HandoverStatus, { label: string; className: string }> = {
-  SIAP_COD: { label: "Siap diambil (COD)", className: "bg-sky-100 text-sky-800" },
-  DISEWA: { label: "Sedang disewa", className: "bg-[#EFECE6] text-[#141413]" },
+const STATUS_MAP: Record<
+  HandoverStatus,
+  { label: string; variant: BadgeVariant }
+> = {
+  SIAP_COD: { label: "Siap COD Kampus", variant: "accent" },
+  DISEWA: { label: "Masa Sewa Aktif", variant: "dark" },
   MENUNGGU_KONFIRMASI_PENGEMBALIAN: {
-    label: "Menunggu konfirmasi pengembalian",
-    className: "bg-amber-100 text-amber-800",
+    label: "Inspeksi Kembali",
+    variant: "hold",
   },
-  SELESAI: { label: "Selesai", className: "bg-[#E9F3ED] text-[#1B4332]" },
-  SENGKETA: { label: "Sengketa", className: "bg-rose-100 text-rose-800" },
+  SELESAI: { label: "Selesai", variant: "available" },
+  SENGKETA: { label: "Sengketa", variant: "danger" },
 };
 
 export function StatusBadge({ status }: { status: HandoverStatus }) {
-  const style = STATUS_STYLES[status];
+  const cfg = STATUS_MAP[status];
   return (
-    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${style.className}`}>
-      {style.label}
-    </span>
+    <Badge variant={cfg.variant} dot>
+      {cfg.label}
+    </Badge>
   );
 }
 
-const CONDITION_STYLES: Record<ItemCondition, { label: string; className: string }> = {
-  BAIK: { label: "Baik", className: "bg-[#E9F3ED] text-[#1B4332]" },
-  RUSAK: { label: "Rusak", className: "bg-amber-50 text-amber-800" },
-  HILANG: { label: "Hilang", className: "bg-rose-50 text-rose-700" },
+const CONDITION_MAP: Record<
+  ItemCondition,
+  { label: string; variant: BadgeVariant }
+> = {
+  BAIK: { label: "Baik / Normal", variant: "available" },
+  RUSAK: { label: "Cacat / Rusak", variant: "hold" },
+  HILANG: { label: "Komponen Hilang", variant: "danger" },
 };
 
 export function ConditionBadge({ condition }: { condition: ItemCondition }) {
-  const style = CONDITION_STYLES[condition];
-  return (
-    <span className={`inline-block rounded px-2 py-0.5 text-xs font-semibold ${style.className}`}>
-      {style.label}
-    </span>
-  );
+  const cfg = CONDITION_MAP[condition];
+  return <Badge variant={cfg.variant}>{cfg.label}</Badge>;
 }

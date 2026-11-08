@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 44" width="264" height="44" fill="none">
+  <g transform="translate(2, 2)">
+    <rect width="40" height="40" rx="10" fill="#1D1D1B"/>
+    <rect x="1" y="1" width="38" height="38" rx="9" stroke="#33312E" stroke-width="1"/>
+    <path d="M 21.8 11.5 H 14 A 2.8 2.8 0 0 0 11.2 14.3 V 17.2 A 2.8 2.8 0 0 0 14 20 H 26 A 2.8 2.8 0 0 1 28.8 22.8 V 25.7 A 2.8 2.8 0 0 1 26 28.5 H 18.2" stroke="#F6F5F0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="27.5" cy="11.5" r="2.6" fill="#C83E2B"/>
+    <circle cx="12.5" cy="28.5" r="2.2" fill="#8E8B83"/>
+    <text x="52" y="18" fill="#F6F5F0" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" letter-spacing="-0.4">SewaKit</text>
+    <text x="52" y="34" fill="#8E8B83" font-family="system-ui, -apple-system, sans-serif" font-size="11.5">Bursa Alat Praktikum &amp; Riset Kampus</text>
+  </g>
+</svg>

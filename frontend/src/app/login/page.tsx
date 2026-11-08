@@ -1,156 +1,220 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Lock } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  ShieldCheck,
+  GraduationCap,
+  KeyRound,
+  ArrowRight,
+  Lock,
+} from 'lucide-react';
+import BrandLogo from '@/components/BrandLogo';
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import Input from '@/components/ui/input';
+import { useRentalSession } from '@/context/RentalSessionContext';
 
-export default function LoginPage() {
+function sanitizeRedirect(raw: string | null, fallback: string): string {
+  if (raw && raw.startsWith('/') && !raw.startsWith('//')) {
+    return raw;
+  }
+  return fallback;
+}
+
+function LoginFormContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get('redirect');
+  const { loginAsStudent, loginAsModerator } = useRentalSession();
+
   const [roleTab, setRoleTab] = useState<'mahasiswa' | 'admin'>('mahasiswa');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [adminUsername, setAdminUsername] = useState('');
   const [adminOtp, setAdminOtp] = useState('');
-  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const studentDestination = sanitizeRedirect(redirectParam, '/catalog');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (roleTab === 'mahasiswa') {
-      setFeedback(`Sesi Mahasiswa aktif untuk ${email} (JWT Token diterbitkan).`);
+      loginAsStudent(email);
+      router.push(studentDestination);
     } else {
-      setFeedback(`Sesi Administrator terverifikasi dengan kode OTP (${adminOtp}).`);
+      loginAsModerator(adminUsername);
+      router.push('/admin/dashboard');
     }
   };
 
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center bg-[#F6F5F0] px-4 py-12">
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 border border-[#DCD8CE] shadow-[0_12px_32px_-12px_rgba(20,20,19,0.08)]">
-        <div className="mb-6">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C83E2B]">
-            PORTAL OTENTIKASI
-          </span>
-          <h1 className="text-2xl font-bold tracking-tight text-[#141413] mt-1">
-            Masuk ke Akun SewaKit
-          </h1>
-          <p className="text-xs text-[#575653] mt-1">
-            Gunakan kredensial mahasiswa Telkom University atau akun moderator.
-          </p>
-        </div>
+    <Card variant="elevated" className="w-full max-w-md p-7 sm:p-8">
+      <div className="mb-6 flex items-center justify-between border-b border-surface-muted pb-5">
+        <BrandLogo size="lg" theme="light" showTagline />
+      </div>
 
-        {/* Pilihan Login Mahasiswa vs Admin (OTP) */}
-        <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-[#EFECE6] p-1 mb-6 text-xs font-medium">
-          <button
-            type="button"
-            onClick={() => {
-              setRoleTab('mahasiswa');
-              setFeedback(null);
-            }}
-            className={`rounded-lg py-2 transition ${
-              roleTab === 'mahasiswa'
-                ? 'bg-[#141413] text-[#F6F5F0]'
-                : 'text-[#575653] hover:text-[#141413]'
-            }`}
-          >
-            Mahasiswa (NIM/Email)
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setRoleTab('admin');
-              setFeedback(null);
-            }}
-            className={`rounded-lg py-2 transition ${
-              roleTab === 'admin'
-                ? 'bg-[#141413] text-[#F6F5F0]'
-                : 'text-[#575653] hover:text-[#141413]'
-            }`}
-          >
-            Moderator (OTP 2FA)
-          </button>
-        </div>
+      <div className="mb-5">
+        <h1 className="text-xl font-bold tracking-tight text-ink">
+          Masuk ke Akun SewaKit
+        </h1>
+        <p className="mt-1 text-xs leading-relaxed text-ink-muted">
+          {redirectParam === '/owner/items'
+            ? 'Masuk dengan akun mahasiswa Tel-U untuk mulai mendaftarkan alat sewaanmu.'
+            : 'Masuk dengan email mahasiswa Telkom University atau akun moderator kampus.'}
+        </p>
+      </div>
 
-        {feedback && (
-          <div className="mb-5 rounded-xl bg-[#E9F3ED] border border-[#1B4332]/25 p-3.5 text-xs font-medium text-[#1B4332]">
-            ✓ {feedback}
+      <div className="mb-6 grid grid-cols-2 gap-1.5 rounded-xl border border-hairline bg-canvas p-1 text-xs font-medium">
+        <button
+          type="button"
+          onClick={() => setRoleTab('mahasiswa')}
+          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 transition ${
+            roleTab === 'mahasiswa'
+              ? 'bg-ink text-canvas font-semibold'
+              : 'text-ink-muted hover:text-ink'
+          }`}
+        >
+          <GraduationCap className="size-3.5" />
+          <span>Mahasiswa</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setRoleTab('admin')}
+          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 transition ${
+            roleTab === 'admin'
+              ? 'bg-ink text-canvas font-semibold'
+              : 'text-ink-muted hover:text-ink'
+          }`}
+        >
+          <ShieldCheck className="size-3.5" />
+          <span>Moderator</span>
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {roleTab === 'mahasiswa' ? (
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-ink">
+              Email Kampus / NIM
+            </label>
+            <Input
+              type="text"
+              required
+              placeholder="nama@student.telkomuniversity.ac.id"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-surface-subtle focus:bg-surface"
+            />
+          </div>
+        ) : (
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-ink">
+              Username Moderator
+            </label>
+            <Input
+              type="text"
+              required
+              placeholder="admin.sewakit"
+              value={adminUsername}
+              onChange={(e) => setAdminUsername(e.target.value)}
+              className="bg-surface-subtle font-mono focus:bg-surface"
+            />
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {roleTab === 'mahasiswa' ? (
-            <div>
-              <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                Email Kampus / NIM
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="nama@student.telkomuniversity.ac.id"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
-              />
-            </div>
-          ) : (
-            <div>
-              <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                Username Administrator
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="admin.sewakit"
-                value={adminUsername}
-                onChange={(e) => setAdminUsername(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
-              />
-            </div>
-          )}
+        <div>
+          <label className="mb-1.5 block text-xs font-medium text-ink">
+            Kata Sandi
+          </label>
+          <Input
+            type="password"
+            required
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            leftIcon={<Lock className="size-4" />}
+            className="bg-surface-subtle focus:bg-surface"
+          />
+        </div>
 
+        {roleTab === 'admin' && (
           <div>
-            <label className="block text-xs font-medium text-[#575653] mb-1.5">
-              Kata Sandi
+            <label className="mb-1.5 block text-xs font-medium text-ink">
+              Kode OTP (6 Digit)
             </label>
-            <input
-              type="password"
+            <Input
+              type="text"
               required
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 text-sm text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
+              maxLength={6}
+              placeholder="849201"
+              value={adminOtp}
+              onChange={(e) => setAdminOtp(e.target.value)}
+              leftIcon={<KeyRound className="size-4 text-accent" />}
+              className="bg-surface-subtle font-mono font-bold tracking-[0.25em] focus:bg-surface"
             />
           </div>
+        )}
 
-          {roleTab === 'admin' && (
-            <div>
-              <label className="block text-xs font-medium text-[#575653] mb-1.5">
-                Kode Verifikasi OTP (6 Digit)
-              </label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                placeholder="123456"
-                value={adminOtp}
-                onChange={(e) => setAdminOtp(e.target.value)}
-                className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-2.5 font-mono text-sm tracking-widest text-[#141413] focus:bg-white focus:border-[#141413] focus:outline-none"
-              />
-            </div>
-          )}
+        <Button type="submit" size="lg" className="w-full text-xs font-semibold">
+          <span>{roleTab === 'mahasiswa' ? 'Masuk' : 'Verifikasi & Masuk'}</span>
+          <ArrowRight className="size-3.5" />
+        </Button>
+      </form>
 
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-[#141413] py-3 text-xs font-medium text-[#F6F5F0] transition hover:bg-[#C83E2B]"
-          >
-            {roleTab === 'mahasiswa' ? 'Masuk ke Akun' : 'Verifikasi & Masuk Admin'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-xs text-[#575653]">
-          Belum memiliki akun mahasiswa?{' '}
-          <Link href="/register" className="font-semibold text-[#C83E2B] hover:underline">
-            Daftar Sekarang
-          </Link>
+      {/* Demo Quick Login (selama backend belum terhubung) */}
+      <div className="mt-5 rounded-xl border border-hairline bg-surface-subtle p-3.5">
+        <p className="text-xs font-medium text-ink-muted">
+          Simulasi cepat tanpa isi form:
         </p>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <Button
+            variant="outline"
+            size="xs"
+            className="text-xs"
+            onClick={() => {
+              loginAsStudent();
+              router.push(
+                sanitizeRedirect(redirectParam, '/rentals/request'),
+              );
+            }}
+          >
+            Akun Mahasiswa
+          </Button>
+          <Button
+            variant="outline"
+            size="xs"
+            className="text-xs"
+            onClick={() => {
+              loginAsModerator();
+              router.push('/admin/dashboard');
+            }}
+          >
+            Akun Moderator
+          </Button>
+        </div>
       </div>
+
+      <div className="mt-5 flex items-center justify-between border-t border-surface-muted pt-4 text-xs text-ink-muted">
+        <span>Belum punya akun?</span>
+        <Link href="/register" className="font-semibold text-accent hover:underline">
+          Daftar sekarang →
+        </Link>
+      </div>
+    </Card>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <div className="flex min-h-[82vh] flex-col items-center justify-center bg-canvas px-4 py-12">
+      <Suspense
+        fallback={
+          <div className="h-[34rem] w-full max-w-md animate-pulse rounded-2xl border border-hairline bg-surface" />
+        }
+      >
+        <LoginFormContent />
+      </Suspense>
     </div>
   );
 }

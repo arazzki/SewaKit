@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Link from 'next/link';
 import { User, ImagePlus, ThumbsUp, X, Loader2, CheckCircle2, Star, ShieldCheck, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RatingStars } from '@/components/foundations/rating-stars';
 import { RatingBadge } from '@/components/foundations/rating-badge';
 import PageHeader from '@/components/PageHeader';
-import { AccordionApp, type AccordionItemData } from '@/components/watermelon/card-split-accordian';
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import { Accordion, type AccordionItemData } from '@/components/ui/accordion';
 
 interface Review {
   id: number;
@@ -49,7 +50,7 @@ const REVIEW_PROTOCOL_ITEMS: AccordionItemData[] = [
     id: 1,
     title: 'Ulasan Terverifikasi Transaksi Selesai',
     tag: 'VERIFIED REVIEW',
-    icon: <ShieldCheck className="size-4 text-[#1B4332]" />,
+    icon: <ShieldCheck className="size-4 text-forest" />,
     content:
       'Hanya mahasiswa yang telah menyelesaikan siklus serah terima pengembalian alat yang dapat memberikan rating bintang dan foto kondisi aktual.',
   },
@@ -57,7 +58,7 @@ const REVIEW_PROTOCOL_ITEMS: AccordionItemData[] = [
     id: 2,
     title: 'Hak Jawab & Balasan Pemilik Alat',
     tag: 'TWO-WAY REPUTATION',
-    icon: <MessageSquare className="size-4 text-[#C83E2B]" />,
+    icon: <MessageSquare className="size-4 text-accent" />,
     content:
       'Pemilik barang dapat menanggapi ulasan penyewa secara terbuka untuk menjaga transparansi histori perawatan instrumen praktikum.',
   },
@@ -109,38 +110,35 @@ export default function ReviewsPage() {
       : '0.0';
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0]">
+    <div className="min-h-screen bg-canvas">
       <PageHeader
-        eyebrow="07 / REPUTASI KOMUNITAS"
-        title="Rating & Ulasan Dua Arah"
-        description="Transparansi penilaian antara Pemilik Alat dan Mahasiswa Penyewa pasca pengembalian barang."
+        eyebrow="Ulasan Pengguna"
+        title="Penilaian Penyewa & Pemilik Alat"
+        description="Ulasan jujur antar mahasiswa setelah serah terima pengembalian barang selesai."
         actions={
-          <Link
-            href="/catalog"
-            className="rounded-xl border border-[#141413] bg-white px-4 py-2.5 text-xs font-medium text-[#141413] hover:bg-[#EFECE6] transition"
-          >
+          <Button href="/catalog" variant="outline" className="border-ink">
             Eksplorasi Katalog →
-          </Link>
+          </Button>
         }
       />
 
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-4 space-y-6">
-            <div className="flex justify-center rounded-2xl border border-[#DCD8CE] bg-white p-6">
+            <Card className="flex justify-center p-6">
               <RatingBadge
                 title={averageRating}
                 subtitle={`Dari ${totalReviews} ulasan terverifikasi`}
                 rating={Number(averageRating)}
                 theme="light"
               />
-            </div>
+            </Card>
 
-            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-[#78756F] block text-center">
+            <Card className="p-6">
+              <span className="text-xs font-semibold text-ink-subtle block text-center">
                 FORMULIR EVALUASI
               </span>
-              <h3 className="text-base font-bold text-[#141413] mb-5 text-center mt-1">
+              <h3 className="text-base font-bold text-ink mb-5 text-center mt-1">
                 Beri Penilaian Transaksi
               </h3>
 
@@ -159,8 +157,8 @@ export default function ReviewsPage() {
                       <Star
                         className={`h-8 w-8 transition-colors duration-200 ${
                           star <= (hover || rating)
-                            ? 'fill-[#C83E2B] text-[#C83E2B]'
-                            : 'fill-[#EFECE6] text-[#DCD8CE]'
+                            ? 'fill-accent text-accent'
+                            : 'fill-surface-muted text-hairline'
                         }`}
                       />
                     </motion.button>
@@ -173,7 +171,7 @@ export default function ReviewsPage() {
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Bagaimana akurasi spesifikasi alat dan ketepatan waktu COD?"
                   required
-                  className="w-full rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] px-4 py-3 text-sm text-[#141413] focus:bg-white focus:border-[#141413] outline-none resize-none transition-all"
+                  className="w-full rounded-xl border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:bg-surface focus:border-ink outline-none resize-none transition-all"
                 />
 
                 <div>
@@ -188,39 +186,41 @@ export default function ReviewsPage() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-full flex items-center justify-center gap-2 border border-dashed border-[#DCD8CE] bg-[#FBF9F5] rounded-xl py-3 text-xs font-medium text-[#575653] hover:border-[#141413] hover:text-[#141413] transition"
+                      className="w-full flex items-center justify-center gap-2 border border-dashed border-hairline bg-surface-subtle rounded-xl py-3 text-xs font-medium text-ink-muted hover:border-ink hover:text-ink transition"
                     >
                       <ImagePlus className="h-4 w-4" /> Lampirkan Foto Dokumentasi (Opsional)
                     </button>
                   ) : (
-                    <div className="relative rounded-xl overflow-hidden border border-[#DCD8CE] group">
+                    <div className="relative rounded-xl overflow-hidden border border-hairline group">
                       <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <button
-                          type="button"
+                        <Button
+                          variant="accent"
+                          size="icon"
                           onClick={() => setImagePreview(null)}
-                          className="bg-[#C83E2B] text-white p-2 rounded-full hover:bg-[#AE3221]"
+                          className="rounded-full"
                         >
                           <X className="h-4 w-4" />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   )}
                 </div>
 
-                <button
+                <Button
                   type="submit"
+                  size="lg"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#141413] px-4 py-3 text-sm font-medium text-[#F6F5F0] hover:bg-[#C83E2B] transition disabled:opacity-70"
+                  className="w-full"
                 >
                   {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Terbitkan Ulasan'}
-                </button>
+                </Button>
               </form>
-            </div>
+            </Card>
 
-            <div className="rounded-2xl border border-[#DCD8CE] bg-[#EFECE6]/70 p-4">
-              <AccordionApp items={REVIEW_PROTOCOL_ITEMS} defaultOpenId={1} />
-            </div>
+            <Card variant="muted" className="p-4">
+              <Accordion items={REVIEW_PROTOCOL_ITEMS} defaultOpenId={1} />
+            </Card>
           </div>
 
           <div className="lg:col-span-8 space-y-4">
@@ -230,27 +230,27 @@ export default function ReviewsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   key={review.id}
-                  className="rounded-2xl border border-[#DCD8CE] bg-white p-6"
+                  className="rounded-2xl border border-hairline bg-surface p-6"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] flex items-center justify-center text-[#141413] font-bold">
+                      <div className="h-10 w-10 rounded-xl border border-hairline bg-canvas flex items-center justify-center text-ink font-bold">
                         <User className="h-4 w-4" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-[#141413]">{review.user}</h4>
+                        <h4 className="text-sm font-bold text-ink">{review.user}</h4>
                         <div className="flex items-center gap-2 mt-1">
                           <RatingStars rating={review.rating} />
-                          <span className="font-mono text-xs text-[#78756F]">{review.date}</span>
+                          <span className="font-mono text-xs text-ink-subtle">{review.date}</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-[#575653] leading-relaxed mb-4">{review.comment}</p>
+                  <p className="text-sm text-ink-muted leading-relaxed mb-4">{review.comment}</p>
 
                   {review.image && (
-                    <div className="mb-4 rounded-xl overflow-hidden border border-[#EFECE6]">
+                    <div className="mb-4 rounded-xl overflow-hidden border border-surface-muted">
                       <img
                         src={review.image}
                         alt="Bukti"
@@ -259,7 +259,7 @@ export default function ReviewsPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-4 pt-4 border-t border-[#EFECE6]">
+                  <div className="flex items-center gap-4 pt-4 border-t border-surface-muted">
                     <button
                       onClick={() =>
                         setReviews(
@@ -268,18 +268,18 @@ export default function ReviewsPage() {
                           )
                         )
                       }
-                      className="flex items-center gap-1.5 font-mono text-xs font-medium text-[#575653] hover:text-[#C83E2B] transition"
+                      className="flex items-center gap-1.5 font-mono text-xs font-medium text-ink-muted hover:text-accent transition"
                     >
                       <ThumbsUp className="h-3.5 w-3.5" /> Membantu ({review.helpful})
                     </button>
                   </div>
 
                   {review.ownerReply && (
-                    <div className="mt-4 bg-[#F6F5F0] rounded-xl p-4 text-sm border border-[#DCD8CE]">
-                      <span className="font-mono text-xs font-semibold text-[#1B4332] mb-1 flex items-center gap-1.5">
+                    <div className="mt-4 bg-canvas rounded-xl p-4 text-sm border border-hairline">
+                      <span className="font-mono text-xs font-semibold text-forest mb-1 flex items-center gap-1.5">
                         <CheckCircle2 className="h-4 w-4" /> TANGGAPAN PEMILIK ALAT
                       </span>
-                      <p className="text-[#575653] text-xs leading-relaxed mt-1">{review.ownerReply}</p>
+                      <p className="text-ink-muted text-xs leading-relaxed mt-1">{review.ownerReply}</p>
                     </div>
                   )}
                 </motion.div>

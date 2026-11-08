@@ -1,0 +1,81 @@
+"use client";
+
+import React, { useEffect, useRef } from "react";
+import { Search, X } from "lucide-react";
+import { cx } from "@/utils/cx";
+
+export interface SearchInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+  value: string;
+  onChange: (value: string) => void;
+  shortcut?: string;
+  enableSlashFocus?: boolean;
+}
+
+export function SearchInput({
+  value,
+  onChange,
+  shortcut = "/",
+  enableSlashFocus = false,
+  placeholder = "Cari instrumen, tipe board, atau lokasi COD...",
+  className,
+  ...props
+}: SearchInputProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!enableSlashFocus) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      const target = e.target as HTMLElement | null;
+      const isInput =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.tagName === "SELECT" ||
+        target?.isContentEditable;
+      if (!isInput && e.key === "/") {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [enableSlashFocus]);
+
+  return (
+    <div className={cx("relative flex items-center", className)}>
+      <Search className="pointer-events-none absolute left-3.5 size-4 text-ink-subtle" />
+      <input
+        ref={inputRef}
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="h-10 w-full rounded-xl border border-hairline bg-surface pl-10 pr-20 text-sm text-ink placeholder:text-ink-faint transition focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10"
+        {...props}
+      />
+      <div className="absolute right-2.5 flex items-center gap-1.5">
+        {value ? (
+          <button
+            type="button"
+            onClick={() => {
+              onChange("");
+              inputRef.current?.focus();
+            }}
+            aria-label="Bersihkan pencarian"
+            className="flex h-6 w-6 items-center justify-center rounded-md text-ink-subtle hover:bg-surface-muted hover:text-ink transition"
+          >
+            <X className="size-3.5" />
+          </button>
+        ) : (
+          shortcut && (
+            <kbd className="pointer-events-none rounded border border-hairline bg-canvas px-1.5 py-0.5 font-mono text-xs font-semibold text-ink-subtle">
+              {shortcut}
+            </kbd>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default SearchInput;

@@ -1,11 +1,30 @@
-
 "use client";
 
 import { useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import Link from "next/link";
+import {
+  Plus,
+  X,
+  Wallet,
+  Package,
+  Layers,
+  CheckCircle2,
+  Pencil,
+  Trash2,
+  Camera,
+  Power,
+} from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import Badge from "@/components/ui/badge";
+import SearchInput from "@/components/ui/search-input";
+import DataTable, { type DataTableColumn } from "@/components/ui/data-table";
+import ItemThumbnail from "@/app/catalog/_components/ItemThumbnail";
+import { formatRupiah } from "@/lib/format";
 
 type Barang = {
   id: number;
+  sku: string;
   nama: string;
   kategori: string;
   spesifikasi: string;
@@ -13,50 +32,69 @@ type Barang = {
   harga: number;
   deposit: number;
   stok: number;
+  aktif: boolean;
 };
 
-const daftarKategori = [
-  "Perangkat IoT dan Elektronika",
-  "Perangkat Komputer dan Multimedia",
+const DAFTAR_KATEGORI = [
+  "Perangkat IoT & Elektronika",
+  "Perangkat Komputer & Multimedia",
   "Perlengkapan Akademik",
-  "Perlengkapan Acara dan Kegiatan",
+  "Perlengkapan Acara & Kegiatan",
 ];
 
-const dataAwal: Barang[] = [
+const DATA_AWAL: Barang[] = [
   {
     id: 1,
-    nama: "Kamera Canon EOS",
-    kategori: "Perangkat Komputer dan Multimedia",
-    spesifikasi: "Kamera DSLR untuk dokumentasi kegiatan dan praktikum.",
-    foto: "",
-    harga: 150000,
-    deposit: 500000,
-    stok: 3,
+    sku: "LAB-OSC-1054",
+    nama: "Rigol DS1054Z Digital Oscilloscope (50 MHz)",
+    kategori: "Perangkat IoT & Elektronika",
+    spesifikasi: "4 Channel analog, 1 GSa/s, termasuk 4 probe PVP2150 & hardcase.",
+    foto: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80",
+    harga: 45000,
+    deposit: 150000,
+    stok: 1,
+    aktif: true,
   },
   {
     id: 2,
-    nama: "Tripod Kamera",
-    kategori: "Perlengkapan Acara dan Kegiatan",
-    spesifikasi: "Tripod kamera untuk membantu pengambilan gambar.",
-    foto: "",
-    harga: 25000,
-    deposit: 50000,
-    stok: 5,
+    sku: "MMD-SNY-6400",
+    nama: "Kamera Mirrorless Sony Alpha A6400 + Lensa Kit",
+    kategori: "Perangkat Komputer & Multimedia",
+    spesifikasi: "APS-C 24MP, 4K UHD, 2 baterai NP-FW50, SDXC 64GB.",
+    foto: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80",
+    harga: 75000,
+    deposit: 500000,
+    stok: 2,
+    aktif: true,
   },
   {
     id: 3,
-    nama: "Proyektor Epson",
-    kategori: "Perangkat Komputer dan Multimedia",
-    spesifikasi: "Proyektor untuk presentasi tugas dan kegiatan kampus.",
-    foto: "",
-    harga: 100000,
-    deposit: 200000,
-    stok: 2,
+    sku: "IOT-ESP-032",
+    nama: "Paket Praktikum ESP32 DevKit V1 + Sensor Kit",
+    kategori: "Perangkat IoT & Elektronika",
+    spesifikasi: "Dual-core WiFi/BLE, sensor DHT22, HC-SR04, breadboard 830 titik.",
+    foto: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80",
+    harga: 15000,
+    deposit: 75000,
+    stok: 4,
+    aktif: true,
+  },
+  {
+    id: 4,
+    sku: "EVT-PRJ-300",
+    nama: "Proyektor Portabel Full HD 3.000 Lumen",
+    kategori: "Perlengkapan Acara & Kegiatan",
+    spesifikasi: "HDMI & USB input, remote control, tas jinjing.",
+    foto: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80",
+    harga: 40000,
+    deposit: 300000,
+    stok: 0,
+    aktif: false,
   },
 ];
 
 export default function KelolaBarangPage() {
-  const [barang, setBarang] = useState<Barang[]>(dataAwal);
+  const [barang, setBarang] = useState<Barang[]>(DATA_AWAL);
   const [pencarian, setPencarian] = useState("");
   const [filterKategori, setFilterKategori] = useState("");
   const [tampilForm, setTampilForm] = useState(false);
@@ -73,23 +111,18 @@ export default function KelolaBarangPage() {
   const inputFotoRef = useRef<HTMLInputElement>(null);
 
   const daftarBarang = barang.filter((item) => {
+    const q = pencarian.toLowerCase();
     const cocokNama =
-      item.nama.toLowerCase().includes(pencarian.toLowerCase()) ||
-      item.spesifikasi.toLowerCase().includes(pencarian.toLowerCase());
-
+      item.nama.toLowerCase().includes(q) ||
+      item.sku.toLowerCase().includes(q) ||
+      item.spesifikasi.toLowerCase().includes(q);
     const cocokKategori =
       filterKategori === "" || item.kategori === filterKategori;
-
     return cocokNama && cocokKategori;
   });
 
-  function formatRupiah(nilai: number) {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      maximumFractionDigits: 0,
-    }).format(nilai);
-  }
+  const totalStok = barang.reduce((total, item) => total + item.stok, 0);
+  const unitAktif = barang.filter((i) => i.aktif && i.stok > 0).length;
 
   function resetForm() {
     setIdEdit(null);
@@ -101,7 +134,6 @@ export default function KelolaBarangPage() {
     setDeposit("");
     setStok("");
     setTampilForm(false);
-
     if (inputFotoRef.current) {
       inputFotoRef.current.value = "";
     }
@@ -114,49 +146,33 @@ export default function KelolaBarangPage() {
 
   function pilihFoto(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-
     if (!file) return;
-
     if (!file.type.startsWith("image/")) {
       alert("Pilih file gambar, seperti JPG, PNG, atau WebP.");
       e.target.value = "";
       return;
     }
-
     if (file.size > 2 * 1024 * 1024) {
       alert("Ukuran foto maksimal 2 MB.");
       e.target.value = "";
       return;
     }
-
     const reader = new FileReader();
-
     reader.onload = () => {
       if (typeof reader.result === "string") {
         setFoto(reader.result);
       }
     };
-
     reader.readAsDataURL(file);
   }
 
   function simpanBarang(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    if (!nama.trim() || !kategori || !spesifikasi.trim()) {
-      alert("Nama, kategori, dan spesifikasi wajib diisi.");
-      return;
-    }
-
-    if (harga.trim() === "" || deposit.trim() === "" || stok.trim() === "") {
-      alert("Harga, deposit, dan stok wajib diisi.");
-      return;
-    }
+    if (!nama.trim() || !kategori || !spesifikasi.trim()) return;
 
     const hargaAngka = Number(harga);
     const depositAngka = Number(deposit);
     const stokAngka = Number(stok);
-
     if (
       !Number.isFinite(hargaAngka) ||
       !Number.isFinite(depositAngka) ||
@@ -165,12 +181,15 @@ export default function KelolaBarangPage() {
       depositAngka < 0 ||
       stokAngka < 0
     ) {
-      alert("Harga, deposit, dan stok harus berupa angka yang valid.");
       return;
     }
 
+    const existing = barang.find((b) => b.id === idEdit);
     const barangBaru: Barang = {
       id: idEdit ?? Date.now(),
+      sku:
+        existing?.sku ??
+        `INV-${Math.floor(100 + (Date.now() % 900))}`,
       nama: nama.trim(),
       kategori,
       spesifikasi: spesifikasi.trim(),
@@ -178,16 +197,16 @@ export default function KelolaBarangPage() {
       harga: hargaAngka,
       deposit: depositAngka,
       stok: stokAngka,
+      aktif: stokAngka > 0,
     };
 
     if (idEdit !== null) {
       setBarang((daftar) =>
-        daftar.map((item) => (item.id === idEdit ? barangBaru : item))
+        daftar.map((item) => (item.id === idEdit ? barangBaru : item)),
       );
     } else {
-      setBarang((daftar) => [...daftar, barangBaru]);
+      setBarang((daftar) => [barangBaru, ...daftar]);
     }
-
     resetForm();
   }
 
@@ -203,360 +222,425 @@ export default function KelolaBarangPage() {
     setTampilForm(true);
   }
 
-  function hapusBarang(id: number) {
-    if (!window.confirm("Apakah kamu yakin ingin menghapus barang ini?")) {
-      return;
-    }
-
-    setBarang((daftar) => daftar.filter((item) => item.id !== id));
-
-    if (idEdit === id) {
-      resetForm();
-    }
+  function toggleStatus(id: number) {
+    setBarang((daftar) =>
+      daftar.map((item) =>
+        item.id === id ? { ...item, aktif: !item.aktif } : item,
+      ),
+    );
   }
 
+  function hapusBarang(id: number) {
+    if (!window.confirm("Hapus unit ini dari inventaris sewaan?")) return;
+    setBarang((daftar) => daftar.filter((item) => item.id !== id));
+    if (idEdit === id) resetForm();
+  }
+
+  const columns: DataTableColumn<Barang>[] = [
+    {
+      key: "unit",
+      header: "Instrumen & SKU",
+      render: (item) => (
+        <div className="flex items-center gap-3.5 min-w-[260px]">
+          <ItemThumbnail
+            name={item.nama}
+            category={item.kategori}
+            imageUrl={item.foto || undefined}
+            size="sm"
+            className="shrink-0 border border-hairline"
+          />
+          <div className="min-w-0">
+            <span className="font-mono text-xs font-semibold text-ink-subtle">
+              {item.sku}
+            </span>
+            <p className="truncate text-xs font-bold text-ink">
+              {item.nama}
+            </p>
+            <p className="mt-0.5 line-clamp-1 text-xs text-ink-muted">
+              {item.spesifikasi}
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "kategori",
+      header: "Kategori",
+      render: (item) => <Badge variant="neutral">{item.kategori}</Badge>,
+    },
+    {
+      key: "harga",
+      header: "Tarif / Hari",
+      align: "right",
+      render: (item) => (
+        <span className="font-mono font-bold text-ink">
+          {formatRupiah(item.harga)}
+        </span>
+      ),
+    },
+    {
+      key: "deposit",
+      header: "Deposit Escrow",
+      align: "right",
+      render: (item) => (
+        <span className="font-mono text-ink-muted">
+          {formatRupiah(item.deposit)}
+        </span>
+      ),
+    },
+    {
+      key: "stok",
+      header: "Unit",
+      align: "center",
+      render: (item) => (
+        <span className="font-mono font-bold text-ink">
+          {item.stok}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status Katalog",
+      render: (item) => {
+        const ready = item.aktif && item.stok > 0;
+        return (
+          <Badge variant={ready ? "available" : "rented"} dot>
+            {ready ? "Tayang Aktif" : item.stok === 0 ? "Stok 0" : "Nonaktif"}
+          </Badge>
+        );
+      },
+    },
+    {
+      key: "aksi",
+      header: "Tindakan Cepat",
+      align: "right",
+      render: (item) => (
+        <div className="inline-flex items-center justify-end gap-1.5">
+          <button
+            type="button"
+            onClick={() => toggleStatus(item.id)}
+            title="Ubah status tayang"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-surface text-ink-muted transition hover:border-ink hover:text-ink"
+          >
+            <Power className="size-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => editBarang(item)}
+            title="Edit spesifikasi & tarif"
+            className="inline-flex h-8 items-center gap-1 rounded-lg border border-hairline bg-surface px-2.5 text-xs font-medium text-ink transition hover:border-ink"
+          >
+            <Pencil className="size-3" />
+            <span>Edit</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => hapusBarang(item.id)}
+            title="Hapus unit"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-danger-border bg-danger-subtle text-danger transition hover:bg-danger hover:text-white"
+          >
+            <Trash2 className="size-3.5" />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <main className="min-h-screen bg-[#F6F5F0] p-4 text-[#141413] sm:p-6">
-      <div className="mx-auto max-w-7xl">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold text-[#141413] sm:text-3xl">
-            Kelola Barang dan Paket
-          </h1>
-          <p className="mt-2 text-[#575653]">
-            Kelola barang yang tersedia untuk disewakan di lingkungan kampus.
-          </p>
-        </header>
-
-        <section className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-[#575653]">Total Jenis Barang</p>
-            <p className="mt-2 text-2xl font-bold">{barang.length}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-[#575653]">Total Stok</p>
-            <p className="mt-2 text-2xl font-bold">
-              {barang.reduce((total, item) => total + item.stok, 0)}
-            </p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-[#575653]">Kategori Barang</p>
-            <p className="mt-2 text-2xl font-bold">
-              {new Set(barang.map((item) => item.kategori)).size}
-            </p>
-          </div>
-        </section>
-
-        <section className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
-          <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <h2 className="text-xl font-semibold">Daftar Barang</h2>
-              <p className="mt-1 text-sm text-[#575653]">
-                Tambah, ubah, cari, dan kelola barang sewaan.
-              </p>
-            </div>
-
+    <div className="flex min-h-screen flex-col bg-canvas text-ink">
+      <PageHeader
+        eyebrow="Panel Pemilik"
+        title="Kelola Barang Sewaan Saya"
+        description="Atur stok alat, tarif sewa harian, besaran deposit, dan daftar kelengkapan barang untuk COD."
+        actions={
+          <>
+            <Link
+              href="/owner/wallet"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-xs font-medium text-ink transition hover:border-ink"
+            >
+              <Wallet className="size-3.5 text-forest" />
+              <span>Dompet Pendapatan</span>
+            </Link>
             <button
               type="button"
               onClick={tampilForm ? resetForm : bukaFormTambah}
-              className="rounded-lg bg-[#141413] px-4 py-2.5 font-medium text-white hover:bg-[#141413]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-xs font-medium text-canvas transition hover:bg-accent"
             >
-              {tampilForm ? "Tutup Form" : "+ Tambah Barang"}
+              {tampilForm ? (
+                <>
+                  <X className="size-3.5" />
+                  <span>Tutup Form</span>
+                </>
+              ) : (
+                <>
+                  <Plus className="size-3.5" />
+                  <span>Tambah Unit Sewaan</span>
+                </>
+              )}
             </button>
+          </>
+        }
+      />
+
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
+        {/* High-Density Console Metrics */}
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="flex items-center justify-between rounded-2xl border border-hairline bg-surface p-5">
+            <div>
+              <span className="text-xs font-semibold text-ink-subtle">
+                INV-01 • JENIS SKU
+              </span>
+              <p className="mt-1 font-mono text-2xl font-bold text-ink">
+                {barang.length} SKU
+              </p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-surface-muted bg-canvas text-ink">
+              <Layers className="size-4.5" />
+            </div>
           </div>
 
-          {tampilForm && (
-            <form
-              onSubmit={simpanBarang}
-              className="mb-8 rounded-xl border border-[#DCD8CE] bg-[#F6F5F0] p-4 sm:p-6"
-            >
-              <h3 className="mb-5 text-lg font-semibold">
-                {idEdit !== null ? "Edit Barang" : "Tambah Barang Baru"}
-              </h3>
+          <div className="flex items-center justify-between rounded-2xl border border-hairline bg-surface p-5">
+            <div>
+              <span className="text-xs font-semibold text-ink-subtle">
+                INV-02 • TOTAL STOK UNIT
+              </span>
+              <p className="mt-1 font-mono text-2xl font-bold text-ink">
+                {totalStok} Unit
+              </p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-surface-muted bg-canvas text-ink">
+              <Package className="size-4.5" />
+            </div>
+          </div>
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                <div>
-                  <label htmlFor="nama" className="mb-1.5 block text-sm font-medium">
-                    Nama Barang *
-                  </label>
-                  <input
-                    id="nama"
-                    value={nama}
-                    onChange={(e) => setNama(e.target.value)}
-                    placeholder="Contoh: Sensor suhu DHT22"
-                    required
-                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
-                  />
-                </div>
+          <div className="flex items-center justify-between rounded-2xl border border-hairline bg-surface p-5">
+            <div>
+              <span className="text-xs font-semibold text-ink-subtle">
+                INV-03 • TAYANG DI KATALOG
+              </span>
+              <p className="mt-1 font-mono text-2xl font-bold text-forest">
+                {unitAktif} Aktif
+              </p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-forest/20 bg-forest-subtle text-forest">
+              <CheckCircle2 className="size-4.5" />
+            </div>
+          </div>
+        </section>
 
-                <div>
-                  <label htmlFor="kategori" className="mb-1.5 block text-sm font-medium">
-                    Kategori *
-                  </label>
-                  <select
-                    id="kategori"
-                    value={kategori}
-                    onChange={(e) => setKategori(e.target.value)}
-                    required
-                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
-                  >
-                    <option value="">Pilih kategori</option>
-                    {daftarKategori.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+        {/* Collapsible Add/Edit Form */}
+        {tampilForm && (
+          <form
+            onSubmit={simpanBarang}
+            className="rounded-2xl border border-ink bg-surface p-6 shadow-sm"
+          >
+            <div className="mb-5 flex items-center justify-between border-b border-surface-muted pb-3.5">
+              <div>
+                <span className="block text-xs font-semibold text-accent">
+                  {idEdit !== null ? "MODIFIKASI SKU" : "REGISTRASI UNIT BARU"}
+                </span>
+                <h2 className="text-base font-bold text-ink">
+                  {idEdit !== null
+                    ? "Perbarui Spesifikasi & Tarif Alat"
+                    : "Daftarkan Instrumen Sewaan Baru"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="rounded-lg p-1.5 text-ink-subtle hover:bg-canvas hover:text-ink"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
 
-                <div className="md:col-span-2">
-                  <label htmlFor="spesifikasi" className="mb-1.5 block text-sm font-medium">
-                    Spesifikasi / Deskripsi *
-                  </label>
-                  <textarea
-                    id="spesifikasi"
-                    value={spesifikasi}
-                    onChange={(e) => setSpesifikasi(e.target.value)}
-                    placeholder="Jelaskan kondisi, fungsi, atau spesifikasi barang."
-                    rows={3}
-                    required
-                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
-                  />
-                </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="md:col-span-2">
+                <label
+                  htmlFor="nama"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
+                >
+                  Nama Instrumen / Paket Praktikum *
+                </label>
+                <input
+                  id="nama"
+                  value={nama}
+                  onChange={(e) => setNama(e.target.value)}
+                  placeholder="Contoh: Logic Analyzer 8-Channel 24MHz + Klip Uji"
+                  required
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
+                />
+              </div>
 
-                <div className="md:col-span-2">
-                  <label htmlFor="foto" className="mb-1.5 block text-sm font-medium">
-                    Foto Barang
-                  </label>
+              <div>
+                <label
+                  htmlFor="kategori"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
+                >
+                  Klasifikasi Kategori *
+                </label>
+                <select
+                  id="kategori"
+                  value={kategori}
+                  onChange={(e) => setKategori(e.target.value)}
+                  required
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3 text-xs font-medium text-ink focus:border-ink focus:bg-surface focus:outline-none"
+                >
+                  <option value="">Pilih kategori</option>
+                  {DAFTAR_KATEGORI.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="harga"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
+                >
+                  Tarif Sewa / Hari (Rp) *
+                </label>
+                <input
+                  id="harga"
+                  type="number"
+                  min="0"
+                  value={harga}
+                  onChange={(e) => setHarga(e.target.value)}
+                  required
+                  placeholder="25000"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="deposit"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
+                >
+                  Jaminan Deposit Escrow (Rp) *
+                </label>
+                <input
+                  id="deposit"
+                  type="number"
+                  min="0"
+                  value={deposit}
+                  onChange={(e) => setDeposit(e.target.value)}
+                  required
+                  placeholder="100000"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="stok"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
+                >
+                  Kuantitas Unit Tersedia *
+                </label>
+                <input
+                  id="stok"
+                  type="number"
+                  min="0"
+                  value={stok}
+                  onChange={(e) => setStok(e.target.value)}
+                  required
+                  placeholder="2"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 font-mono text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label
+                  htmlFor="spesifikasi"
+                  className="mb-1.5 block text-xs font-medium text-ink-muted"
+                >
+                  Spesifikasi Teknis &amp; Kelengkapan *
+                </label>
+                <textarea
+                  id="spesifikasi"
+                  value={spesifikasi}
+                  onChange={(e) => setSpesifikasi(e.target.value)}
+                  placeholder="Rincikan voltase, sensor bawaan, jumlah kabel probe, dan kondisi fisik..."
+                  rows={2}
+                  required
+                  className="w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 py-2.5 text-xs text-ink focus:border-ink focus:bg-surface focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <span className="mb-1.5 block text-xs font-medium text-ink-muted">
+                  Foto Produk (Maks 2 MB)
+                </span>
+                <label className="flex h-[68px] cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-hairline bg-surface-subtle px-3 text-xs font-medium text-ink-muted transition hover:border-ink hover:text-ink">
+                  <Camera className="size-4 text-accent" />
+                  <span>{foto ? "Ganti Foto Produk" : "Unggah Foto Alat"}</span>
                   <input
                     ref={inputFotoRef}
                     id="foto"
                     type="file"
                     accept="image/*"
                     onChange={pilihFoto}
-                    className="block w-full rounded-lg border border-[#DCD8CE] bg-white p-2 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-[#EFECE6] file:px-4 file:py-2 file:font-medium file:text-[#C83E2B] hover:file:bg-[#EFECE6]"
+                    className="sr-only"
                   />
-                  <p className="mt-1 text-xs text-[#575653]">
-                    Format gambar yang didukung mengikuti browser. Maksimal 2 MB.
-                  </p>
-
-                  {foto && (
-                    <div className="mt-3">
-                      <p className="mb-2 text-sm font-medium">Pratinjau foto</p>
-                      <img
-                        src={foto}
-                        alt="Pratinjau barang"
-                        className="h-40 w-40 rounded-lg border border-[#DCD8CE] bg-white object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFoto("");
-                          if (inputFotoRef.current) {
-                            inputFotoRef.current.value = "";
-                          }
-                        }}
-                        className="mt-2 block text-sm font-medium text-red-600 hover:text-red-800"
-                      >
-                        Hapus foto
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="harga" className="mb-1.5 block text-sm font-medium">
-                    Harga Sewa per Hari (Rp) *
-                  </label>
-                  <input
-                    id="harga"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={harga}
-                    onChange={(e) => setHarga(e.target.value)}
-                    required
-                    placeholder="150000"
-                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="deposit" className="mb-1.5 block text-sm font-medium">
-                    Deposit (Rp) *
-                  </label>
-                  <input
-                    id="deposit"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={deposit}
-                    onChange={(e) => setDeposit(e.target.value)}
-                    required
-                    placeholder="500000"
-                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="stok" className="mb-1.5 block text-sm font-medium">
-                    Jumlah Stok *
-                  </label>
-                  <input
-                    id="stok"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={stok}
-                    onChange={(e) => setStok(e.target.value)}
-                    required
-                    placeholder="3"
-                    className="w-full rounded-lg border border-[#DCD8CE] bg-white px-3 py-2.5 outline-none focus:border-[#141413]"
-                  />
-                </div>
+                </label>
               </div>
+            </div>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button
-                  type="submit"
-                  className="rounded-lg bg-[#141413] px-5 py-2.5 font-medium text-white hover:bg-[#141413]"
-                >
-                  {idEdit !== null ? "Simpan Perubahan" : "Simpan Barang"}
-                </button>
+            <div className="mt-5 flex items-center gap-2.5 border-t border-surface-muted pt-4">
+              <button
+                type="submit"
+                className="rounded-xl bg-ink px-5 py-2.5 text-xs font-semibold text-canvas transition hover:bg-accent"
+              >
+                {idEdit !== null ? "Simpan Perubahan SKU" : "Terbitkan ke Katalog"}
+              </button>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="rounded-xl border border-hairline bg-surface px-4 py-2.5 text-xs font-medium text-ink-muted hover:bg-canvas"
+              >
+                Batal
+              </button>
+            </div>
+          </form>
+        )}
 
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="rounded-lg border border-[#DCD8CE] bg-white px-5 py-2.5 font-medium hover:bg-[#F6F5F0]"
-                >
-                  Batal
-                </button>
+        {/* Inventory DataTable */}
+        <DataTable
+          columns={columns}
+          data={daftarBarang}
+          rowKey={(item) => item.id}
+          toolbar={
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+              <div className="md:col-span-8">
+                <SearchInput
+                  value={pencarian}
+                  onChange={setPencarian}
+                  placeholder="Cari kode SKU, nama instrumen, atau spesifikasi..."
+                />
               </div>
-            </form>
-          )}
-
-          <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <input
-              value={pencarian}
-              onChange={(e) => setPencarian(e.target.value)}
-              placeholder="Cari nama atau spesifikasi barang..."
-              aria-label="Cari barang"
-              className="w-full rounded-lg border border-[#DCD8CE] px-4 py-3 outline-none focus:border-[#141413]"
-            />
-
-            <select
-              value={filterKategori}
-              onChange={(e) => setFilterKategori(e.target.value)}
-              aria-label="Filter kategori barang"
-              className="w-full rounded-lg border border-[#DCD8CE] bg-white px-4 py-3 outline-none focus:border-[#141413]"
-            >
-              <option value="">Semua kategori</option>
-              {daftarKategori.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1050px] border-collapse text-left">
-              <thead>
-                <tr className="border-b bg-[#F6F5F0] text-sm text-[#575653]">
-                  <th className="px-4 py-3 font-semibold">No.</th>
-                  <th className="px-4 py-3 font-semibold">Foto</th>
-                  <th className="px-4 py-3 font-semibold">Nama Barang</th>
-                  <th className="px-4 py-3 font-semibold">Kategori</th>
-                  <th className="px-4 py-3 font-semibold">Harga/Hari</th>
-                  <th className="px-4 py-3 font-semibold">Deposit</th>
-                  <th className="px-4 py-3 font-semibold">Stok</th>
-                  <th className="px-4 py-3 font-semibold">Status</th>
-                  <th className="px-4 py-3 font-semibold">Aksi</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {daftarBarang.map((item, index) => (
-                  <tr key={item.id} className="border-b last:border-b-0 hover:bg-[#F6F5F0]">
-                    <td className="px-4 py-4">{index + 1}</td>
-                    <td className="px-4 py-4">
-                      {item.foto ? (
-                        <img
-                          src={item.foto}
-                          alt={item.nama}
-                          className="h-14 w-14 rounded-lg border border-[#DCD8CE] object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-[#F6F5F0] text-xs text-[#78756F]">
-                          No foto
-                        </div>
-                      )}
-                    </td>
-                    <td className="max-w-[220px] px-4 py-4">
-                      <p className="font-medium text-[#141413]">{item.nama}</p>
-                      <p className="mt-1 line-clamp-2 text-xs text-[#575653]">
-                        {item.spesifikasi}
-                      </p>
-                    </td>
-                    <td className="max-w-[200px] px-4 py-4 text-sm">
-                      {item.kategori}
-                    </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      {formatRupiah(item.harga)}
-                    </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      {formatRupiah(item.deposit)}
-                    </td>
-                    <td className="px-4 py-4">{item.stok}</td>
-                    <td className="px-4 py-4">
-                      <span
-                        className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ${
-                          item.stok > 0
-                            ? "bg-[#E9F3ED] text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {item.stok > 0 ? "Tersedia" : "Stok Habis"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4">
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => editBarang(item)}
-                          className="font-medium text-[#C83E2B] hover:text-[#141413]"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => hapusBarang(item.id)}
-                          className="font-medium text-red-600 hover:text-red-800"
-                        >
-                          Hapus
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-
-                {daftarBarang.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="px-4 py-10 text-center text-[#575653]">
-                      Tidak ada barang yang cocok dengan pencarian atau kategori.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <p className="mt-4 text-sm text-[#575653]">
-            Menampilkan {daftarBarang.length} dari {barang.length} jenis barang.
-          </p>
-        </section>
-      </div>
-    </main>
+              <div className="md:col-span-4">
+                <select
+                  value={filterKategori}
+                  onChange={(e) => setFilterKategori(e.target.value)}
+                  aria-label="Filter kategori barang"
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface px-3.5 text-xs font-medium text-ink focus:border-ink focus:outline-none"
+                >
+                  <option value="">Semua Kategori Inventaris</option>
+                  {DAFTAR_KATEGORI.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          }
+          footer={`Menampilkan ${daftarBarang.length} dari ${barang.length} SKU milik akun Anda.`}
+        />
+      </main>
+    </div>
   );
 }

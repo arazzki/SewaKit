@@ -1,17 +1,79 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Timer,
+  CheckCircle2,
+  ShieldCheck,
+  QrCode,
+  Building2,
+  Wallet,
+  Copy,
+  Check,
+  ArrowUpRight,
+  Zap,
+  X,
+  Lock,
+} from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import BrandLogo from "@/components/BrandLogo";
+import Badge from "@/components/ui/badge";
+import { formatRupiah } from "@/lib/format";
+
+type PaymentMethod = "qris" | "bca_va" | "mandiri_va" | "ewallet";
+
+const PAYMENT_CHANNELS: {
+  id: PaymentMethod;
+  label: string;
+  code: string;
+  subtitle: string;
+  feeTag: string;
+  icon: React.ComponentType<{ className?: string }>;
+}[] = [
+  {
+    id: "qris",
+    label: "QRIS Instan Nasional",
+    code: "QRIS",
+    subtitle: "GoPay, ShopeePay, OVO, DANA, BCA Mobile, Livin'",
+    feeTag: "Rp 0 Biaya Kanal",
+    icon: QrCode,
+  },
+  {
+    id: "bca_va",
+    label: "BCA Virtual Account",
+    code: "BCA-VA",
+    subtitle: "Verifikasi webhook otomatis 24 jam",
+    feeTag: "Auto-Callback",
+    icon: Building2,
+  },
+  {
+    id: "mandiri_va",
+    label: "Mandiri Virtual Account",
+    code: "MDR-VA",
+    subtitle: "Pembayaran via Livin' by Mandiri / ATM",
+    feeTag: "Auto-Callback",
+    icon: Building2,
+  },
+  {
+    id: "ewallet",
+    label: "E-Wallet Direct Link",
+    code: "EWALLET",
+    subtitle: "Otorisasi instan nomor ponsel terdaftar",
+    feeTag: "Instan",
+    icon: Wallet,
+  },
+];
 
 export default function PaymentPage() {
-  const [selectedMethod, setSelectedMethod] = useState<'qris' | 'bca_va' | 'mandiri_va' | 'ewallet'>('qris');
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>("qris");
   const [showXenditModal, setShowXenditModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Timer batas waktu 2 jam (menit & detik)
-  const [secondsLeft, setSecondsLeft] = useState(7140); // 1 jam 59 menit
+  const [secondsLeft, setSecondsLeft] = useState(6135); // 01:42:15 seperti spesifikasi
 
   useEffect(() => {
     if (isPaid || secondsLeft <= 0) return;
@@ -25,20 +87,26 @@ export default function PaymentPage() {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const billDetails = {
-    orderId: 'REQ-2026-088',
-    itemName: 'Kamera Mirrorless Sony Alpha A6400 + Tripod',
-    ownerName: 'Azriel Raihan (Informatika)',
+    orderId: "INV-SK-2026-088",
+    requestCode: "REQ-2026-088",
+    itemName: "Kamera Mirrorless Sony Alpha A6400 + Lensa 16-50mm",
+    sku: "MMD-SNY-6400",
+    ownerName: "Azriel Raihan (S1 Informatika)",
+    codLocation: "Selasar Gedung Kuliah Umum (GKU)",
     rentalDays: 2,
     rentalCost: 170000,
     depositAmount: 250000,
     adminFee: 2500,
   };
 
-  const totalAmount = billDetails.rentalCost + billDetails.depositAmount + billDetails.adminFee;
+  const totalAmount =
+    billDetails.rentalCost + billDetails.depositAmount + billDetails.adminFee;
 
   const handleSimulatePayment = () => {
     setIsProcessing(true);
@@ -46,281 +114,343 @@ export default function PaymentPage() {
       setIsProcessing(false);
       setShowXenditModal(false);
       setIsPaid(true);
-    }, 1200);
+    }, 1000);
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F5F0] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header & Navigasi */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#DCD8CE] shadow-xs">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-[#141413]">
-                Pembayaran Transaksi Sewa (Xendit Gateway)
-              </span>
-              <span className="rounded-full bg-[#EFECE6] px-2.5 py-0.5 text-xs font-semibold text-[#C83E2B]">
-                Escrow Terlindungi
-              </span>
-            </div>
-            <p className="text-xs text-[#575653] mt-1">
-              Gateway Pembayaran Sewa {"&"} Deposit Jaminan • Idempotency Webhook • Batas Bayar 2 Jam
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="rounded-lg border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#575653] hover:bg-[#EFECE6] transition"
-            >
-              ← Kembali ke Beranda
-            </Link>
-          </div>
-        </div>
-
-        {/* Banner Timer Batas Waktu Bayar 2 Jam */}
-        {!isPaid ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white font-bold text-lg">
-                ⏳
-              </span>
-              <div>
-                <h4 className="text-sm font-bold text-amber-950">
-                  Batas Waktu Pembayaran (Hold 2 Jam)
-                </h4>
-                <p className="text-xs text-amber-800">
-                  Selesaikan pembayaran sebelum batas waktu habis, atau pesanan dibatalkan otomatis dan jadwal dibuka kembali.
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="block text-[11px] uppercase tracking-wider font-semibold text-amber-800">Sisa Waktu</span>
-              <span className="font-mono text-xl font-extrabold text-amber-900">
-                {formatTimer(secondsLeft)}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-2xl border border-[#1B4332]/25 bg-[#E9F3ED] p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B4332] text-white font-bold text-lg">
-                ✓
-              </span>
-              <div>
-                <h4 className="text-sm font-bold text-emerald-950">
-                  Pembayaran Berhasil Dikonfirmasi (Webhook Xendit Verified)
-                </h4>
-                <p className="text-xs text-[#1B4332]">
-                  Dana sewa dan deposit tersimpan aman di sistem. Silakan lanjut janjian serah terima COD dengan pemilik alat.
-                </p>
-              </div>
-            </div>
+    <div className="flex min-h-screen flex-col bg-canvas">
+      <PageHeader
+        eyebrow="Pembayaran Rekber"
+        title="Selesaikan Pembayaran Sewa & Deposit"
+        description="Uang sewa beserta deposit jaminan disimpan di rekening bersama SewaKit sampai barang selesai dikembalikan."
+        actions={
+          <>
             <Link
               href="/rentals/request"
-              className="rounded-xl bg-[#1B4332] px-4 py-2 text-xs font-bold text-white hover:bg-[#1B4332] transition"
+              className="rounded-xl border border-hairline bg-surface px-3.5 py-2 text-xs font-semibold text-ink transition hover:bg-surface-muted"
             >
-              Lihat Kontak COD →
+              ← Pengajuan Sewa
             </Link>
+            {!isPaid ? (
+              <div className="inline-flex items-center gap-2.5 rounded-xl border border-warning-border bg-warning-subtle px-3.5 py-2">
+                <Timer className="size-4 text-warning-ink" />
+                <div className="leading-none">
+                  <span className="block text-xs font-semibold text-warning-ink">
+                    BATAS BAYAR 2 JAM
+                  </span>
+                  <span className="font-mono text-sm font-bold text-ink">
+                    {formatTimer(secondsLeft)}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <Badge variant="available" dot className="px-3 py-1.5 text-xs">
+                LUNAS TERVERIFIKASI WEBHOOK
+              </Badge>
+            )}
+          </>
+        }
+      />
+
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+        {isPaid && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-forest/25 bg-forest-subtle p-5">
+            <div className="flex items-start gap-3.5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-forest text-white">
+                <CheckCircle2 className="size-5" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-ink">
+                  Pembayaran Terkonfirmasi (Idempotency Key Verified)
+                </h2>
+                <p className="mt-0.5 text-xs text-forest">
+                  Dana sebesar <strong>{formatRupiah(totalAmount)}</strong> telah diamankan di Escrow. Kontak WhatsApp COD kini terbuka dan siap lanjut ke tahap inspeksi fisik.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/handover"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-forest px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-forest-hover"
+              >
+                <span>Lanjut ke Protokol COD</span>
+                <ArrowUpRight className="size-3.5" />
+              </Link>
+            </div>
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Kolom Kiri: Pilihan Metode Pembayaran Xendit */}
-          <div className="md:col-span-2 space-y-4">
-            <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE] shadow-xs">
-              <h3 className="text-base font-bold text-[#141413] mb-1">
-                Pilih Jalur Pembayaran (Xendit Sandbox)
-              </h3>
-              <p className="text-xs text-[#575653] mb-4">
-                Uji coba transaksi menggunakan simulator pembayaran Xendit.
-              </p>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
+          {/* Left Column: Payment Channel Selector (7 Columns) */}
+          <div className="space-y-4 lg:col-span-7">
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-surface">
+              <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-6 py-4">
+                <div>
+                  <span className="block text-xs font-semibold text-ink-subtle">
+                    METODE PEMBAYARAN TERINTEGRASI
+                  </span>
+                  <h2 className="mt-0.5 text-base font-bold text-ink">
+                    Pilih Kanal Pembayaran Xendit
+                  </h2>
+                </div>
+                <Badge variant="outline">SANDBOX MODE</Badge>
+              </div>
 
-              <div className="space-y-3">
-                {/* Opsi QRIS */}
-                <label
-                  onClick={() => setSelectedMethod('qris')}
-                  className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                    selectedMethod === 'qris'
-                      ? 'border-[#141413] bg-[#EFECE6] ring-1 ring-indigo-600'
-                      : 'border-[#DCD8CE] hover:bg-[#F6F5F0]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-sm text-[#141413]">QRIS Instan</span>
-                    <span className="rounded bg-[#EFECE6] text-[#C83E2B] text-[10px] px-2 py-0.5 font-bold">
-                      Bebas Biaya Admin
+              <div className="space-y-2.5 p-6">
+                {PAYMENT_CHANNELS.map((ch) => {
+                  const Icon = ch.icon;
+                  const active = selectedMethod === ch.id;
+                  return (
+                    <button
+                      key={ch.id}
+                      type="button"
+                      onClick={() => setSelectedMethod(ch.id)}
+                      className={`flex w-full items-center justify-between gap-4 rounded-xl border p-4 text-left transition ${
+                        active
+                          ? "border-ink bg-surface-subtle ring-1 ring-ink"
+                          : "border-hairline bg-surface hover:border-ink/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <div
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${
+                            active
+                              ? "border-ink bg-ink text-canvas"
+                              : "border-hairline bg-canvas text-ink"
+                          }`}
+                        >
+                          <Icon className="size-4.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-sm font-bold text-ink">
+                              {ch.label}
+                            </span>
+                            <span className="rounded border border-hairline bg-surface-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-ink-muted">
+                              {ch.code}
+                            </span>
+                          </div>
+                          <p className="mt-0.5 truncate text-xs text-ink-muted">
+                            {ch.subtitle}
+                          </p>
+                        </div>
+                      </div>
+
+                      <span className="shrink-0 font-mono text-xs font-semibold text-forest">
+                        {ch.feeTag}
+                      </span>
+                    </button>
+                  );
+                })}
+
+                {!isPaid ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowXenditModal(true)}
+                    className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 text-sm font-semibold text-canvas transition hover:bg-accent"
+                  >
+                    <Lock className="size-4" />
+                    <span>
+                      Bayar {formatRupiah(totalAmount)} via Xendit Invoice
                     </span>
-                  </div>
-                  <span className="text-xs text-[#575653]">GoPay, OVO, ShopeePay, BCA Mobile</span>
-                </label>
-
-                {/* Opsi Virtual Account BCA */}
-                <label
-                  onClick={() => setSelectedMethod('bca_va')}
-                  className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                    selectedMethod === 'bca_va'
-                      ? 'border-[#141413] bg-[#EFECE6] ring-1 ring-indigo-600'
-                      : 'border-[#DCD8CE] hover:bg-[#F6F5F0]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-sm text-[#141413]">BCA Virtual Account</span>
-                  </div>
-                  <span className="text-xs text-[#575653] font-mono">Verifikasi Otomatis</span>
-                </label>
-
-                {/* Opsi Virtual Account Mandiri */}
-                <label
-                  onClick={() => setSelectedMethod('mandiri_va')}
-                  className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                    selectedMethod === 'mandiri_va'
-                      ? 'border-[#141413] bg-[#EFECE6] ring-1 ring-indigo-600'
-                      : 'border-[#DCD8CE] hover:bg-[#F6F5F0]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-sm text-[#141413]">Mandiri Virtual Account</span>
-                  </div>
-                  <span className="text-xs text-[#575653] font-mono">Verifikasi Otomatis</span>
-                </label>
-              </div>
-
-              {!isPaid ? (
-                <button
-                  type="button"
-                  onClick={() => setShowXenditModal(true)}
-                  className="mt-6 w-full rounded-xl bg-[#141413] py-3.5 text-sm font-bold text-white shadow-sm hover:bg-[#141413] transition"
-                >
-                  Buka Invoice Pembayaran Xendit Sandbox →
-                </button>
-              ) : (
-                <button
-                  disabled
-                  className="mt-6 w-full rounded-xl bg-[#EFECE6] py-3 text-sm font-bold text-[#78756F] cursor-not-allowed"
-                >
-                  ✓ Tagihan Ini Sudah Lunas Terbayar
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Kolom Kanan: Rincian Tagihan */}
-          <div className="space-y-4">
-            <div className="bg-white rounded-2xl p-6 border border-[#DCD8CE] shadow-xs">
-              <span className="text-[11px] font-mono bg-[#EFECE6] text-[#575653] px-2.5 py-1 rounded-md font-bold">
-                {billDetails.orderId}
-              </span>
-              <h4 className="text-base font-bold text-[#141413] mt-2">
-                {billDetails.itemName}
-              </h4>
-              <p className="text-xs text-[#575653] mt-0.5">
-                Pemilik: <strong>{billDetails.ownerName}</strong>
-              </p>
-
-              <div className="border-t border-b border-[#EFECE6] my-4 py-3 space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-[#575653]">Biaya Sewa ({billDetails.rentalDays} Hari)</span>
-                  <span className="font-semibold text-[#141413]">
-                    Rp {billDetails.rentalCost.toLocaleString('id-ID')}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#575653]">Deposit Jaminan (Kembali 100%)</span>
-                  <span className="font-semibold text-[#141413]">
-                    Rp {billDetails.depositAmount.toLocaleString('id-ID')}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#575653]">Biaya Layanan Gateway</span>
-                  <span className="font-semibold text-[#141413]">
-                    Rp {billDetails.adminFee.toLocaleString('id-ID')}
-                  </span>
-                </div>
-                <div className="flex justify-between pt-2 border-t border-[#EFECE6] text-sm">
-                  <span className="font-bold text-[#141413]">Total Pembayaran</span>
-                  <span className="font-extrabold text-[#C83E2B]">
-                    Rp {totalAmount.toLocaleString('id-ID')}
-                  </span>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-[#F6F5F0] p-3 text-[11px] text-[#575653] leading-relaxed border border-[#DCD8CE]">
-                🔒 <strong>Proteksi Escrow:</strong> Deposit Rp {billDetails.depositAmount.toLocaleString('id-ID')} disimpan di rekening penampung dan akan dikembalikan otomatis pasca serah terima pengembalian alat.
+                    <ArrowUpRight className="size-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled
+                    className="mt-4 flex h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-muted text-xs font-semibold text-ink-muted"
+                  >
+                    <CheckCircle2 className="size-4 text-forest" />
+                    <span>Invoice Telah Lunas Terbayar</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
+
+          {/* Right Column: Official Stripe/Xendit Style Invoice Sheet (5 Columns) */}
+          <aside className="lg:col-span-5">
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-surface">
+              {/* Official Brand Invoice Header */}
+              <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-6 py-4">
+                <BrandLogo
+                  size="sm"
+                  theme="light"
+                  showTagline={false}
+                  href={null}
+                />
+                <span className="font-mono text-xs font-bold text-ink">
+                  {billDetails.orderId}
+                </span>
+              </div>
+
+              <div className="space-y-5 p-6">
+                <div>
+                  <span className="text-xs font-semibold text-accent">
+                    INSTRUMEN DISEWA ({billDetails.sku})
+                  </span>
+                  <h3 className="mt-1 text-base font-bold text-ink">
+                    {billDetails.itemName}
+                  </h3>
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Pemilik: <strong className="text-ink">{billDetails.ownerName}</strong>
+                  </p>
+                  <p className="text-xs text-ink-muted">
+                    Titik COD: {billDetails.codLocation}
+                  </p>
+                </div>
+
+                {/* Transparent Line-Item Ledger */}
+                <dl className="space-y-2.5 border-y border-surface-muted py-4 text-xs">
+                  <div className="flex justify-between">
+                    <dt className="text-ink-muted">
+                      Sewa Instrumen ({billDetails.rentalDays} Hari)
+                    </dt>
+                    <dd className="font-mono font-semibold text-ink">
+                      {formatRupiah(billDetails.rentalCost)}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="text-ink-muted">
+                      Deposit Jaminan Escrow (Refundable 100%)
+                    </dt>
+                    <dd className="font-mono font-semibold text-ink">
+                      {formatRupiah(billDetails.depositAmount)}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="text-ink-muted">Biaya Infrastruktur Gateway</dt>
+                    <dd className="font-mono font-semibold text-ink">
+                      {formatRupiah(billDetails.adminFee)}
+                    </dd>
+                  </div>
+                </dl>
+
+                <div className="flex items-baseline justify-between">
+                  <span className="text-sm font-bold text-ink">
+                    Total Tagihan Escrow
+                  </span>
+                  <span className="font-mono text-2xl font-bold text-accent">
+                    {formatRupiah(totalAmount)}
+                  </span>
+                </div>
+
+                <div className="flex items-start gap-2.5 rounded-xl border border-hairline bg-canvas p-3.5 text-xs leading-relaxed text-ink-muted">
+                  <ShieldCheck className="mt-0.5 size-4 shrink-0 text-forest" />
+                  <p>
+                    <strong className="text-ink">Proteksi Rekber SewaKit:</strong>{" "}
+                    Deposit {formatRupiah(billDetails.depositAmount)} dikunci pada rekening penampung dan dikembalikan utuh otomatis setelah checklist pengembalian disetujui.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
 
         {/* MODAL SIMULATOR POPUP XENDIT SANDBOX */}
         {showXenditModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
-            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-[#DCD8CE]">
-              <div className="flex items-center justify-between border-b border-[#EFECE6] pb-3 mb-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4 backdrop-blur-[2px]">
+            <div className="w-full max-w-md overflow-hidden rounded-2xl border border-hairline bg-surface shadow-xl">
+              <div className="flex items-center justify-between border-b border-surface-muted bg-surface-subtle px-5 py-3.5">
+                <BrandLogo
+                  size="sm"
+                  theme="light"
+                  showTagline={false}
+                  href={null}
+                />
                 <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#141413] font-extrabold text-white text-xs">
-                    X
-                  </span>
-                  <span className="font-bold text-[#141413] text-sm">Xendit Invoice (Sandbox)</span>
+                  <Badge variant="accent">XENDIT SANDBOX</Badge>
+                  <button
+                    type="button"
+                    onClick={() => setShowXenditModal(false)}
+                    className="rounded-lg p-1 text-ink-subtle hover:bg-surface-muted hover:text-ink"
+                  >
+                    <X className="size-4" />
+                  </button>
                 </div>
-                <span className="text-[11px] bg-[#EFECE6] text-[#C83E2B] font-mono px-2 py-0.5 rounded font-bold">
-                  TEST_MODE
-                </span>
               </div>
 
-              <div className="space-y-4 text-xs">
-                <div className="rounded-xl bg-[#F6F5F0] p-3.5 border border-[#DCD8CE]">
-                  <span className="text-[#78756F] block mb-0.5">Total Tagihan:</span>
-                  <span className="text-xl font-extrabold text-[#141413] font-mono">
-                    Rp {totalAmount.toLocaleString('id-ID')}
+              <div className="space-y-4 p-5 text-xs">
+                <div className="flex items-center justify-between rounded-xl border border-hairline bg-canvas p-3.5">
+                  <div>
+                    <span className="block font-mono text-xs uppercase text-ink-subtle">
+                      Nominal Pembayaran
+                    </span>
+                    <span className="font-mono text-xl font-bold text-ink">
+                      {formatRupiah(totalAmount)}
+                    </span>
+                  </div>
+                  <span className="font-mono text-xs font-semibold text-warning-ink">
+                    {formatTimer(secondsLeft)}
                   </span>
                 </div>
 
-                {selectedMethod === 'qris' && (
-                  <div className="text-center py-2 space-y-2">
-                    <div className="mx-auto flex h-36 w-36 items-center justify-center rounded-xl bg-[#EFECE6] border border-dashed border-[#DCD8CE] font-mono text-[#575653] text-xs">
-                      [ QRIS CODE MOCKUP ]
+                {selectedMethod === "qris" ? (
+                  <div className="space-y-3 rounded-xl border border-hairline bg-surface-subtle p-4 text-center">
+                    <span className="text-xs font-semibold text-ink-muted">
+                      QRIS DINAMIS SEWAKIT ESCROW
+                    </span>
+                    {/* Crisp Technical SVG QR Matrix Representation */}
+                    <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-xl border border-hairline bg-surface p-3">
+                      <QrCode className="h-28 w-28 text-ink" strokeWidth={1.25} />
                     </div>
-                    <p className="text-[11px] text-[#575653]">
-                      Scan kode QRIS di atas menggunakan aplikasi e-wallet simulator.
+                    <p className="text-xs text-ink-muted">
+                      Pindai melalui aplikasi perbankan atau e-wallet, atau klik tombol simulasi webhook di bawah.
                     </p>
                   </div>
-                )}
-
-                {(selectedMethod === 'bca_va' || selectedMethod === 'mandiri_va') && (
-                  <div className="rounded-xl border border-[#DCD8CE] p-4 space-y-2">
-                    <span className="text-[#78756F] block">Nomor Virtual Account Simulasi:</span>
-                    <div className="flex items-center justify-between bg-white border p-2.5 rounded-lg">
-                      <span className="font-mono font-bold text-sm text-[#141413]">
-                        8808992026088
+                ) : (
+                  <div className="space-y-2 rounded-xl border border-hairline bg-surface-subtle p-4">
+                    <span className="font-mono text-xs uppercase text-ink-subtle">
+                      Nomor Virtual Account ({selectedMethod.toUpperCase()})
+                    </span>
+                    <div className="flex items-center justify-between rounded-xl border border-hairline bg-surface px-3.5 py-2.5">
+                      <span className="font-mono text-base font-bold tracking-wider text-ink">
+                        8808 9920 2608 81
                       </span>
                       <button
                         type="button"
                         onClick={() => {
+                          navigator.clipboard?.writeText("88089920260881");
                           setCopied(true);
                           setTimeout(() => setCopied(false), 2000);
                         }}
-                        className="text-[#C83E2B] font-bold hover:underline"
+                        className="inline-flex items-center gap-1 rounded-lg border border-hairline bg-canvas px-2.5 py-1 font-mono text-xs font-semibold text-ink hover:border-ink"
                       >
-                        {copied ? 'Tersalin!' : 'Salin'}
+                        {copied ? (
+                          <>
+                            <Check className="size-3 text-forest" />
+                            <span>Tersalin</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="size-3" />
+                            <span>Salin</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
                 )}
 
-                <div className="pt-2 flex gap-2">
+                <div className="flex gap-2 pt-1">
                   <button
                     type="button"
                     disabled={isProcessing}
                     onClick={handleSimulatePayment}
-                    className="flex-1 rounded-xl bg-[#1B4332] py-3 text-xs font-bold text-white hover:bg-[#1B4332] transition"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-forest py-3 text-xs font-semibold text-white transition hover:bg-forest-hover disabled:opacity-60"
                   >
-                    {isProcessing ? 'Memproses Webhook...' : '⚡ Simulasikan Bayar Sukses (Webhook)'}
+                    <Zap className="size-3.5" />
+                    <span>
+                      {isProcessing
+                        ? "Memverifikasi Webhook..."
+                        : "Simulasikan Callback Lunas"}
+                    </span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowXenditModal(false)}
-                    className="rounded-xl border border-[#DCD8CE] px-4 py-3 text-xs font-semibold text-[#575653] hover:bg-[#F6F5F0]"
+                    className="rounded-xl border border-hairline bg-surface px-4 py-3 text-xs font-medium text-ink-muted hover:bg-canvas"
                   >
                     Tutup
                   </button>
@@ -329,7 +459,7 @@ export default function PaymentPage() {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,239 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Lock,
+  Calendar,
+  ShieldCheck,
+  ArrowRight,
+  MapPin,
+} from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import Badge from "@/components/ui/badge";
+import Button from "@/components/ui/button";
+import Card from "@/components/ui/card";
+import Input from "@/components/ui/input";
+import {
+  BOOKABLE_ITEMS,
+  COD_LOCATIONS,
+  isDateOverlapping,
+} from "@/data/dummyRequests";
+import { DEMO_STUDENT_SESSION, useRentalSession } from "@/context/RentalSessionContext";
+import { formatRupiah } from "@/lib/format";
 
-interface CatalogItem {
-  id: string;
-  name: string;
-  category: string;
-  pricePerDay: number;
-  deposit: number;
-  ownerName: string;
-  ownerNim: string;
-  ownerPhone: string;
-  ownerProdi: string;
-  bookedRanges: { start: string; end: string; reason: string }[];
-}
+function RenterBookingContent() {
+  const searchParams = useSearchParams();
+  const requestedSlug = searchParams.get("item");
+  const initialItem =
+    BOOKABLE_ITEMS.find((i) => i.id === requestedSlug) ?? BOOKABLE_ITEMS[0];
 
-interface RentalRequest {
-  id: string;
-  itemId: string;
-  itemName: string;
-  renterName: string;
-  renterNim: string;
-  renterProdi: string;
-  renterPhone: string;
-  ownerName: string;
-  ownerNim: string;
-  ownerPhone: string;
-  startDate: string;
-  endDate: string;
-  totalDays: number;
-  rentalCost: number;
-  depositAmount: number;
-  codLocation: string;
-  codTime: string;
-  purposeNote: string;
-  status:
-    | "MENUNGGU_PERSETUJUAN"
-    | "DISETUJUI_MENUNGGU_BAYAR"
-    | "SIAP_COD"
-    | "DITOLAK";
-  holdExpiresIn: string;
-  paymentExpiresIn?: string;
-  rejectReason?: string;
-  createdAt: string;
-}
+  const { session, requests, createRequest } = useRentalSession();
 
-const DUMMY_ITEMS: CatalogItem[] = [
-  {
-    id: "ITM-001",
-    name: "Oscilloscope Digital Rigol DS1054Z (4 Channel 50MHz)",
-    category: "Perangkat IoT & Elektronika",
-    pricePerDay: 45000,
-    deposit: 150000,
-    ownerName: "Triansyah Danishwara",
-    ownerNim: "103032400062",
-    ownerPhone: "0812-3456-7890",
-    ownerProdi: "S1 Teknik Elektro",
-    bookedRanges: [
-      {
-        start: "2026-11-02",
-        end: "2026-11-04",
-        reason: "Disewa oleh Mahasiswa lain",
-      },
-      {
-        start: "2026-11-10",
-        end: "2026-11-11",
-        reason: "Ditahan (Hold 24 Jam)",
-      },
-    ],
-  },
-  {
-    id: "ITM-002",
-    name: "Paket Praktikum IoT Lengkap (ESP32 + Sensor Suhu, Ultrasonik, Relay, Breadboard)",
-    category: "Perangkat IoT & Elektronika",
-    pricePerDay: 20000,
-    deposit: 75000,
-    ownerName: "Rayvan Alifarlo",
-    ownerNim: "103032400087",
-    ownerPhone: "0813-9876-5432",
-    ownerProdi: "S1 Teknologi Informasi",
-    bookedRanges: [
-      {
-        start: "2026-11-05",
-        end: "2026-11-07",
-        reason: "Disewa oleh Mahasiswa lain",
-      },
-    ],
-  },
-  {
-    id: "ITM-003",
-    name: "Kamera Mirrorless Sony Alpha A6400 + Lensa 16-50mm + Tripod",
-    category: "Perangkat Komputer & Multimedia",
-    pricePerDay: 85000,
-    deposit: 250000,
-    ownerName: "Azriel Raihan",
-    ownerNim: "103032400010",
-    ownerPhone: "0857-1122-3344",
-    ownerProdi: "S1 Informatika",
-    bookedRanges: [],
-  },
-];
-
-const COD_LOCATIONS = [
-  "Lobi Gedung TULT (Telkom University Landmark Tower)",
-  "Perpustakaan Open Library (Gedung Manterawu Lt. 5)",
-  "Selasar Gedung Kuliah Umum (GKU / Tokong Nanas)",
-  "Area Kantin Teknik / Asrama Putra",
-  "Student Center / Taman Danau Galau",
-];
-
-const INITIAL_REQUESTS: RentalRequest[] = [
-  {
-    id: "REQ-2026-089",
-    itemId: "ITM-001",
-    itemName: "Oscilloscope Digital Rigol DS1054Z (4 Channel 50MHz)",
-    renterName: "Muhamad Alwan Suryadi",
-    renterNim: "103032400104",
-    renterProdi: "S1 Teknologi Informasi",
-    renterPhone: "0821-8899-7766",
-    ownerName: "Triansyah Danishwara",
-    ownerNim: "103032400062",
-    ownerPhone: "0812-3456-7890",
-    startDate: "2026-11-10",
-    endDate: "2026-11-11",
-    totalDays: 2,
-    rentalCost: 90000,
-    depositAmount: 150000,
-    codLocation: "Lobi Gedung TULT (Telkom University Landmark Tower)",
-    codTime: "13:00 WIB",
-    purposeNote: "Untuk praktikum modul rangkaian listrik & pengukuran sinyal gelombang.",
-    status: "MENUNGGU_PERSETUJUAN",
-    holdExpiresIn: "18 jam 42 menit",
-    createdAt: "Hari ini, 10:15 WIB",
-  },
-  {
-    id: "REQ-2026-085",
-    itemId: "ITM-002",
-    itemName: "Paket Praktikum IoT Lengkap (ESP32 + Sensor Suhu, Ultrasonik, Relay, Breadboard)",
-    renterName: "Muhammad Fiqri Habibi",
-    renterNim: "103032400056",
-    renterProdi: "S1 Teknologi Informasi",
-    renterPhone: "0819-4455-6677",
-    ownerName: "Rayvan Alifarlo",
-    ownerNim: "103032400087",
-    ownerPhone: "0813-9876-5432",
-    startDate: "2026-11-05",
-    endDate: "2026-11-07",
-    totalDays: 3,
-    rentalCost: 60000,
-    depositAmount: 75000,
-    codLocation: "Perpustakaan Open Library (Gedung Manterawu Lt. 5)",
-    codTime: "10:00 WIB",
-    purposeNote: "Demo tugas besar mata kuliah IoT.",
-    status: "SIAP_COD",
-    holdExpiresIn: "-",
-    createdAt: "Kemarin, 14:30 WIB",
-  },
-  {
-    id: "REQ-2026-088",
-    itemId: "ITM-003",
-    itemName: "Kamera Mirrorless Sony Alpha A6400 + Lensa 16-50mm + Tripod",
-    renterName: "Muhammad Ariq Azzaki",
-    renterNim: "103032400138",
-    renterProdi: "S1 Teknologi Informasi",
-    renterPhone: "0812-9988-1122",
-    ownerName: "Azriel Raihan",
-    ownerNim: "103032400010",
-    ownerPhone: "0857-1122-3344",
-    startDate: "2026-11-14",
-    endDate: "2026-11-15",
-    totalDays: 2,
-    rentalCost: 170000,
-    depositAmount: 250000,
-    codLocation: "Selasar Gedung Kuliah Umum (GKU / Tokong Nanas)",
-    codTime: "15:30 WIB",
-    purposeNote: "Dokumentasi kegiatan himpunan & video presentasi proyek.",
-    status: "DISETUJUI_MENUNGGU_BAYAR",
-    holdExpiresIn: "Disetujui Pemilik",
-    paymentExpiresIn: "01 jam 48 menit",
-    createdAt: "Hari ini, 11:20 WIB",
-  },
-];
-
-function isDateOverlapping(
-  startA: string,
-  endA: string,
-  startB: string,
-  endB: string
-) {
-  return startA <= endB && endA >= startB;
-}
-
-export default function RentalRequestPage() {
-  const [activeTab, setActiveTab] = useState<"form" | "owner" | "cod">("form");
-  const [requests, setRequests] = useState<RentalRequest[]>(INITIAL_REQUESTS);
-
-  // Form states
-  const [selectedItemId, setSelectedItemId] = useState<string>(DUMMY_ITEMS[0].id);
-  const [startDate, setStartDate] = useState<string>("2026-11-12");
-  const [endDate, setEndDate] = useState<string>("2026-11-13");
+  const [selectedItemId, setSelectedItemId] = useState<string>(initialItem.id);
+  const [startDate, setStartDate] = useState<string>("2026-11-18");
+  const [endDate, setEndDate] = useState<string>("2026-11-19");
   const [codLocation, setCodLocation] = useState<string>(COD_LOCATIONS[0]);
   const [codTime, setCodTime] = useState<string>("13:00");
   const [purposeNote, setPurposeNote] = useState<string>("");
   const [formFeedback, setFormFeedback] = useState<{
     type: "error" | "success";
     message: string;
+    createdId?: string;
   } | null>(null);
 
-  // Reject modal state
-  const [rejectingId, setRejectingId] = useState<string | null>(null);
-  const [rejectInput, setRejectInput] = useState<string>("");
-
   const selectedItem =
-    DUMMY_ITEMS.find((item) => item.id === selectedItemId) || DUMMY_ITEMS[0];
+    BOOKABLE_ITEMS.find((item) => item.id === selectedItemId) ??
+    BOOKABLE_ITEMS[0];
 
-  // Calculate days
-  const calculateDays = () => {
+  const totalDays = (() => {
     if (!startDate || !endDate) return 0;
     const s = new Date(startDate);
     const e = new Date(endDate);
-    const diff = Math.floor((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const diff =
+      Math.floor((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) + 1;
     return diff > 0 ? diff : 0;
-  };
+  })();
 
-  const totalDays = calculateDays();
   const rentalCost = totalDays * selectedItem.pricePerDay;
   const totalPayable = rentalCost + selectedItem.deposit;
 
-  // Check schedule conflict
   const conflictingRange = selectedItem.bookedRanges.find((range) =>
     startDate && endDate && startDate <= endDate
       ? isDateOverlapping(startDate, endDate, range.start, range.end)
-      : false
+      : false,
   );
+
+  const activeRenterNim = session.nim ?? DEMO_STUDENT_SESSION.nim!;
+  const myRequests = requests.filter((r) => r.renterNim === activeRenterNim);
 
   const handleCreateRequest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,7 +77,7 @@ export default function RentalRequestPage() {
     if (!startDate || !endDate || totalDays <= 0) {
       setFormFeedback({
         type: "error",
-        message: "Tanggal selesai harus sama atau setelah tanggal mulai sewa.",
+        message: "Tanggal pengembalian harus sama atau setelah tanggal mulai sewa.",
       });
       return;
     }
@@ -250,7 +85,7 @@ export default function RentalRequestPage() {
     if (conflictingRange) {
       setFormFeedback({
         type: "error",
-        message: `Jadwal bentrok! Barang sudah tidak tersedia pada ${conflictingRange.start} s/d ${conflictingRange.end} (${conflictingRange.reason}).`,
+        message: `Jadwal bentrok. Alat tidak tersedia pada ${conflictingRange.start} s/d ${conflictingRange.end} (${conflictingRange.reason}).`,
       });
       return;
     }
@@ -258,19 +93,22 @@ export default function RentalRequestPage() {
     if (!purposeNote.trim()) {
       setFormFeedback({
         type: "error",
-        message: "Mohon isi catatan keperluan praktikum/kuliah terlebih dahulu.",
+        message: "Mohon isi catatan keperluan pemakaian alat terlebih dahulu.",
       });
       return;
     }
 
-    const newReq: RentalRequest = {
-      id: `REQ-2026-${Math.floor(100 + Math.random() * 899)}`,
+    const created = createRequest({
       itemId: selectedItem.id,
+      itemSku: selectedItem.sku,
       itemName: selectedItem.name,
-      renterName: "Muhammad Ariq Azzaki (Anda)",
-      renterNim: "103032400138",
-      renterProdi: "S1 Teknologi Informasi",
-      renterPhone: "0812-9988-1122",
+      renterName:
+        session.role === "mahasiswa"
+          ? session.name
+          : DEMO_STUDENT_SESSION.name,
+      renterNim: activeRenterNim,
+      renterProdi: session.prodi ?? DEMO_STUDENT_SESSION.prodi!,
+      renterPhone: session.phone ?? DEMO_STUDENT_SESSION.phone!,
       ownerName: selectedItem.ownerName,
       ownerNim: selectedItem.ownerNim,
       ownerPhone: selectedItem.ownerPhone,
@@ -282,699 +120,398 @@ export default function RentalRequestPage() {
       codLocation,
       codTime: `${codTime} WIB`,
       purposeNote,
-      status: "MENUNGGU_PERSETUJUAN",
-      holdExpiresIn: "23 jam 59 menit",
-      createdAt: "Baru saja",
-    };
+    });
 
-    setRequests([newReq, ...requests]);
     setPurposeNote("");
     setFormFeedback({
       type: "success",
-      message: `Pengajuan ${newReq.id} berhasil dibuat! Jadwal tanggal ${startDate} s/d ${endDate} kini ditahan (Hold) selama 24 jam menunggu respons Pemilik.`,
+      message: `Pengajuan ${created.id} berhasil dikirim! Jadwal dikunci selama 24 jam sambil menunggu persetujuan pemilik alat.`,
+      createdId: created.id,
     });
   };
 
-  const handleApprove = (id: string) => {
-    setRequests((prev) =>
-      prev.map((req) =>
-        req.id === id
-          ? {
-              ...req,
-              status: "DISETUJUI_MENUNGGU_BAYAR",
-              holdExpiresIn: "Disetujui Pemilik",
-              paymentExpiresIn: "01 jam 59 menit",
-            }
-          : req
-      )
-    );
-  };
-
-  const handleSimulatePaid = (id: string) => {
-    setRequests((prev) =>
-      prev.map((req) =>
-        req.id === id
-          ? {
-              ...req,
-              status: "SIAP_COD",
-              paymentExpiresIn: "Lunas (Xendit)",
-            }
-          : req
-      )
-    );
-  };
-
-  const handleConfirmReject = (id: string) => {
-    if (!rejectInput.trim()) return;
-    setRequests((prev) =>
-      prev.map((req) =>
-        req.id === id
-          ? {
-              ...req,
-              status: "DITOLAK",
-              holdExpiresIn: "Jadwal Dibuka Kembali",
-              rejectReason: rejectInput,
-            }
-          : req
-      )
-    );
-    setRejectingId(null);
-    setRejectInput("");
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#F6F5F0]">
-      {/* Top Navbar */}
-      <header className="border-b border-[#DCD8CE] bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            
+    <main className="mx-auto w-full max-w-7xl flex-1 space-y-10 px-4 py-8 sm:px-6">
+      {/* Formulir Pengajuan & Ringkasan Biaya */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <Card className="p-6 lg:col-span-8">
+          <div className="mb-5 border-b border-surface-muted pb-4">
+            <h2 className="text-base font-bold text-ink">
+              Formulir Pengajuan Sewa
+            </h2>
+            <p className="mt-0.5 text-xs text-ink-muted">
+              Pilih alat, cek tanggal yang masih kosong, lalu tentukan titik ketemuan COD di kampus.
+            </p>
+          </div>
+
+          {formFeedback && (
+            <div
+              className={`mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3.5 text-xs font-medium ${
+                formFeedback.type === "error"
+                  ? "border-accent/30 bg-accent-subtle text-accent-ink"
+                  : "border-forest/25 bg-forest-subtle text-forest"
+              }`}
+            >
+              <span className="flex items-start gap-2.5">
+                {formFeedback.type === "error" ? (
+                  <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+                ) : (
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
+                )}
+                <span>{formFeedback.message}</span>
+              </span>
+              {formFeedback.createdId && (
+                <Button
+                  href={`/rentals/${formFeedback.createdId}`}
+                  variant="forest"
+                  size="xs"
+                >
+                  <span>Lihat Pesanan</span>
+                  <ArrowRight className="size-3" />
+                </Button>
+              )}
+            </div>
+          )}
+
+          <form onSubmit={handleCreateRequest} className="space-y-5">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-[#141413]">
-                  Pengajuan & Persetujuan Sewa Alat
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Pilih Alat
+              </label>
+              <select
+                value={selectedItemId}
+                onChange={(e) => {
+                  setSelectedItemId(e.target.value);
+                  setFormFeedback(null);
+                }}
+                className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-2.5 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
+              >
+                {BOOKABLE_ITEMS.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    [{item.sku}] {item.name} - {formatRupiah(item.pricePerDay)}/hari
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Tanggal Terpakai */}
+            <div className="rounded-xl border border-hairline bg-surface-subtle p-4">
+              <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink">
+                  <Calendar className="size-3.5 text-accent" />
+                  <span>Tanggal yang Sudah Terisi:</span>
                 </span>
-                <span className="rounded-full bg-[#EFECE6] px-2.5 py-0.5 text-xs font-semibold text-[#C83E2B]">
-                  Booking & Escrow
+                <Badge variant="neutral">November 2026</Badge>
+              </div>
+
+              {selectedItem.bookedRanges.length === 0 ? (
+                <p className="inline-flex items-center gap-1.5 text-xs font-medium text-forest">
+                  <CheckCircle2 className="size-3.5" />
+                  <span>Semua tanggal bulan ini masih kosong.</span>
+                </p>
+              ) : (
+                <ul className="space-y-1.5 text-xs text-ink-muted">
+                  {selectedItem.bookedRanges.map((r, idx) => (
+                    <li key={idx} className="flex flex-wrap items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      <span className="rounded bg-surface-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-ink">
+                        {r.start} s/d {r.end}
+                      </span>
+                      <span className="text-ink-subtle">- {r.reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-ink">
+                  Tanggal Mulai Sewa
+                </label>
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setFormFeedback(null);
+                  }}
+                  className="bg-surface-subtle font-mono focus:bg-surface"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-ink">
+                  Tanggal Pengembalian
+                </label>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    setFormFeedback(null);
+                  }}
+                  className="bg-surface-subtle font-mono focus:bg-surface"
+                />
+              </div>
+            </div>
+
+            {conflictingRange && (
+              <div className="flex items-start gap-2.5 rounded-xl border border-accent/30 bg-accent-subtle p-3.5 text-xs font-medium text-accent-ink">
+                <AlertTriangle className="mt-0.5 size-4 shrink-0 text-accent" />
+                <span>
+                  Tanggal bentrok dengan jadwal{" "}
+                  <span className="font-mono font-semibold underline">
+                    {conflictingRange.start} s/d {conflictingRange.end}
+                  </span>{" "}
+                  ({conflictingRange.reason}). Silakan pilih tanggal lain.
                 </span>
               </div>
-              <p className="text-xs text-[#575653]">
-                Booking Tanggal Anti-Bentrok • Hold Jadwal 24 Jam • Persetujuan Pemilik • Kontak COD Kampus
-              </p>
-            </div>
-          </div>
+            )}
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/rentals/cancellation"
-              className="rounded-lg border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition"
-            >
-              Pembatalan & No-Show →
-            </Link>
-            <Link
-              href="/"
-              className="rounded-lg border border-[#DCD8CE] bg-white px-3.5 py-2 text-xs font-semibold text-[#575653] hover:bg-[#EFECE6] transition"
-            >
-              Kembali ke Beranda
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl w-full flex-1 px-6 py-8">
-        {/* Alur Informasi Banner */}
-        <div className="mb-8 rounded-2xl border border-[#DCD8CE] bg-[#EFECE6] p-5">
-          <h2 className="text-sm font-bold text-[#141413] mb-2">
-            Alur Sistem Pengajuan & Persetujuan Sewa (Aturan Bisnis SewaKit):
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs text-[#141413]">
-            <div className="rounded-xl bg-white p-3.5 shadow-xs border border-[#DCD8CE]">
-              <span className="font-bold text-[#C83E2B] block mb-1">
-                1. Cek Anti-Bentrok & Hold 24 Jam
-              </span>
-              Penyewa memilih rentang tanggal kosong. Begitu diajukan, jadwal otomatis ditahan (Hold) selama 24 jam agar tidak diserobot mahasiswa lain.
-            </div>
-            <div className="rounded-xl bg-white p-3.5 shadow-xs border border-[#DCD8CE]">
-              <span className="font-bold text-[#C83E2B] block mb-1">
-                2. Persetujuan Pemilik (Maks 24 Jam)
-              </span>
-              Pemilik menerima atau menolak pengajuan. Jika tidak direspons dalam 24 jam, pengajuan batal otomatis dan jadwal dibuka kembali.
-            </div>
-            <div className="rounded-xl bg-white p-3.5 shadow-xs border border-[#DCD8CE]">
-              <span className="font-bold text-[#C83E2B] block mb-1">
-                3. Batas Waktu Bayar 2 Jam
-              </span>
-              Setelah disetujui Pemilik, Penyewa wajib membayar biaya sewa + deposit dalam waktu 2 jam sebelum pesanan hangus otomatis.
-            </div>
-            <div className="rounded-xl bg-white p-3.5 shadow-xs border border-[#DCD8CE]">
-              <span className="font-bold text-[#C83E2B] block mb-1">
-                4. Pembukaan Kontak & Janjian COD
-              </span>
-              Setelah pembayaran terkonfirmasi, nomor WhatsApp kedua pihak ditampilkan untuk menyepakati serah terima COD di titik kampus.
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="mb-6 flex flex-wrap gap-2 border-b border-[#DCD8CE] pb-4">
-          <button
-            onClick={() => setActiveTab("form")}
-            className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
-              activeTab === "form"
-                ? "bg-[#141413] text-white shadow-sm"
-                : "bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]"
-            }`}
-          >
-            1. Form Pengajuan Sewa (Penyewa)
-          </button>
-          <button
-            onClick={() => setActiveTab("owner")}
-            className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition flex items-center gap-2 ${
-              activeTab === "owner"
-                ? "bg-[#141413] text-white shadow-sm"
-                : "bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]"
-            }`}
-          >
-            <span>2. Panel Persetujuan Pemilik Barang</span>
-            <span className="rounded-full bg-amber-400 px-2 py-0.5 text-xs font-bold text-slate-950">
-              {requests.filter((r) => r.status === "MENUNGGU_PERSETUJUAN").length} Pending
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab("cod")}
-            className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition flex items-center gap-2 ${
-              activeTab === "cod"
-                ? "bg-[#141413] text-white shadow-sm"
-                : "bg-white text-[#575653] border border-[#DCD8CE] hover:bg-[#EFECE6]"
-            }`}
-          >
-            <span>3. Status Pengajuan & Kontak COD Kampus</span>
-            <span className="rounded-full bg-[#1B4332] px-2 py-0.5 text-xs font-bold text-white">
-              {requests.filter((r) => r.status === "SIAP_COD").length} Siap COD
-            </span>
-          </button>
-        </div>
-
-        {/* TAB 1: FORM PENGAJUAN SEWA */}
-        {activeTab === "form" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs">
-              <h3 className="text-lg font-bold text-[#141413] mb-1">
-                Formulir Pengajuan Sewa Alat Kuliah
-              </h3>
-              <p className="text-xs text-[#575653] mb-6">
-                Pilih alat, periksa kalender tanggal yang terblokir, dan ajukan jadwal sewa.
-              </p>
-
-              {formFeedback && (
-                <div
-                  className={`mb-6 rounded-xl p-4 text-sm font-medium border ${
-                    formFeedback.type === "error"
-                      ? "bg-rose-50 border-rose-200 text-rose-800"
-                      : "bg-[#E9F3ED] border-[#1B4332]/25 text-[#1B4332]"
-                  }`}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="md:col-span-2">
+                <label className="mb-1.5 block text-xs font-medium text-ink">
+                  Lokasi Ketemuan COD di Kampus
+                </label>
+                <select
+                  value={codLocation}
+                  onChange={(e) => setCodLocation(e.target.value)}
+                  className="h-10 w-full rounded-xl border border-hairline bg-surface-subtle px-3.5 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
                 >
-                  {formFeedback.message}
-                </div>
-              )}
+                  {COD_LOCATIONS.map((loc) => (
+                    <option key={loc} value={loc}>
+                      {loc}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-ink">
+                  Jam Ketemuan
+                </label>
+                <Input
+                  type="time"
+                  value={codTime}
+                  onChange={(e) => setCodTime(e.target.value)}
+                  className="bg-surface-subtle font-mono focus:bg-surface"
+                />
+              </div>
+            </div>
 
-              <form onSubmit={handleCreateRequest} className="space-y-5">
-                {/* Pilih Barang */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
-                    Pilih Alat / Paket Praktikum
-                  </label>
-                  <select
-                    value={selectedItemId}
-                    onChange={(e) => {
-                      setSelectedItemId(e.target.value);
-                      setFormFeedback(null);
-                    }}
-                    className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-3 text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
-                  >
-                    {DUMMY_ITEMS.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        [{item.id}] {item.name} — Rp{" "}
-                        {item.pricePerDay.toLocaleString("id-ID")}/hari
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-ink">
+                Keperluan Pemakaian
+              </label>
+              <textarea
+                rows={3}
+                value={purposeNote}
+                onChange={(e) => setPurposeNote(e.target.value)}
+                placeholder="Contoh: Untuk praktikum Sistem Mikrokontroler modul 4 di Lab TULT Lt. 9..."
+                className="w-full rounded-xl border border-hairline bg-surface-subtle px-4 py-3 text-sm text-ink focus:border-ink focus:bg-surface focus:outline-none"
+              />
+            </div>
 
-                {/* Info Jadwal Terblokir / Anti-Bentrok */}
-                <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-amber-900">
-                      Jadwal Tidak Tersedia (Sudah Dibooking / Ditahan 24 Jam):
-                    </span>
-                    <span className="rounded bg-amber-200/80 px-2 py-0.5 text-[11px] font-semibold text-amber-950">
-                      Proteksi Anti-Bentrok Aktif
-                    </span>
-                  </div>
-                  {selectedItem.bookedRanges.length === 0 ? (
-                    <p className="text-xs text-[#1B4332] font-medium">
-                      ✓ Seluruh tanggal bulan ini masih tersedia untuk disewa.
-                    </p>
-                  ) : (
-                    <ul className="space-y-1 text-xs text-amber-900">
-                      {selectedItem.bookedRanges.map((r, idx) => (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
-                          <span className="font-mono font-semibold">
-                            {r.start} s/d {r.end}
-                          </span>
-                          <span className="text-amber-700">— {r.reason}</span>
-                        </li>
-                      ))}
-                    </ul>
+            <Button
+              type="submit"
+              size="lg"
+              disabled={Boolean(conflictingRange) || totalDays <= 0}
+              className="w-full text-xs font-semibold"
+            >
+              <Clock className="size-4" />
+              <span>Kirim Pengajuan &amp; Tahan Jadwal 24 Jam</span>
+            </Button>
+          </form>
+        </Card>
+
+        {/* Ringkasan Biaya */}
+        <div className="lg:col-span-4">
+          <Card className="sticky top-24 p-6">
+            <div className="flex items-center justify-between">
+              <span className="rounded-md border border-hairline bg-canvas px-2 py-0.5 font-mono text-xs font-semibold text-ink-muted">
+                {selectedItem.sku}
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-forest">
+                <ShieldCheck className="size-3.5" />
+                Jaminan Rekber
+              </span>
+            </div>
+
+            <h3 className="mt-3 text-base font-bold text-ink">
+              {selectedItem.name}
+            </h3>
+            <p className="mt-1 text-xs text-ink-muted">
+              Pemilik: <strong className="text-ink">{selectedItem.ownerName}</strong> •{" "}
+              {selectedItem.ownerProdi}
+            </p>
+
+            <dl className="my-5 space-y-2.5 border-y border-surface-muted py-4 text-xs">
+              <div className="flex justify-between">
+                <dt className="text-ink-muted">Durasi sewa</dt>
+                <dd className="font-mono font-semibold text-ink">
+                  {totalDays > 0 ? `${totalDays} hari` : "-"}
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-ink-muted">
+                  Sewa ({totalDays} × {formatRupiah(selectedItem.pricePerDay)})
+                </dt>
+                <dd className="font-mono font-semibold text-ink">
+                  {formatRupiah(rentalCost)}
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-ink-muted">Deposit jaminan (kembali 100%)</dt>
+                <dd className="font-mono font-semibold text-ink">
+                  {formatRupiah(selectedItem.deposit)}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="mb-4 flex items-center justify-between">
+              <span className="text-xs font-bold text-ink">
+                Total dibayar setelah disetujui
+              </span>
+              <span className="font-mono text-lg font-bold text-accent">
+                {formatRupiah(totalDays > 0 ? totalPayable : 0)}
+              </span>
+            </div>
+
+            <div className="flex items-start gap-2.5 rounded-xl border border-hairline bg-surface-subtle p-3.5 text-xs leading-relaxed text-ink-muted">
+              <Lock className="mt-0.5 size-4 shrink-0 text-ink" />
+              <span>
+                Kamu belum ditagih saat mengajukan. Tagihan rekber baru dibuka selama{" "}
+                <strong className="text-ink">2 jam</strong> setelah pemilik menyetujui jadwalmu.
+              </span>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Daftar Pengajuan Milik Penyewa Sendiri (Tanpa Tombol Pemilik!) */}
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-hairline pb-3">
+          <div>
+            <h2 className="text-lg font-bold text-ink">Pengajuan Sewa Saya</h2>
+            <p className="text-xs text-ink-muted">
+              Pantau status persetujuan pemilik, lanjutkan pembayaran rekber, atau buka kontak COD.
+            </p>
+          </div>
+          <Badge variant="neutral">{myRequests.length} Pesanan</Badge>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {myRequests.map((req) => (
+            <Card key={req.id} className="flex flex-col justify-between p-5">
+              <div>
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <span className="rounded-md border border-hairline bg-canvas px-2 py-0.5 font-mono text-xs font-bold text-ink">
+                    {req.id}
+                  </span>
+                  {req.status === "MENUNGGU_PERSETUJUAN" && (
+                    <Badge variant="hold" dot>
+                      Menunggu Pemilik ({req.holdExpiresIn})
+                    </Badge>
+                  )}
+                  {req.status === "DISETUJUI_MENUNGGU_BAYAR" && (
+                    <Badge variant="accent" dot>
+                      Disetujui - Batas Bayar {req.paymentExpiresIn}
+                    </Badge>
+                  )}
+                  {req.status === "SIAP_COD" && (
+                    <Badge variant="available" dot>
+                      Lunas - Siap COD
+                    </Badge>
+                  )}
+                  {req.status === "DITOLAK" && (
+                    <Badge variant="rented" dot>
+                      Ditolak Pemilik
+                    </Badge>
                   )}
                 </div>
 
-                {/* Pilih Rentang Tanggal */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
-                      Tanggal Mulai Sewa
-                    </label>
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => {
-                        setStartDate(e.target.value);
-                        setFormFeedback(null);
-                      }}
-                      className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
-                      Tanggal Selesai (Pengembalian)
-                    </label>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => {
-                        setEndDate(e.target.value);
-                        setFormFeedback(null);
-                      }}
-                      className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
-                    />
-                  </div>
-                </div>
+                <h3 className="text-sm font-bold text-ink">{req.itemName}</h3>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Pemilik: <strong className="text-ink">{req.ownerName}</strong> •{" "}
+                  <span className="font-mono">
+                    {req.startDate} s/d {req.endDate} ({req.totalDays} hari)
+                  </span>
+                </p>
+                <p className="mt-1 inline-flex items-center gap-1 text-xs text-ink-subtle">
+                  <MapPin className="size-3.5 text-accent" />
+                  <span>
+                    {req.codLocation} ({req.codTime})
+                  </span>
+                </p>
 
-                {/* Real-time Conflict Warning */}
-                {conflictingRange && (
-                  <div className="rounded-xl border border-rose-300 bg-rose-50 p-3.5 text-xs text-rose-800 font-medium">
-                    ⚠️ <strong>Jadwal Bentrok Terdeteksi:</strong> Rentang tanggal yang kamu pilih bertabrakan dengan jadwal{" "}
-                    <span className="underline font-mono">
-                      {conflictingRange.start} s/d {conflictingRange.end}
-                    </span>{" "}
-                    ({conflictingRange.reason}). Silakan pilih tanggal lain!
-                  </div>
+                {req.rejectReason && (
+                  <p className="mt-2 rounded-lg border border-accent/25 bg-accent-subtle px-3 py-2 text-xs text-accent-ink">
+                    Alasan penolakan: {req.rejectReason}
+                  </p>
                 )}
+              </div>
 
-                {/* Pilih Titik COD & Jam */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="md:col-span-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
-                      Usulan Titik Temu COD Kampus
-                    </label>
-                    <select
-                      value={codLocation}
-                      onChange={(e) => setCodLocation(e.target.value)}
-                      className="w-full rounded-xl border border-[#DCD8CE] bg-white px-4 py-2.5 text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
-                    >
-                      {COD_LOCATIONS.map((loc) => (
-                        <option key={loc} value={loc}>
-                          {loc}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
-                      Usulan Waktu COD
-                    </label>
-                    <input
-                      type="time"
-                      value={codTime}
-                      onChange={(e) => setCodTime(e.target.value)}
-                      className="w-full rounded-xl border border-[#DCD8CE] px-4 py-2.5 text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Catatan Keperluan */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#575653] mb-2">
-                    Catatan Keperluan Praktikum / Kuliah untuk Pemilik
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={purposeNote}
-                    onChange={(e) => setPurposeNote(e.target.value)}
-                    placeholder="Contoh: Digunakan untuk praktikum Sistem Mikrokontroler modul 4 di Lab TULT Lt. 9..."
-                    className="w-full rounded-xl border border-[#DCD8CE] px-4 py-3 text-sm text-[#141413] focus:border-[#141413] focus:outline-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={Boolean(conflictingRange) || totalDays <= 0}
-                  className="w-full rounded-xl bg-[#141413] px-6 py-3.5 text-sm font-bold text-white shadow-sm hover:bg-[#141413] disabled:bg-slate-300 disabled:cursor-not-allowed transition"
-                >
-                  Ajukan Sewa & Tahan Jadwal (Hold 24 Jam)
-                </button>
-              </form>
-            </div>
-
-            {/* Ringkasan Kalkulasi Biaya & Info Hold */}
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs">
-                <span className="rounded-md bg-[#EFECE6] px-2.5 py-1 text-xs font-bold text-[#C83E2B]">
-                  Ringkasan Pengajuan
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-surface-muted pt-3.5">
+                <span className="font-mono text-xs font-bold text-ink">
+                  Total {formatRupiah(req.rentalCost + req.depositAmount)}
                 </span>
-                <h4 className="mt-3 text-base font-bold text-[#141413]">
-                  {selectedItem.name}
-                </h4>
-                <p className="mt-1 text-xs text-[#575653]">
-                  Pemilik: <strong className="text-[#141413]">{selectedItem.ownerName}</strong> ({selectedItem.ownerProdi})
-                </p>
 
-                <div className="my-5 border-t border-b border-[#EFECE6] py-4 space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-[#575653]">Durasi Sewa</span>
-                    <span className="font-semibold text-[#141413]">
-                      {totalDays > 0 ? `${totalDays} Hari` : "-"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#575653]">
-                      Biaya Sewa ({totalDays} x Rp{" "}
-                      {selectedItem.pricePerDay.toLocaleString("id-ID")})
-                    </span>
-                    <span className="font-semibold text-[#141413]">
-                      Rp {rentalCost.toLocaleString("id-ID")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#575653]">Deposit Jaminan (Refundable)</span>
-                    <span className="font-semibold text-[#141413]">
-                      Rp {selectedItem.deposit.toLocaleString("id-ID")}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-[#141413]">
-                    Total Dibayar Saat Disetujui
-                  </span>
-                  <span className="text-lg font-extrabold text-[#C83E2B]">
-                    Rp {(totalDays > 0 ? totalPayable : 0).toLocaleString("id-ID")}
-                  </span>
-                </div>
-
-                <div className="rounded-xl bg-[#F6F5F0] p-3.5 text-xs text-[#575653] leading-relaxed border border-[#DCD8CE]/80">
-                  🔒 <strong>Aturan Penahanan Jadwal:</strong> Kamu belum perlu membayar sekarang. Pembayaran dibuka selama <strong>2 jam</strong> setelah Pemilik menyetujui pengajuanmu.
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: PANEL PERSETUJUAN PEMILIK BARANG */}
-        {activeTab === "owner" && (
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 bg-white p-5 rounded-2xl border border-[#DCD8CE]">
-              <div>
-                <h3 className="text-lg font-bold text-[#141413]">
-                  Panel Persetujuan Sewa Masuk (Tampilan Pemilik Barang)
-                </h3>
-                <p className="text-xs text-[#575653]">
-                  Setiap pengajuan menahan jadwal selama 24 jam. Jika tidak direspons dalam 24 jam, pengajuan batal otomatis.
-                </p>
-              </div>
-            </div>
-
-            {requests.map((req) => (
-              <div
-                key={req.id}
-                className="rounded-2xl border border-[#DCD8CE] bg-white p-6 shadow-xs"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EFECE6] pb-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs font-bold bg-[#EFECE6] px-2.5 py-1 rounded-md text-[#141413]">
-                      {req.id}
-                    </span>
-                    <span className="text-xs text-[#575653]">
-                      Diajukan: {req.createdAt}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {req.status === "MENUNGGU_PERSETUJUAN" && (
-                      <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800">
-                        ⏳ Hold Jadwal 24 Jam (Sisa: {req.holdExpiresIn})
-                      </span>
-                    )}
-                    {req.status === "DISETUJUI_MENUNGGU_BAYAR" && (
-                      <span className="rounded-full bg-[#EFECE6] px-3 py-1 text-xs font-bold text-blue-800">
-                        ✓ Disetujui — Menunggu Pembayaran Penyewa (Batas 2 Jam: {req.paymentExpiresIn})
-                      </span>
-                    )}
-                    {req.status === "SIAP_COD" && (
-                      <span className="rounded-full bg-[#E9F3ED] px-3 py-1 text-xs font-bold text-[#1B4332]">
-                        ✓ Lunas — Siap COD di Kampus
-                      </span>
-                    )}
-                    {req.status === "DITOLAK" && (
-                      <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-bold text-rose-800">
-                        ✕ Ditolak Pemilik
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="md:col-span-2 space-y-2">
-                    <h4 className="text-base font-bold text-[#141413]">
-                      {req.itemName}
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#575653] pt-1">
-                      <div>
-                        <span className="text-[#78756F] block">Peminjam (Penyewa):</span>
-                        <strong className="text-[#141413]">
-                          {req.renterName} ({req.renterNim})
-                        </strong>{" "}
-                        — {req.renterProdi}
-                      </div>
-                      <div>
-                        <span className="text-[#78756F] block">Rentang Tanggal Sewa:</span>
-                        <strong className="font-mono text-[#C83E2B]">
-                          {req.startDate} s/d {req.endDate} ({req.totalDays} Hari)
-                        </strong>
-                      </div>
-                      <div>
-                        <span className="text-[#78756F] block">Usulan Lokasi & Jam COD:</span>
-                        <strong className="text-[#141413]">
-                          {req.codLocation} ({req.codTime})
-                        </strong>
-                      </div>
-                      <div>
-                        <span className="text-[#78756F] block">Nilai Transaksi:</span>
-                        <strong className="text-[#141413]">
-                          Sewa Rp {req.rentalCost.toLocaleString("id-ID")} + Deposit Rp{" "}
-                          {req.depositAmount.toLocaleString("id-ID")}
-                        </strong>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 rounded-xl bg-[#F6F5F0] p-3 text-xs text-[#575653] border border-[#DCD8CE]/70">
-                      <span className="font-semibold text-[#141413]">
-                        Catatan Keperluan Penyewa:
-                      </span>{" "}
-                      &ldquo;{req.purposeNote}&rdquo;
-                    </div>
-
-                    {req.rejectReason && (
-                      <div className="mt-2 rounded-xl bg-rose-50 p-3 text-xs text-rose-800 border border-rose-200">
-                        <strong>Alasan Penolakan:</strong> {req.rejectReason}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex flex-col justify-center gap-2.5 border-t md:border-t-0 md:border-l border-[#EFECE6] pt-4 md:pt-0 md:pl-6">
-                    {req.status === "MENUNGGU_PERSETUJUAN" && (
-                      <>
-                        <button
-                          onClick={() => handleApprove(req.id)}
-                          className="w-full rounded-xl bg-[#1B4332] px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#1B4332] transition"
-                        >
-                          ✓ Terima Pengajuan Sewa
-                        </button>
-                        <button
-                          onClick={() => setRejectingId(req.id)}
-                          className="w-full rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-bold text-rose-700 hover:bg-rose-100 transition"
-                        >
-                          ✕ Tolak Pengajuan
-                        </button>
-                      </>
-                    )}
-
-                    {req.status === "DISETUJUI_MENUNGGU_BAYAR" && (
-                      <div className="space-y-2">
-                        <p className="text-xs text-[#575653]">
-                          Menunggu Penyewa menyelesaikan pembayaran dalam 2 jam.
-                        </p>
-                        <button
-                          onClick={() => handleSimulatePaid(req.id)}
-                          className="w-full rounded-xl bg-[#141413] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#141413] transition"
-                        >
-                          ⚡ Simulasikan Sudah Dibayar (Buka Kontak COD)
-                        </button>
-                      </div>
-                    )}
-
-                    {req.status === "SIAP_COD" && (
-                      <button
-                        onClick={() => setActiveTab("cod")}
-                        className="w-full rounded-xl bg-[#E9F3ED] border border-[#1B4332]/25 px-4 py-2.5 text-xs font-bold text-[#1B4332] hover:bg-[#E9F3ED] transition"
-                      >
-                        Lihat Kontak WhatsApp & Detail COD →
-                      </button>
-                    )}
-
-                    {req.status === "DITOLAK" && (
-                      <span className="text-xs text-[#78756F] text-center">
-                        Pengajuan telah ditolak & jadwal dibuka kembali.
-                      </span>
-                    )}
-
-                    {rejectingId === req.id && (
-                      <div className="mt-2 space-y-2 rounded-xl border border-rose-200 bg-rose-50/50 p-3">
-                        <input
-                          type="text"
-                          value={rejectInput}
-                          onChange={(e) => setRejectInput(e.target.value)}
-                          placeholder="Tulis alasan penolakan..."
-                          className="w-full rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs text-[#141413]"
-                        />
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleConfirmReject(req.id)}
-                            className="flex-1 rounded-lg bg-rose-600 py-1.5 text-xs font-bold text-white"
-                          >
-                            Konfirmasi Tolak
-                          </button>
-                          <button
-                            onClick={() => setRejectingId(null)}
-                            className="rounded-lg bg-white px-2.5 py-1.5 text-xs text-[#575653] border"
-                          >
-                            Batal
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* TAB 3: TAMPILAN KONTAK UNTUK JANJIAN COD */}
-        {activeTab === "cod" && (
-          <div className="space-y-5">
-            <div className="rounded-2xl border border-[#DCD8CE] bg-white p-5">
-              <h3 className="text-lg font-bold text-[#141413]">
-                Daftar Kontak & Kesepakatan Titik COD Kampus
-              </h3>
-              <p className="text-xs text-[#575653] mt-1">
-                Demi keamanan dan mencegah transaksi di luar platform, kontak WhatsApp kedua pihak hanya terbuka setelah pengajuan disetujui dan dibayar.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {requests.map((req) => {
-                const isUnlocked = req.status === "SIAP_COD";
-                return (
-                  <div
-                    key={req.id}
-                    className={`rounded-2xl border p-6 shadow-xs ${
-                      isUnlocked
-                        ? "border-[#1B4332]/25 bg-white"
-                        : "border-[#DCD8CE] bg-white/80"
-                    }`}
+                <div className="flex items-center gap-2">
+                  {req.status === "DISETUJUI_MENUNGGU_BAYAR" && (
+                    <Button href="/payments" variant="accent" size="xs">
+                      <span>Bayar Rekber</span>
+                      <ArrowRight className="size-3" />
+                    </Button>
+                  )}
+                  <Button
+                    href={`/rentals/${req.id}`}
+                    variant={req.status === "SIAP_COD" ? "forest" : "outline"}
+                    size="xs"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-xs font-bold bg-[#EFECE6] px-2.5 py-1 rounded text-[#141413]">
-                        {req.id}
-                      </span>
-                      <span
-                        className={`rounded-full px-3 py-0.5 text-xs font-bold ${
-                          isUnlocked
-                            ? "bg-[#E9F3ED] text-[#1B4332]"
-                            : "bg-[#EFECE6] text-[#575653]"
-                        }`}
-                      >
-                        {isUnlocked ? "🔓 Kontak COD Terbuka" : "🔒 Kontak Terkunci"}
-                      </span>
-                    </div>
+                    <span>
+                      {req.status === "SIAP_COD"
+                        ? "Kontak COD"
+                        : "Detail Pesanan"}
+                    </span>
+                    <ArrowRight className="size-3" />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
 
-                    <h4 className="text-base font-bold text-[#141413] mb-3">
-                      {req.itemName}
-                    </h4>
+export default function RentalRequestPage() {
+  return (
+    <div className="flex min-h-screen flex-col bg-canvas">
+      <PageHeader
+        eyebrow="Penyewa"
+        title="Ajukan Sewa & Jadwal Pengambilan"
+        description="Pilih tanggal sewa yang tersedia, tentukan titik ketemuan COD di kampus, dan pantau konfirmasi dari pemilik alat."
+        actions={
+          <>
+            <Button href="/rentals/cancellation" variant="outline">
+              Pembatalan Sewa
+            </Button>
+            <Button href="/catalog" variant="outline" className="border-ink">
+              ← Katalog Alat
+            </Button>
+          </>
+        }
+      />
 
-                    <div className="rounded-xl bg-[#F6F5F0] p-3.5 text-xs space-y-1.5 border border-[#DCD8CE]/80 mb-4">
-                      <div>
-                        <span className="text-[#78756F]">Titik Temu COD Kampus:</span>{" "}
-                        <strong className="text-[#141413]">{req.codLocation}</strong>
-                      </div>
-                      <div>
-                        <span className="text-[#78756F]">Jadwal Sewa & Jam COD:</span>{" "}
-                        <strong className="text-[#C83E2B] font-mono">
-                          {req.startDate} s/d {req.endDate} • Pukul {req.codTime}
-                        </strong>
-                      </div>
-                    </div>
-
-                    {isUnlocked ? (
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div className="rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED]/50 p-3">
-                            <span className="text-[#78756F] block mb-0.5">
-                              Kontak Pemilik Alat:
-                            </span>
-                            <strong className="text-[#141413] block">
-                              {req.ownerName}
-                            </strong>
-                            <span className="text-[#575653] block">
-                              NIM: {req.ownerNim}
-                            </span>
-                            <span className="font-mono font-bold text-[#1B4332] mt-1 block">
-                              WA: {req.ownerPhone}
-                            </span>
-                          </div>
-                          <div className="rounded-xl border border-[#1B4332]/25 bg-[#E9F3ED]/50 p-3">
-                            <span className="text-[#78756F] block mb-0.5">
-                              Kontak Penyewa:
-                            </span>
-                            <strong className="text-[#141413] block">
-                              {req.renterName}
-                            </strong>
-                            <span className="text-[#575653] block">
-                              NIM: {req.renterNim}
-                            </span>
-                            <span className="font-mono font-bold text-[#1B4332] mt-1 block">
-                              WA: {req.renterPhone}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <a
-                            href={`https://wa.me/62${req.ownerPhone.replace(/[^0-9]/g, "").replace(/^0/, "")}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex-1 rounded-xl bg-[#1B4332] py-2.5 text-center text-xs font-bold text-white hover:bg-[#1B4332] transition"
-                          >
-                            💬 Hubungi WhatsApp untuk Janjian COD
-                          </a>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="rounded-xl border border-dashed border-[#DCD8CE] p-4 text-center text-xs text-[#575653]">
-                        Nomor WhatsApp Pemilik (<strong>08xx-xxxx-xxxx</strong>) & Penyewa masih disembunyikan hingga pengajuan disetujui dan pembayaran selesai.
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+      <Suspense
+        fallback={
+          <div className="mx-auto w-full max-w-7xl flex-1 px-6 py-12 text-xs text-ink-subtle">
+            Memuat formulir pengajuan sewa...
           </div>
-        )}
-      </main>
+        }
+      >
+        <RenterBookingContent />
+      </Suspense>
     </div>
   );
 }
