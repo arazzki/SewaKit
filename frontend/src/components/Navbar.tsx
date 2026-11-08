@@ -171,7 +171,7 @@ export default function Navbar() {
             <Link
               href="/"
               onClick={() => setOpenDropdown(null)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
                 pathname === "/"
                   ? "bg-[#141413] text-[#F6F5F0] shadow-2xs"
                   : "text-[#575653] hover:text-[#141413]"
@@ -183,7 +183,7 @@ export default function Navbar() {
             <Link
               href="/catalog"
               onClick={() => setOpenDropdown(null)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
                 pathname.startsWith("/catalog")
                   ? "bg-[#141413] text-[#F6F5F0] shadow-2xs"
                   : "text-[#575653] hover:text-[#141413]"
@@ -201,7 +201,7 @@ export default function Navbar() {
                     prev === "transaksi" ? null : "transaksi",
                   )
                 }
-                className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
                   isTransactionActive || openDropdown === "transaksi"
                     ? "bg-[#141413] text-[#F6F5F0] shadow-2xs"
                     : "text-[#575653] hover:text-[#141413]"
@@ -267,7 +267,7 @@ export default function Navbar() {
                 onClick={() =>
                   setOpenDropdown((prev) => (prev === "owner" ? null : "owner"))
                 }
-                className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
                   isOwnerActive || openDropdown === "owner"
                     ? "bg-[#141413] text-[#F6F5F0] shadow-2xs"
                     : "text-[#575653] hover:text-[#141413]"
@@ -329,7 +329,7 @@ export default function Navbar() {
             <Link
               href="/admin/dashboard"
               onClick={() => setOpenDropdown(null)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
                 isAdminActive
                   ? "bg-[#141413] text-[#F6F5F0] shadow-2xs"
                   : "text-[#575653] hover:text-[#141413]"
@@ -348,7 +348,7 @@ export default function Navbar() {
               aria-label="Pencarian cepat katalog"
             >
               <Search className="size-3.5 text-[#575653]" />
-              <span className="hidden md:inline">Cari alat...</span>
+              <span className="hidden whitespace-nowrap md:inline">Cari alat...</span>
               <kbd className="rounded border border-[#DCD8CE] bg-[#F6F5F0] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#575653]">
                 ⌘K
               </kbd>

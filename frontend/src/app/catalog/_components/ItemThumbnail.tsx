@@ -88,8 +88,9 @@ export default function ItemThumbnail({
 
   return (
     <div
+      data-sku={resolvedSku}
       className={cx(
-        "relative flex items-center justify-center overflow-hidden bg-[#EFECE6]",
+        "relative flex items-center justify-center overflow-hidden bg-sand",
         sizeClass,
         className,
       )}
@@ -101,14 +102,8 @@ export default function ItemThumbnail({
             alt={displayTitle}
             loading="lazy"
             onError={() => setImgFailed(true)}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#141413]/35 via-transparent to-transparent opacity-60" />
-          {size !== "sm" && resolvedSku && (
-            <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded bg-[#141413]/80 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wider text-[#F6F5F0] backdrop-blur-xs">
-              {resolvedSku}
-            </span>
-          )}
         </>
       ) : (
         <div className="bg-tech-grid relative flex h-full w-full flex-col items-center justify-center">

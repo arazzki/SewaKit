@@ -47,8 +47,8 @@ const springTransition: Transition = {
 export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   {
     id: 1,
-    title: "01 / Penahanan Jadwal (Hold 24 Jam) Anti-Bentrok",
-    tag: "BOOKING ENGINE",
+    title: "Jadwal ditahan 24 jam, tidak bisa diserobot",
+    tag: "Jadwal",
     icon: <Clock className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
     content:
       "Setiap pengajuan sewa otomatis mengunci kalender ketersediaan alat selama 24 jam. Mahasiswa lain tidak dapat menyerobot tanggal yang sama sementara pemilik meninjau permintaan Anda.",
@@ -59,8 +59,8 @@ export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   },
   {
     id: 2,
-    title: "02 / Rekening Bersama (Escrow) & Deposit Jaminan",
-    tag: "XENDIT GATEWAY",
+    title: "Uang ditahan sistem sampai sewa selesai",
+    tag: "Pembayaran",
     icon: <CreditCard className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
     content:
       "Setelah disetujui pemilik, penyewa memiliki waktu 2 jam untuk menyelesaikan pembayaran via QRIS atau Virtual Account. Dana sewa dan deposit ditahan di sistem hingga alat kembali dengan aman.",
@@ -71,8 +71,8 @@ export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   },
   {
     id: 3,
-    title: "03 / Verifikasi Serah Terima COD di Titik Kampus",
-    tag: "HANDOVER PROTOCOL",
+    title: "Serah terima dicek dua pihak di kampus",
+    tag: "Serah terima",
     icon: <ScanLine className="size-4 text-[#141413]" strokeWidth={1.75} />,
     content:
       "Pertemuan dilakukan langsung di area Telkom University (Lobi TULT, GKU, Open Library, atau Student Center). Dilengkapi token OTP 6 digit, checklist fisik, dan dokumentasi foto sebelum/sesudah.",
@@ -83,8 +83,8 @@ export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   },
   {
     id: 4,
-    title: "04 / Kalkulasi Denda Proporsional & Pencairan Otomatis",
-    tag: "AUTOMATED SETTLEMENT",
+    title: "Denda dihitung otomatis, maksimal sebesar deposit",
+    tag: "Pengembalian dana",
     icon: <ShieldCheck className="size-4 text-[#1B4332]" strokeWidth={1.75} />,
     content:
       "Jika pengembalian tepat waktu dan sesuai checklist, deposit dikembalikan 100% ke penyewa dan uang sewa langsung cair ke dompet pemilik. Keterlambatan dihitung transparan per hari.",
@@ -95,8 +95,8 @@ export const SEWAKIT_ACCORDION_ITEMS: AccordionItemData[] = [
   },
   {
     id: 5,
-    title: "05 / Reputasi Dua Arah & Moderasi Komunitas Kampus",
-    tag: "TRUST & SAFETY",
+    title: "Ulasan dua arah setelah transaksi",
+    tag: "Reputasi",
     icon: <Award className="size-4 text-[#C83E2B]" strokeWidth={1.75} />,
     content:
       "Setiap mahasiswa terverifikasi dengan NIM dan program studi. Penyewa dan pemilik saling memberikan rating dan ulasan pasca transaksi untuk menjaga standar peralatan praktikum.",
@@ -201,7 +201,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
 
               <div className="min-w-0">
                 {item.tag && (
-                  <span className="block font-mono text-[10px] uppercase tracking-widest text-[#78756F]">
+                  <span className="block text-xs text-muted">
                     {item.tag}
                   </span>
                 )}

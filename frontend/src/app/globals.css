@@ -16,6 +16,20 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Token warna SewaKit (dipakai lewat class seperti bg-paper, text-ink) */
+  --color-paper: #f6f5f0;
+  --color-paper-2: #fbf9f5;
+  --color-sand: #efece6;
+  --color-ink: #141413;
+  --color-ink-2: #3d3c39;
+  --color-muted: #5f5d58;
+  --color-line: #dcd8ce;
+  --color-line-soft: #e9e5dc;
+  --color-clay: #c83e2b;
+  --color-clay-soft: #f6e4df;
+  --color-forest: #1b4332;
+  --color-forest-soft: #e6efe9;
 }
 
 html {
@@ -27,9 +41,24 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 .font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular {
   font-variant-numeric: tabular-nums;
 }
 
@@ -38,4 +67,22 @@ body {
     linear-gradient(to right, rgba(220, 216, 206, 0.45) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(220, 216, 206, 0.45) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-terracotta);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
