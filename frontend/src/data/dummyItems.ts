@@ -279,7 +279,7 @@ export const DUMMY_ITEMS: CatalogItem[] = [
     description:
       "Tripod kokoh dengan quick-release plate dan waterpass untuk perekaman presentasi kelas, wawancara riset, dan live streaming.",
     specs: [
-      { label: "Tinggi Operasional", value: "55 cm – 160 cm (3-Section Flip Lock)" },
+      { label: "Tinggi Operasional", value: "55 cm - 160 cm (3-Section Flip Lock)" },
       { label: "Kapasitas Beban", value: "Maksimal 3,5 kg • Termasuk Holder Smartphone & Tas" },
     ],
     bookedSlots: [],

@@ -188,7 +188,7 @@ function RenterBookingContent() {
               >
                 {BOOKABLE_ITEMS.map((item) => (
                   <option key={item.id} value={item.id}>
-                    [{item.sku}] {item.name} — {formatRupiah(item.pricePerDay)}/hari
+                    [{item.sku}] {item.name} - {formatRupiah(item.pricePerDay)}/hari
                   </option>
                 ))}
               </select>
@@ -217,7 +217,7 @@ function RenterBookingContent() {
                       <span className="rounded bg-surface-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-ink">
                         {r.start} s/d {r.end}
                       </span>
-                      <span className="text-ink-subtle">— {r.reason}</span>
+                      <span className="text-ink-subtle">- {r.reason}</span>
                     </li>
                   ))}
                 </ul>
@@ -414,12 +414,12 @@ function RenterBookingContent() {
                   )}
                   {req.status === "DISETUJUI_MENUNGGU_BAYAR" && (
                     <Badge variant="accent" dot>
-                      Disetujui — Batas Bayar {req.paymentExpiresIn}
+                      Disetujui - Batas Bayar {req.paymentExpiresIn}
                     </Badge>
                   )}
                   {req.status === "SIAP_COD" && (
                     <Badge variant="available" dot>
-                      Lunas — Siap COD
+                      Lunas - Siap COD
                     </Badge>
                   )}
                   {req.status === "DITOLAK" && (

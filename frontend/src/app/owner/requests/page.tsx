@@ -120,7 +120,7 @@ export default function OwnerIncomingRequestsPage() {
                   <div>
                     {req.status === "MENUNGGU_PERSETUJUAN" && (
                       <Badge variant="hold" dot>
-                        Menunggu Konfirmasimu — Sisa {req.holdExpiresIn}
+                        Menunggu Konfirmasimu - Sisa {req.holdExpiresIn}
                       </Badge>
                     )}
                     {req.status === "DISETUJUI_MENUNGGU_BAYAR" && (
@@ -130,7 +130,7 @@ export default function OwnerIncomingRequestsPage() {
                     )}
                     {req.status === "SIAP_COD" && (
                       <Badge variant="available" dot>
-                        Rekber Lunas — Siap Ketemuan COD
+                        Rekber Lunas - Siap Ketemuan COD
                       </Badge>
                     )}
                     {req.status === "DITOLAK" && (
@@ -152,7 +152,7 @@ export default function OwnerIncomingRequestsPage() {
                           Mahasiswa Penyewa
                         </span>
                         <strong className="text-ink">{req.renterName}</strong>{" "}
-                        (<span className="font-mono">{req.renterNim}</span>) —{" "}
+                        (<span className="font-mono">{req.renterNim}</span>) -{" "}
                         {req.renterProdi}
                       </div>
                       <div>

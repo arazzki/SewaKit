@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
   RotateCcw,
@@ -33,18 +33,21 @@ const COD_FILTER_OPTIONS = [
   "Student Center",
 ];
 
-export default function CatalogView({ items }: { items: CatalogItem[] }) {
-  const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category") as CategorySlug | null;
-
-  const validInitialCategory: CategorySlug | "semua" =
-    initialCategory && CATEGORIES.some((c) => c.slug === initialCategory)
-      ? initialCategory
-      : "semua";
-
-  const [query, setQuery] = useState("");
+function CatalogFilterContent({
+  items,
+  initialCategory,
+  initialQuery,
+  hasUrlParams,
+}: {
+  items: CatalogItem[];
+  initialCategory: CategorySlug | "semua";
+  initialQuery: string;
+  hasUrlParams: boolean;
+}) {
+  const router = useRouter();
+  const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState<CategorySlug | "semua">(
-    validInitialCategory,
+    initialCategory,
   );
   const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [codPoint, setCodPoint] = useState<string>("Semua titik COD");
@@ -115,13 +118,15 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
     setCodPoint("Semua titik COD");
     setOnlyAvailable(false);
     setSort("rekomendasi");
+    if (hasUrlParams) {
+      router.replace("/catalog", { scroll: false });
+    }
   }
 
   return (
     <div className="space-y-6">
-      {/* Modern Origin-UI Filter Console */}
       <div className="rounded-2xl border border-hairline bg-surface p-4 sm:p-5">
-        {/* Top Row: Search + Sort + Availability Toggle */}
+        {/* Top Row: Search + Sort + COD Location */}
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <SearchInput
@@ -129,7 +134,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
               onChange={setQuery}
               enableSlashFocus
               shortcut="/"
-              placeholder="Cari nama instrumen, kode SKU (LAB-OSC), pemilik, atau modul..."
+              placeholder="Cari nama alat, kode SKU (LAB-OSC), pemilik, atau modul..."
             />
           </div>
 
@@ -160,11 +165,11 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
                 onChange={(e) => setSort(e.target.value as SortOption)}
                 className="h-10 w-full rounded-xl border border-hairline bg-surface pl-9 pr-3 text-xs font-medium text-ink focus:border-ink focus:outline-none"
               >
-                <option value="rekomendasi">Urutan: Rekomendasi Lab</option>
+                <option value="rekomendasi">Urutan: Rekomendasi</option>
                 <option value="harga-terendah">Tarif: Terendah ke Tinggi</option>
                 <option value="harga-tertinggi">Tarif: Tertinggi ke Rendah</option>
-                <option value="rating-tertinggi">Reputasi: Rating Tertinggi</option>
-                <option value="nama">Alfabetis: A – Z</option>
+                <option value="rating-tertinggi">Rating: Tertinggi</option>
+                <option value="nama">Alfabetis: A - Z</option>
               </select>
             </div>
           </div>
@@ -175,7 +180,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           <button
             type="button"
             onClick={() => setCategory("semua")}
-            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
               category === "semua"
                 ? "border-ink bg-ink text-canvas"
                 : "border-hairline bg-surface-subtle text-ink-muted hover:border-ink hover:text-ink"
@@ -200,7 +205,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
                 key={option.slug}
                 type="button"
                 onClick={() => setCategory(option.slug)}
-                className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+                className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                   active
                     ? "border-ink bg-ink text-canvas"
                     : "border-hairline bg-surface-subtle text-ink-muted hover:border-ink hover:text-ink"
@@ -258,7 +263,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1 rounded-lg border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent transition hover:bg-accent hover:text-white"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent transition hover:bg-accent hover:text-white"
               >
                 <RotateCcw className="size-3" />
                 <span>Reset</span>
@@ -275,7 +280,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           <span className="font-mono font-bold text-ink">
             {filteredItems.length}
           </span>{" "}
-          dari <span className="font-mono">{items.length}</span> instrumen terdaftar
+          dari <span className="font-mono">{items.length}</span> alat terdaftar
         </p>
         <span className="hidden sm:inline font-mono text-xs text-ink-subtle">
           Tekan tombol [ / ] untuk fokus pencarian cepat
@@ -295,7 +300,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
             <PackageSearch className="size-5" />
           </div>
           <p className="text-sm font-bold text-ink">
-            Tidak ditemukan instrumen yang sesuai
+            Tidak ditemukan alat yang sesuai
           </p>
           <p className="mt-1 text-xs text-ink-muted">
             Ubah kata kunci pencarian, naikkan batas harga sewa, atau pilih semua titik COD.
@@ -303,7 +308,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
           <button
             type="button"
             onClick={resetFilters}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2 text-xs font-medium text-canvas transition hover:bg-accent"
+            className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-ink px-4 py-2 text-xs font-medium text-canvas transition hover:bg-accent"
           >
             <RotateCcw className="size-3.5" />
             <span>Reset Seluruh Filter</span>
@@ -311,5 +316,28 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
         </div>
       )}
     </div>
+  );
+}
+
+export default function CatalogView({ items }: { items: CatalogItem[] }) {
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams.get("category") as CategorySlug | null;
+  const urlQuery = searchParams.get("q") ?? "";
+
+  const validUrlCategory: CategorySlug | "semua" =
+    urlCategory && CATEGORIES.some((c) => c.slug === urlCategory)
+      ? urlCategory
+      : "semua";
+
+  const hasUrlParams = searchParams.toString().length > 0;
+
+  return (
+    <CatalogFilterContent
+      key={`${validUrlCategory}|${urlQuery}`}
+      items={items}
+      initialCategory={validUrlCategory}
+      initialQuery={urlQuery}
+      hasUrlParams={hasUrlParams}
+    />
   );
 }

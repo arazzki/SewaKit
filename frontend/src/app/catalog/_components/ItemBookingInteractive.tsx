@@ -39,7 +39,7 @@ export function AvailabilityCalendar({
           <Calendar className="size-4 text-accent" />
           <div>
             <h2 className="text-sm font-bold text-ink">
-              Matriks Kalender Anti-Bentrok — November 2026
+              Matriks Kalender Anti-Bentrok - November 2026
             </h2>
             <p className="text-xs text-ink-subtle">
               Klik tanggal untuk memeriksa status ketersediaan unit secara real-time

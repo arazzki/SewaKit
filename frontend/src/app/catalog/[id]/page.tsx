@@ -30,8 +30,8 @@ export async function generateMetadata({
   const item = getItemById(id);
   return {
     title: item
-      ? `${item.name} — Datasheet SewaKit`
-      : "Barang tidak ditemukan — SewaKit",
+      ? `${item.name} - SewaKit`
+      : "Barang tidak ditemukan - SewaKit",
   };
 }
 

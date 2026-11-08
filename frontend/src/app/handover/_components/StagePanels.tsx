@@ -80,7 +80,7 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
   if (role === "PENYEWA") {
     if (!rental.pickupChecklist) {
       return (
-        <Section title="Langkah 1 — Inspeksi Fisik Komponen Saat Pengambilan COD">
+        <Section title="Langkah 1 - Inspeksi Fisik Komponen Saat Pengambilan COD">
           <InfoBox icon={<ShieldCheck className="size-4 text-ink" />}>
             Saat bertemu Pemilik di titik COD kampus, periksa setiap komponen lalu isi checklist kondisi awal di bawah. Dokumentasi ini menjadi acuan sah jika terjadi klaim sengketa.
           </InfoBox>
@@ -94,7 +94,7 @@ export function PickupPanel({ rental, role, onUpdate }: PanelProps) {
       );
     }
     return (
-      <Section title="Langkah 2 — Tunjukkan Token OTP 6-Digit kepada Pemilik Alat">
+      <Section title="Langkah 2 - Tunjukkan Token OTP 6-Digit kepada Pemilik Alat">
         <div className="bg-tech-grid rounded-2xl border border-hairline bg-surface-subtle p-6 text-center">
           <div className="inline-flex items-center gap-1.5 rounded-md border border-accent/25 bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
             <KeyRound className="size-3" />

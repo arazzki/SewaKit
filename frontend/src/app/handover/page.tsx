@@ -5,7 +5,7 @@ import PageHeader from "@/components/PageHeader";
 import Button from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Serah Terima dan Pengembalian — SewaKit",
+  title: "Serah Terima dan Pengembalian - SewaKit",
   description: "Konfirmasi serah terima dan pengembalian barang sewa dengan checklist dua pihak.",
 };
 

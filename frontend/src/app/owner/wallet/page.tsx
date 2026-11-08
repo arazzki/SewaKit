@@ -448,7 +448,7 @@ export default function WalletPage() {
                   >
                     {REKENING_TUJUAN.map((rekening) => (
                       <option key={rekening.id} value={rekening.id}>
-                        {rekening.nama} — {formatNomorRekening(rekening.nomor)} a.n.{" "}
+                        {rekening.nama} - {formatNomorRekening(rekening.nomor)} a.n.{" "}
                         {rekening.pemilik}
                       </option>
                     ))}

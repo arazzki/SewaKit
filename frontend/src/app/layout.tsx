@@ -18,14 +18,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SewaKit — Sewa Alat Praktikum & Kegiatan Kampus Tel-U",
+  title: "SewaKit - Sewa Alat Praktikum & Kegiatan Kampus Tel-U",
   description:
     "Platform sewa-menyewa peralatan praktikum, perangkat IoT, kamera multimedia, dan perlengkapan kepanitiaan antar mahasiswa Telkom University.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+    <html
+      lang="id"
+      data-scroll-behavior="smooth"
+      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+    >
       <body className="min-h-full flex flex-col bg-canvas text-ink antialiased">
         <RentalSessionProvider>
           <Navbar />

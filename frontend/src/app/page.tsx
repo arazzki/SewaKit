@@ -141,13 +141,6 @@ export default function HomePage() {
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
             <Card className="flex flex-col justify-between p-6 sm:p-8 lg:col-span-7">
               <div className="space-y-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="available" dot>
-                    Mahasiswa Telkom University
-                  </Badge>
-                  <Badge variant="neutral">Rekber &amp; Deposit Aman</Badge>
-                </div>
-
                 <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]">
                   Sewa alat praktikum &amp; kegiatan kampus,{" "}
                   <span className="underline decoration-accent decoration-2 underline-offset-6">
@@ -403,7 +396,10 @@ export default function HomePage() {
       </section>
 
       {/* Cara Kerja & Akses Cepat */}
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 space-y-10">
+      <section
+        id="cara-kerja"
+        className="mx-auto max-w-7xl scroll-mt-24 px-4 py-14 sm:px-6 space-y-10"
+      >
         <div>
           <SectionHeading
             eyebrow="Cara Kerja"

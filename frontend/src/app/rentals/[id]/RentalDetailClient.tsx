@@ -120,7 +120,7 @@ export default function RentalDetailClient({ id }: { id: string }) {
               )}
               {req.status === "SIAP_COD" && (
                 <Badge variant="available" dot>
-                  Lunas — Siap COD
+                  Lunas - Siap COD
                 </Badge>
               )}
               {req.status === "DITOLAK" && (

@@ -142,7 +142,7 @@ export default function HandoverView({
                 </p>
                 <div className="mt-2 flex items-center justify-between gap-2 font-mono text-xs text-ink-muted">
                   <span>
-                    {formatDate(rental.startDate)} – {formatDate(rental.endDate)}
+                    {formatDate(rental.startDate)} - {formatDate(rental.endDate)}
                   </span>
                   {late && (
                     <span className="inline-flex items-center gap-1 font-semibold text-danger">
@@ -214,7 +214,7 @@ export default function HandoverView({
                     {formatRupiah(selected.depositAmount)}
                   </p>
                   <p className="font-mono text-xs text-forest/80">
-                    {formatDate(selected.startDate)} – {formatDate(selected.endDate)}
+                    {formatDate(selected.startDate)} - {formatDate(selected.endDate)}
                   </p>
                 </div>
               </div>

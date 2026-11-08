@@ -592,7 +592,7 @@ export default function CancellationAndNoShowPage() {
                   >
                     {orders.map((o) => (
                       <option key={o.id} value={o.id}>
-                        [{o.id}] {o.itemName} — {o.codLocation}
+                        [{o.id}] {o.itemName} - {o.codLocation}
                       </option>
                     ))}
                   </select>

@@ -7,7 +7,7 @@ import CatalogView from "./_components/CatalogView";
 import PageHeader from "@/components/PageHeader";
 
 export const metadata: Metadata = {
-  title: "Katalog Alat — SewaKit",
+  title: "Katalog Alat - SewaKit",
   description: "Cari dan sewa alat penunjang kuliah dari sesama mahasiswa.",
 };
 

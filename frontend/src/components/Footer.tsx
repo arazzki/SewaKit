@@ -78,12 +78,17 @@ export default function Footer() {
                   Pembatalan Sewa
                 </Link>
               </li>
+              <li>
+                <Link href="/#cara-kerja" className="transition hover:text-canvas">
+                  Cara Kerja Sewa
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 className="mb-4 text-xs font-semibold text-canvas">
-              Pemilik &amp; Admin
+              Pemilik &amp; Bantuan
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
@@ -107,6 +112,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/bantuan" className="transition hover:text-canvas">
+                  Pusat Bantuan &amp; FAQ
+                </Link>
+              </li>
+              <li>
                 <Link href="/admin/dashboard" className="transition hover:text-canvas">
                   Dashboard Moderator
                 </Link>
@@ -117,7 +127,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-ink-border pt-6 text-xs text-ink-subtle sm:flex-row">
           <p>
-            © 2026 SewaKit — S1 Teknologi Informasi, Telkom University.
+            © 2026 SewaKit - S1 Teknologi Informasi, Telkom University.
           </p>
           <div className="flex items-center gap-2 text-xs text-ink-inverse-muted">
             <ShieldCheck className="size-4 text-accent" />

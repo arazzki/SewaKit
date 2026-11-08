@@ -1,12 +1,18 @@
+"use client";
+
+import type React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cx } from "@/utils/cx";
 
 export interface BrandLogoProps {
   size?: "sm" | "md" | "lg";
   theme?: "light" | "dark";
   showTagline?: boolean;
+  taglineClassName?: string;
   href?: string | null;
   className?: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 const SIZE_MAP = {
@@ -34,11 +40,30 @@ export default function BrandLogo({
   size = "md",
   theme = "light",
   showTagline = true,
+  taglineClassName,
   href = "/",
   className,
+  onClick,
 }: BrandLogoProps) {
+  const pathname = usePathname();
   const s = SIZE_MAP[size];
   const isDark = theme === "dark";
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(e);
+    if (e.defaultPrevented) return;
+
+    if (href === "/" && pathname === "/") {
+      e.preventDefault();
+      if (typeof window !== "undefined") {
+        if (window.location.hash) {
+          window.history.replaceState(null, "", "/");
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.dispatchEvent(new CustomEvent("sewakit:scrolltop"));
+      }
+    }
+  };
 
   const content = (
     <>
@@ -107,6 +132,7 @@ export default function BrandLogo({
               "mt-1 block truncate",
               isDark ? "text-ink-faint" : "text-ink-subtle",
               s.tagline,
+              taglineClassName,
             )}
           >
             Sewa Alat Praktikum &amp; Kegiatan Kampus
@@ -120,8 +146,9 @@ export default function BrandLogo({
     return (
       <Link
         href={href}
+        onClick={handleLinkClick}
         className={cx(
-          "group inline-flex shrink-0 items-center",
+          "group inline-flex shrink-0 cursor-pointer items-center",
           s.gap,
           className,
         )}
