@@ -1,4 +1,4 @@
-# SewaKit — Platform Sewa Alat Penunjang Kuliah Antar-Mahasiswa
+# SewaKit | Platform Sewa Alat Penunjang Kuliah Antar-Mahasiswa
 
 **SewaKit** adalah aplikasi web untuk sewa-menyewa alat penunjang kuliah (perangkat IoT, elektronika, komputer, multimedia, perlengkapan akademik, dan kegiatan) antar-mahasiswa dalam satu lingkungan kampus.
 
